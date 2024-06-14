@@ -823,20 +823,20 @@ header#main-header.menu-sticky{
 }
 .playbtn img{
     display: inline-block;
-    width: 50px;
-    filter: invert(1);
+    width: 90px;
+    filter: invert(-2);
 }
 .playbtn img:hover{
-    background: #e50914;
-    border-radius: 50%;
+    background: #3927c4;
+    border-radius: 70%;
     filter: invert(0);
 }
 .w-trailor{
-    font-size: 17px;
+    font-size: 18px;
     letter-spacing: 3.5px;
-    font-weight: 600;
-    color: #fff;
-    margin-left: 5px;
+    font-weight: 700;
+    color: #eceaea;
+    margin-left: 15px;
 
 }
 .slider-inner{

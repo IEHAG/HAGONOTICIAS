@@ -545,9 +545,9 @@ header#main-header.menu-sticky{
         right: 0 !important;
     }
 }
-@media (max-width:991px){
+@media (max-width:999px){
     header .navbar-light .navbar-brand img.logo{
-        width: 100px;
+        width: 200px;
     }
     .navbar-collapse{
         position: fixed;
@@ -806,12 +806,12 @@ header#main-header.menu-sticky{
     font-weight: 500;
 }
 .c-logo{
-    width: 130px;
+    width: 250px;
 }
 
 .channel-logo{
-    border-left: 5px solid rgb(9 134 229);
-    background: transparent linear-gradient(270deg, rgba(11,1,2,0) 0%, rgba(22, 61, 117, 0.3) 100%);
+    border-left: 5px solid rgb(1, 17, 163);
+    background: transparent linear-gradient(270deg, rgba(109, 18, 27, 0) 0%, rgba(22, 61, 117, 0.3) 100%);
     padding: 10px 10px 10px 15px;
     width: 255px;
     position: relative;

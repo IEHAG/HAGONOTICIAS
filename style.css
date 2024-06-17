@@ -35,6 +35,17 @@ a{
     text-decoration: none;
     outline: medium none;
     transition: all 0.5s ease-out 0s;
+    --glow-color: rgb(43, 31, 206);
+ --glow-spread-color: #0d0e0dc7;
+ --enhanced-glow-color: rgb(22, 14, 129);
+ border-radius: 1em;
+ outline: none;
+ box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 1em var(--glow-spread-color),
+        inset 0 0 .75em .25em var(--glow-color);
+ text-shadow: 0 0 .5em var(--glow-color);
+ position: relative;
+ transition: all 0.3s;
 }
 header .navbar ul.navbar-nav{
     display: block;

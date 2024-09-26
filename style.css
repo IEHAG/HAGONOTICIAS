@@ -33,19 +33,18 @@ header .navbar .menu-header-menu-container, header .navbar .menu-main-menu-conta
 a{
     color: #d1d0cf;
     text-decoration: none;
+    background: #17a2b8;
     outline: medium none;
     transition: all 0.5s ease-out 0s;
     --glow-color: rgb(43, 31, 206);
- --glow-spread-color: #0d0e0dc7;
- --enhanced-glow-color: rgb(22, 14, 129);
- border-radius: 1em;
- outline: none;
- box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 1em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
- text-shadow: 0 0 .5em var(--glow-color);
- position: relative;
- transition: all 0.3s;
+    --glow-spread-color: #0d0e0dc7;
+    --enhanced-glow-color: rgb(22, 14, 129);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em rgb(144 193 228 / 55%), 0 0 4em 1em var(--glow-spread-color), inset 0 0 .75em .25em rgb(112 165 230);
+    text-shadow: 0 0 .5em rgb(0 0 0);
+    position: relative;
+    transition: all 0.3s
 }
 header .navbar ul.navbar-nav{
     display: block;
@@ -783,13 +782,13 @@ header#main-header.menu-sticky{
     z-index: 1;
 }
 #home-slider .slick-bg.s-bg-1{
-    background-image: url(1_IMAGENES/dia\ democracia.jpg);
+    background-image: url(images/fondo1.jpg);
 }
 #home-slider .slick-bg.s-bg-2{
-    background-image: url(1_IMAGENES/Hagonoticias\ dia\ del\ maestro\ y\ la\ secretaria.jpg);
+    background-image: url(images/fondo2.jpg);
 }
 #home-slider .slick-bg.s-bg-3{
-    background-image: url(1_IMAGENES/TALENTOS.jpg);
+    background-image: url(images/fondo3.jpg);
 }
 
 .slick-bg::before{
@@ -1967,10 +1966,9 @@ background: rgba(0, 0, 0, 0.8);
     z-index: 1;
 }
 .slick-bg::before{
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 35% ,
-     rgba(83,100,141,0) 100%);
-     width: 100%;
-     z-index: -1;
+    background: linear-gradient(90deg, rgb(0 0 0 / 76%) 0%, rgb(20 20 20 / 83%) 35%, rgba(83, 100, 141, 0) 100%);
+    width: 100%;
+    z-index: -1;
 
 }
 .overlay-tab::before{

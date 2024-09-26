@@ -12,7 +12,7 @@ body{
     background: #141414;
 }
 .container-fluid{
-    padding: 0 100px;
+    padding: 4px 100px;
 }
 header#main-header{
     position: fixed;
@@ -41,6 +41,7 @@ a{
     --enhanced-glow-color: rgb(22, 14, 129);
     border-radius: 1em;
     outline: none;
+    padding: 0px 8px;
     box-shadow: 0 0 1em .25em rgb(144 193 228 / 55%), 0 0 4em 1em var(--glow-spread-color), inset 0 0 .75em .25em rgb(112 165 230);
     text-shadow: 0 0 .5em rgb(0 0 0);
     position: relative;

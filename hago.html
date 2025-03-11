@@ -12,7 +12,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="contain/* Contenedor principal del visor de PDF */
+    #pdfModal {
+        position: relative;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* Botones de navegación */
+    #prevPage, #nextPage {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem; /* Tamaño grande */
+        padding: 20px;
+        cursor: pointer;
+        z-index: 10;
+        border-radius: 50%; /* Forma circular */
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Posicionamiento de los botones */
+    #prevPage {
+        left: 10px;
+    }
+    
+    #nextPage {
+        right: 10px;
+    }
+    
+    /* Efecto hover para los botones */
+    #prevPage:hover, #nextPage:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }er">
         <div class="header">
             <h1>Ediciones</h1>
             <div id="google_translate_element"></div>

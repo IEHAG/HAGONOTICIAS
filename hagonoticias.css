@@ -158,14 +158,14 @@ input, select {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
+    background: #c8d8e7;
+    border-bottom: 1px solid #060606;
 }
 
 .pdf-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 5px;
 }
 
 .toolbar-button {
@@ -192,7 +192,7 @@ input, select {
     border: none;
     cursor: pointer;
     font-size: 1.5em;
-    color: #555;
+    color: #0d38d6;
     padding: 5px;
 }
 
@@ -203,16 +203,16 @@ input, select {
 #pdfContainer {
     flex: 1;
     overflow: auto;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background: #f0f0f0;
+    background: #161414;
     position: relative;
 }
 
 #pdfViewer {
-    max-width: 100%;
+    max-width: 80%;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
@@ -257,6 +257,49 @@ input, select {
         margin-bottom: 10px;
     }
 }
+/* Contenedor principal del visor de PDF */
+#pdfModal {
+    position: center;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Botones de navegación */
+#prevPage, #nextPage {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem; /* Tamaño grande */
+    padding: 20px;
+    cursor: pointer;
+    z-index: 100;
+    border-radius: 100%; /* Forma circular */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Posicionamiento de los botones */
+#prevPage {
+    left: 10px;
+}
+
+#nextPage {
+    right: 10px;
+}
+
+/* Efecto hover para los botones */
+#prevPage:hover, #nextPage:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
 /* Full Screen Mode */
 .modal.fullscreen {
@@ -269,3 +312,16 @@ input, select {
     margin: 0;
     border-radius: 0;
 }
+
+#pdfViewer.flip-page {
+    transition: transform 0.5s ease-in-out;
+}
+
+#pdfViewer.flip-page.next {
+    transform: rotateY(-180deg); /* Efecto de volteo hacia la izquierda */
+}
+
+#pdfViewer.flip-page.prev {
+    transform: rotateY(180deg); /* Efecto de volteo hacia la derecha */
+}
+

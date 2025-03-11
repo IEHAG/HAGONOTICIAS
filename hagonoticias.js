@@ -1,8 +1,8 @@
 // Sample book data
 const books = [
     {
-        title: "Día del Maestro y la Secretaria",
-        author: "Proyecto Períodico institucional",
+        title: "Edición # 1",
+        author: "Día de la Democracia,Maestro, Madres,Secretaria, y Talentos Abadistas",
         category: "#1",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240",
@@ -22,7 +22,7 @@ const books = [
         category: "#3",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240",
-        pdfUrl: "pdf/Edición4.pdf"
+        pdfUrl: "pdf/Edición3.pdf"
     },
     {
         title: "Talentos Abadistas",
@@ -30,7 +30,7 @@ const books = [
         category: "#4",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1pcX7YXagIywqxi4-r_M6Ia8SvH5p7c_E&sz=w320-h240",
-        pdfUrl: "pdf/Edición5.pdf"
+        pdfUrl: "pdf/Edición4.pdf"
     },
     {
         title: "Edición 5",
@@ -38,7 +38,7 @@ const books = [
         category: "#5",
         year: 2025,
         thumbnail: "https://covers.openlibrary.org/b/id/6853269-L.jpg",
-        pdfUrl: "pdf/Edición6.pdf.pdf"
+        pdfUrl: "pdf/Edición5.pdf.pdf"
     }
 ];
 
@@ -48,6 +48,8 @@ let pageNum = 1;
 let pageRendering = false;
 let pageNumPending = null;
 let scale = 1.5;
+
+
 
 // DOM Elements
 const bookList = document.getElementById('bookList');
@@ -64,6 +66,8 @@ const zoomInButton = document.getElementById('zoomIn');
 const zoomOutButton = document.getElementById('zoomOut');
 const fullscreenButton = document.getElementById('fullscreen');
 const closeButton = document.querySelector('.close-button');
+
+
 
 // Función para aplicar la transición de volteo
 function flipPage(direction) {
@@ -87,7 +91,7 @@ function flipPage(direction) {
         // Remover la clase de animación
         pdfViewer.classList.remove('flip-page');
         console.log("Animación finalizada"); // Depuración
-    }, 10000); // Duración de la animación (0.10s)
+    }, 100000); // Duración de la animación (0.10s)
 }
 
 // PDF navigation functions
@@ -280,6 +284,8 @@ function showNextPage() {
     queueRenderPage(pageNum);
 }
 
+const MIN_SCALE = 0.5; // Zoom mínimo
+const MAX_SCALE = 8.0; // Zoom máximo
 // Zoom functions
 function zoomIn() {
     scale *= 1.2;
@@ -303,40 +309,27 @@ function toggleFullscreen() {
 // PDF Viewer functions
 async function openPdfViewer(pdfUrl) {
     modal.style.display = 'block';
-    scale = 1.5; // Reset zoom level
-    // Convertir el enlace de Google Drive a un formato de vista previa
-    const googleDrivePreview = pdfUrl.replace("uc?export=download", "preview");
-    const pdfContainer = document.getElementById('pdfContainer');
-    pdfContainer.innerHTML = `<iframe src="${googleDrivePreview}" width="100%" height="500px"></iframe>`;
+    scale = 1.5;
+
+    const container = document.getElementById('pdfContainer');
+    container.innerHTML = '<div class="loading">Cargando PDF...</div>';
 
     try {
-        // Mostrar un mensaje de carga
-        const container = document.getElementById('pdfContainer');
-        container.innerHTML = '<div class="loading">Cargando PDF...</div>';
-
-        console.log("Cargando PDF desde:", pdfUrl); // Depuración
-
-        // Cargar el PDF
         const loadingTask = pdfjsLib.getDocument(pdfUrl);
         pdfDoc = await loadingTask.promise;
 
-        console.log("PDF cargado correctamente"); // Depuración
-
-        // Limpiar el contenedor y mostrar el canvas
         container.innerHTML = '';
         container.appendChild(canvas);
 
-        // Actualizar el número de páginas y renderizar la primera página
         document.getElementById('pageCount').textContent = pdfDoc.numPages;
         pageNum = 1;
         await renderPage(pageNum);
+        updateNavigationButtons(); // Actualizar botones de navegación
     } catch (error) {
-        console.error('Error al cargar el PDF:', error); // Depuración
-        alert('Error al cargar el PDF. Por favor, inténtalo de nuevo más tarde.');
-        modal.style.display = 'none';
+        console.error('Error al cargar el PDF:', error);
+        container.innerHTML = '<div class="error">Error al cargar el PDF. Inténtalo de nuevo.</div>';
     }
 }
-
 
 // Event listeners
 searchInput.addEventListener('input', filterBooks);
@@ -354,14 +347,78 @@ closeButton.addEventListener('click', () => {
     pdfDoc = null;
 });
 
-window.addEventListener('click', (event) => {
-    if (event.target === modal) {
-        modal.style.display = 'none';
-        modal.classList.remove('fullscreen');
-        scale = 1.5;
-        pdfDoc = null;
+// Cambio de página con teclado
+window.addEventListener('keydown', (event) => {
+    if (modal.style.display === 'block') {
+        if (event.key === 'ArrowLeft') {
+            flipPage('prev');
+        } else if (event.key === 'ArrowRight') {
+            flipPage('next');
+        }
     }
 });
+
+
+// Cambio de página con deslizamiento horizontal
+let isDragging = false;
+let startX = false;
+
+canvas.addEventListener('mousedown', (event) => {
+    isDragging = true;
+    startX = event.clientX;
+});
+
+canvas.addEventListener('mousemove', (event) => {
+    if (!isDragging) return;
+    const currentX = event.clientX;
+    const deltaX = currentX - startX;
+
+    if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+            flipPage('prev');
+        } else {
+            flipPage('next');
+        }
+        isDragging = false;
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    isDragging = false;
+});
+function updateNavigationButtons() {
+    prevButton.disabled = pageNum <= 1;
+    nextButton.disabled = pageNum >= pdfDoc.numPages;
+}
+
+function showPrevPage() {
+    if (pageNum <= 1) return;
+    pageNum--;
+    queueRenderPage(pageNum);
+    updateNavigationButtons();
+}
+
+function showNextPage() {
+    if (pageNum >= pdfDoc.numPages) return;
+    pageNum++;
+    queueRenderPage(pageNum);
+    updateNavigationButtons();
+}
+
+closeButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+    modal.classList.remove('fullscreen');
+    scale = 5.5;
+    pdfDoc = null;
+    pageNum = 1; // Reiniciar la página actual
+    document.getElementById('pdfContainer').innerHTML = ''; // Limpiar el contenedor
+});
+
+
 
 // Initial display
 displayBooks(books);

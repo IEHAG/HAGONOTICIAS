@@ -2,7 +2,7 @@
 const books = [
     {
         title: "Edición # 1",
-        author: "Proyecto Períodico institucional",
+        author: "Día de la democracia,Madres,        ,Maestro,Talentos Abadistas",
         category: "#1",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240",
@@ -10,7 +10,7 @@ const books = [
     },
     {
         title: "Edición # 2",
-        author: "Proyecto Períodico institucional",
+        author: "Día de la Antioqueñidad.",
         category: "#2",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w320-h240",
@@ -18,7 +18,7 @@ const books = [
     },
     {
         title: "Edición # 3",
-        author: "Proyecto Períodico institucional",
+        author: "Semana Abadista-Foro-Museo Escolar",
         category: "#3",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240",
@@ -28,7 +28,7 @@ const books = [
         title: "Edición # 4",
         author: "Proyecto Períodico institucional",
         category: "#4",
-        year: 2024,
+        year: 2025,
         thumbnail: "https://drive.google.com/thumbnail?id=1pcX7YXagIywqxi4-r_M6Ia8SvH5p7c_E&sz=w320-h240",
         pdfUrl: "pdf/Edición4.pdf"
     },
@@ -172,7 +172,7 @@ function createBookCard(book) {
     bookCard.innerHTML = `
         <img src="${book.thumbnail}" alt="${book.title}" class="book-thumbnail">
         <h3>${book.title}</h3>
-        <p>Autor: ${book.author}</p>
+        <p>Temas: ${book.author}</p>
         <p>Año: ${book.year}</p>
        <button class="category action-button" 
                 onmouseover="showCategoryTopics(event, '${book.category}')"
@@ -188,13 +188,7 @@ function createBookCard(book) {
             </a>
         </div>
     `;
-// Mapeo de temas por edición
-const category = {
-    "#1": "Día del maestro, Día de la secretaria",
-    "#2": "Día del estudiante, Feria de ciencias",
-    "#3": "Semana cultural, Día de la familia",
-    "#4": "Semana de la lectura, Día de la tierra"
-};
+
     // Add PDF viewer event listener
     const viewButton = bookCard.querySelector('.view-pdf');
     viewButton.addEventListener('click', () => openPdfViewer(book.pdfUrl));

@@ -88,21 +88,29 @@ input, select {
 
 .book-card p {
     color: #141111;
-    margin: 0 10px 10px;
-    font-size: 0.9em;
-    line-height: 1.4; /* Espaciado entre líneas */
-    column-count: 1; /* Divide el texto en 2 columnas */
-    column-gap: 30px; /* Espacio entre columnas */
+    margin: 0 10px 10px; /* Márgenes ajustados */
+    font-size: 0.6em;
+    line-height: 1.2; /* Espaciado entre líneas */
+    column-count: 1; /* Una sola columna */
+    column-gap: 10px; /* Espacio entre columnas */
+    text-align: center; /* Justificar el texto */
+    display: -webkit-box;     
+    align-items: stretch;
+}
+/* Ajuste específico para el autor */
+.book-card p.author {
+    text-align: center; /* Centrado del texto */
+    font-size: 3px; /* Ajuste del tamaño de letra */
+    margin: 4px 0; /* Espaciado superior e inferior */
+    font-weight: bold; /* Resaltar el texto */
 }
 
 .book-card .category {
     display: inline-block;
     background: #007bff; /* Color de fondo más llamativo */
     color: white; /* Texto en blanco */
-    padding: 5px 15px;
-    border-radius: 20px; /* Bordes redondeados */
-    font-size: 0.8em;
-    margin: 10px;
+    padding: 5px 85px;
+    font-size: 0.8em; /* Tamaño de letra más pequeño */
     text-transform: uppercase; /* Texto en mayúsculas */
     letter-spacing: 1px; /* Espaciado entre letras */
 }
@@ -355,3 +363,5 @@ input, select {
     font-size: 14px;
     color: #333;
 }
+
+

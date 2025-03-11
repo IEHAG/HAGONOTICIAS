@@ -325,3 +325,33 @@ input, select {
     transform: rotateY(180deg); /* Efecto de volteo hacia la derecha */
 }
 
+/* Estilo general del contenedor */
+.filter-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Estilo del contenedor de temas */
+.topics-container {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 100%; /* Debajo del select */
+    left: 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 10;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Mostrar el contenedor de temas al pasar el mouse */
+.filter-container:hover .topics-container {
+    display: block;
+}
+
+
+#topicPreview {
+    font-size: 14px;
+    color: #333;
+}

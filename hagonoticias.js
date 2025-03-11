@@ -2,14 +2,14 @@
 const books = [
     {
         title: "Edición # 1",
-        author: "Día de la Democracia,Maestro, Madres,Secretaria, y Talentos Abadistas",
+        author: "Proyecto Períodico institucional",
         category: "#1",
         year: 2024,
         thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240",
         pdfUrl: "pdf/Edición1.pdf"
     },
     {
-        title: "Día de la Democracia",
+        title: "Edición # 2",
         author: "Proyecto Períodico institucional",
         category: "#2",
         year: 2024,
@@ -17,7 +17,7 @@ const books = [
         pdfUrl: "pdf/Edición2.pdf"
     },
     {
-        title: "Día de la Madres",
+        title: "Edición # 3",
         author: "Proyecto Períodico institucional",
         category: "#3",
         year: 2024,
@@ -25,7 +25,7 @@ const books = [
         pdfUrl: "pdf/Edición3.pdf"
     },
     {
-        title: "Talentos Abadistas",
+        title: "Edición # 4",
         author: "Proyecto Períodico institucional",
         category: "#4",
         year: 2024,
@@ -33,7 +33,7 @@ const books = [
         pdfUrl: "pdf/Edición4.pdf"
     },
     {
-        title: "Edición 5",
+        title: "Edición # 5 ",
         author: "Proyecto Períodico institucional",
         category: "#5",
         year: 2025,
@@ -41,6 +41,8 @@ const books = [
         pdfUrl: "pdf/Edición5.pdf.pdf"
     }
 ];
+
+
 
 // PDF viewer state
 let pdfDoc = null;
@@ -161,6 +163,8 @@ function googleTranslateElementInit() {
     );
 }
 
+
+
 // Create book card
 function createBookCard(book) {
     const bookCard = document.createElement('div');
@@ -168,9 +172,13 @@ function createBookCard(book) {
     bookCard.innerHTML = `
         <img src="${book.thumbnail}" alt="${book.title}" class="book-thumbnail">
         <h3>${book.title}</h3>
-        <p>By: ${book.author}</p>
-        <p>Year: ${book.year}</p>
-        <span class="category">${book.category}</span>
+        <p>Autor: ${book.author}</p>
+        <p>Año: ${book.year}</p>
+       <button class="category action-button" 
+                onmouseover="showCategoryTopics(event, '${book.category}')"
+                onmouseout="hideCategoryTopics()">
+            ${book.category}
+        </button>
         <div class="book-actions">
             <button class="action-button view-pdf" title="View PDF">
                 <i class="fas fa-eye"></i>
@@ -180,7 +188,13 @@ function createBookCard(book) {
             </a>
         </div>
     `;
-
+// Mapeo de temas por edición
+const category = {
+    "#1": "Día del maestro, Día de la secretaria",
+    "#2": "Día del estudiante, Feria de ciencias",
+    "#3": "Semana cultural, Día de la familia",
+    "#4": "Semana de la lectura, Día de la tierra"
+};
     // Add PDF viewer event listener
     const viewButton = bookCard.querySelector('.view-pdf');
     viewButton.addEventListener('click', () => openPdfViewer(book.pdfUrl));
@@ -422,3 +436,4 @@ closeButton.addEventListener('click', () => {
 
 // Initial display
 displayBooks(books);
+

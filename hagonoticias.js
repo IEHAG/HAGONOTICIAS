@@ -26,7 +26,7 @@ const books = [
     },
     {
         title: "Edición # 4",
-        author: "La institución de laInclusión,Gobierno Escolar 2025,",
+        author: "La institución de la Inclusión,Gobierno Escolar 2025,",
         category: "#4",
         year: 2025,
         thumbnail: "https://drive.google.com/thumbnail?id=1pcX7YXagIywqxi4-r_M6Ia8SvH5p7c_E&sz=w320-h240",

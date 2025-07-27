@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - HAG Noticias Dashboard</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .login-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+            background: white;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group-text {
+            background: rgba(0, 123, 255, 0.1);
+            border: 2px solid #e9ecef;
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            color: #007bff;
+        }
+        
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .btn-login {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            color: white;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+            background: linear-gradient(45deg, #0056b3, #007bff);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link a:hover {
+            color: #0056b3;
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .floating-shapes::before,
+        .floating-shapes::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-shapes::before {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-shapes::after {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .connection-status {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-connecting {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes"></div>
+    
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="../img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" onerror="this.style.display='none'">
+            <h2 class="login-title">Dashboard HAG Noticias</h2>
+            <p class="login-subtitle">Acceso al panel de administración</p>
+        </div>
+        
+        <div class="connection-status">
+            <div id="connectionStatus">
+                <span class="status-badge status-connecting">
+                    <i class="fas fa-spinner fa-spin me-1"></i>
+                    Conectando...
+                </span>
+            </div>
+        </div>
+        
+        <div id="alertContainer"></div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <input type="email" class="form-control" id="email" placeholder="Correo electrónico" required>
+            </div>
+            
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn btn-login" id="loginBtn">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Iniciar Sesión
+            </button>
+        </form>
+        
+        <div class="back-link">
+            <a href="../index.html">
+                <i class="fas fa-arrow-left me-1"></i>
+                Volver al sitio principal
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script>
+        // Variables globales
+        const alertContainer = document.getElementById('alertContainer');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo = 'info', duracion = 5000) {
+            const alertId = 'alert-' + Date.now();
+            const alertHTML = `
+                <div id="${alertId}" class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-${getIconForType(tipo)} me-2"></i>
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            alertContainer.insertAdjacentHTML('beforeend', alertHTML);
+            
+            if (duracion > 0) {
+                setTimeout(() => {
+                    const alertElement = document.getElementById(alertId);
+                    if (alertElement) {
+                        const alert = new bootstrap.Alert(alertElement);
+                        alert.close();
+                    }
+                }, duracion);
+            }
+        }
+
+        function getIconForType(tipo) {
+            const icons = {
+                'success': 'check-circle',
+                'danger': 'exclamation-triangle',
+                'warning': 'exclamation-circle',
+                'info': 'info-circle'
+            };
+            return icons[tipo] || 'info-circle';
+        }
+
+        // Función para actualizar estado de conexión
+        function actualizarEstadoConexion(conectado, mensaje = '') {
+            if (conectado) {
+                connectionStatus.innerHTML = `
+                    <span class="status-badge status-connected">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Conectado a Supabase
+                    </span>
+                `;
+            } else {
+                connectionStatus.innerHTML = `
+                    <span class="status-badge status-disconnected">
+                        <i class="fas fa-times-circle me-1"></i>
+                        ${mensaje || 'Desconectado'}
+                    </span>
+                `;
+            }
+        }
+
+        // Función para verificar si ya está autenticado
+        async function verificarSesionExistente() {
+            try {
+                if (!supabase) return false;
+
+                const { data: { user }, error } = await supabase.auth.getUser();
+                
+                if (error) {
+                    console.error('Error al verificar sesión:', error);
+                    return false;
+                }
+
+                if (user) {
+                    console.log('Usuario ya autenticado:', user.email);
+                    mostrarAlerta('Ya tienes una sesión activa. Redirigiendo...', 'success', 2000);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-supabase.html';
+                    }, 2000);
+                    return true;
+                }
+
+                return false;
+            } catch (error) {
+                console.error('Error en verificarSesionExistente:', error);
+                return false;
+            }
+        }
+
+        // Función para manejar el login
+        async function manejarLogin(e) {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                mostrarAlerta('Por favor completa todos los campos', 'danger');
+                return;
+            }
+
+            // Deshabilitar formulario
+            loginBtn.disabled = true;
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Iniciando sesión...';
+
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase no está inicializado');
+                }
+
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (data.user) {
+                    mostrarAlerta('Inicio de sesión exitoso. Redirigiendo...', 'success', 2000);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-supabase.html';
+                    }, 2000);
+                } else {
+                    throw new Error('No se pudo autenticar el usuario');
+                }
+
+            } catch (error) {
+                console.error('Error en login:', error);
+                
+                let mensaje = 'Error al iniciar sesión';
+                if (error.message.includes('Invalid login credentials')) {
+                    mensaje = 'Credenciales incorrectas. Verifica tu email y contraseña.';
+                } else if (error.message.includes('Email not confirmed')) {
+                    mensaje = 'Por favor confirma tu email antes de iniciar sesión.';
+                } else if (error.message.includes('Too many requests')) {
+                    mensaje = 'Demasiados intentos. Espera unos minutos antes de intentar de nuevo.';
+                }
+                
+                mostrarAlerta(mensaje, 'danger');
+            } finally {
+                // Restaurar formulario
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = originalText;
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Verificar configuración de Supabase
+            if (!validarConfiguracion()) {
+                actualizarEstadoConexion(false, 'Configuración incompleta');
+                mostrarAlerta('Las credenciales de Supabase no están configuradas correctamente. Por favor, actualiza el archivo supabase-config.js', 'warning', 0);
+                return;
+            }
+
+            // Inicializar sistema
+            if (!inicializarSistema()) {
+                actualizarEstadoConexion(false, 'Error de inicialización');
+                mostrarAlerta('Error al inicializar el sistema. Verifica la configuración de Supabase.', 'danger');
+                return;
+            }
+
+            actualizarEstadoConexion(true);
+
+            // Verificar si ya hay una sesión activa
+            await verificarSesionExistente();
+        });
+
+        // Event listeners
+        loginForm.addEventListener('submit', manejarLogin);
+
+        // Permitir login con Enter
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                manejarLogin(e);
+            }
+        });
+    </script>
+</body>
+</html>
+

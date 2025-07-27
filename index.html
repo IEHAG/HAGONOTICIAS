@@ -1,486 +1,655 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HAGONOTICIAS</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <!-- i will provide this in description  -->
-  <link rel="stylesheet" href="css/slick.css" />
-  <link rel="stylesheet" href="css/slick-theme.css" />
-  <link rel="stylesheet" href="css/owl.carousel.min.css" />
-  <link rel="stylesheet" href="css/animate.min.css" />
-  <link rel="stylesheet" href="css/magnific-popup.css" />
-  <link rel="stylesheet" href="css/select2.min.css" />
-  <link rel="stylesheet" href="css/select2-bootstrap4.min.css" />
-  <link rel="stylesheet" href="css/slick-animation.css" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="hagonoticias.css">
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
-  <!-- Update PDF.js version and add stylesheet -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
-  <style>
-    .ediciones1{
-      background: none;
-      box-shadow: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAG Noticias - Portal de Noticias Institucional</title>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/select2.min.css">
+    <link rel="stylesheet" href="css/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/slick-theme.css">
+    <link rel="stylesheet" href="css/slick-animation.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/hero-styles.css">
+    <link rel="stylesheet" href="css/hagonoticias.css">
+    <link rel="stylesheet" href="css/pdf-viewer.css">
+    <link rel="stylesheet" href="css/enhanced-pdf-viewer.css">
+    <link rel="stylesheet" href="css/responsive-fixes.css">
+    
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- Google Translate -->
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+
+    <style>
+        /* Estilos adicionales para mejorar la apariencia */
+        .admin-btn {
+            position: fixed;
+            top: 10px;
+            left: 690px;
+            /* Cambiado de right a left */
+            z-index: 1000;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            border-radius: 50px;
+            padding: 1px 10px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 1px 5px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+            color: white;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .floating-elements::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+            animation: pulse 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.05);
+            }
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.4);
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        }
+
+        .section-title {
+            position: relative;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border-radius: 2px;
+        }
+    </style>
 </head>
+
 <body>
-  <header id="main-header">
-    <div class="main-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-12">
-            <nav class="navbar navbar-expand-lg navbar-light p-0">
-              <a href="#" class="navbar-toggler c-toggler" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <div class="navbar-toggler-icon" data-toggle="collapse">
-                  <span class="navbar-menu-icon navbar-menu-icon--top"></span>
-                  <span class="navbar-menu-icon navbar-menu-icon--middle"></span>
-                  <span class="navbar-menu-icon navbar-menu-icon--bottom"></span>
-                </div>
-              </a>
-              <a href="index.html" class="navbar-brand">
-                <img src="hagonoticias/LOGO HAGO NOTICIAS.png" class="img-fluid logo" alt="" />
-              </a>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div class="menu-main-menu-container">
-                  <ul id="top-menu" class="navbar-nav ml-auto">
-                    <li  class="menu-item"><a class="ediciones1" href="#">INICIO</a></li>
-                    <li  class="menu-item"><a class="ediciones1" href="#ediciones">EDICIONES</a></li>
-                    <li  class="menu-item"><a class="ediciones1" href="https://hagonoticias.wixsite.com/inicio?&idmenutipo=7217&tag">EDICIONES ANTERIORES</a></li>
-                    <li  class="menu-item"><a class="ediciones1" href="https://www.iehectorabadgomez.edu.co/index.php#">REGRESAR</a></li>
+    <!-- Botón de Administrador -->
+    <button class="admin-btn" onclick="window.location.href='admin/login-supabase.html'">
+        <i class="fas fa-user-shield"></i> Admin
+    </button>
 
-                  </ul>
-                </div>
-              </div>
-
-              <div class="mobile-more-menu">
-                <a class="ediciones1" href="javascript:void(0);" class="more-toggle" id="dropdownMenuButton" data-toggle="more-toggle"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-ellipsis-h"></i>
+    <!-- Header -->
+    <header id="main-header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#home">
+                    <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" height="40">
                 </a>
-                <div class="more-menu" aria-labelledby="dropdownMenuButton">
-                  <div class="navbar-right position-relative">
-                    <ul class="d-flex align-items-center justify-content-end list-inline m-0">
-                      <li>
-                        <a href="#" class="search-toggle">
-                          <i class="fa fa-search"></i>
-                        </a>
-                        <div class="search-box iq-search-bar">
-                          <form action="#" class="searchbox">
-                            <div class="form-group position-relative">
-                              <input type="text" class="text search-input font-size-12"
-                                placeholder="type here to search..." />
-                              <i class="search-link fa fa-search"></i>
-                            </div>
-                          </form>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#ediciones">Ediciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://hagonoticias.wixsite.com/inicio" target="_blank">Ediciones
+                                Anteriores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.iehectorabadgomez.edu.co"
+                                target="_blank">Regresar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section parallax-element" data-speed="0.1">
+        <!-- Fondo con imágenes rotativas -->
+        <div class="hero-background">
+            <div class="background-image active"></div>
+            <div class="background-image"></div>
+            <div class="background-image"></div>
+        </div>
+
+        <!-- Partículas flotantes -->
+        <div class="floating-elements">
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+        </div>
+
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content text-white reveal animate-fadeInLeft">
+                        <div class="logo-container">
+                            <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" class="img-fluid hover-scale">
                         </div>
-                      </li>
- 
-                  <li class="nav-item nav-icon">
-                    <a href="#" class="iq-user-dropdown search-toggle d-flex align-items-center p-0">
-                      <img src="images/user/user.png" class="img-fluid user-m rounded-circle" alt="" />
-                    </a>
-                    <div class="iq-sub-dropdown iq-user-dropdown">
-                      <div class="iq-card shadow-none m-0">
-                        <div class="iq-card-body p-0 pl-3 pr-3">
-                          <a href="#" class="iq-sub-card setting-dropdown">
-                            <div class="media align-items-center">
-                              <div class="right-icon">
-                                <i class="fa fa-user text-primary"></i>
-                              </div>
-                              <div class="media-body ml-3">
-                                <h6 class="mb-0">Ediciones</h6>
-                              </div>
-                            </div>
-                          </a>
-                          <a href="#" class="iq-sub-card setting-dropdown">
-                            <div class="media align-items-center">
-                              <div class="right-icon">
-                                <i class="fa fa-cog text-primary"></i>
-                              </div>
-                              <div class="media-body ml-3">
-                                <h6 class="mb-0">Settings</h6>
-                              </div>
-                            </div>
-                          </a>
-                          <a href="#" class="iq-sub-card setting-dropdown">
-                            <div class="media align-items-center">
-                              <div class="right-icon">
-                                <i class="fa fa-inr text-primary"></i>
-                              </div>
-                              <div class="media-body ml-3">
-                                <h6 class="mb-0">Hagonoticias</h6>
-                              </div>
-                            </div>
-                          </a>
-                          <a href="#" class="iq-sub-card setting-dropdown">
-                            <div class="media align-items-center">
-                              <div class="right-icon">
-                                <i class="fa fa-sign-out text-primary"></i>
-                              </div>
-                              <div class="media-body ml-3">
-                                <h6 class="mb-0">Logout</h6>
-                              </div>
-                            </div>
-                          </a>
+                        <h1 class="display-4 fw-bold mb-4 text-gradient typewriter-text">Portal de Noticias
+                            Institucional</h1>
+                        <p class="lead mb-4 reveal delay-200">Descubre las últimas noticias y eventos de la Institución
+                            Educativa Héctor Abad Gómez</p>
+                        <div class="d-flex gap-3 flex-wrap reveal delay-300">
+                            <a href="#ediciones" class="btn btn-primary-custom btn-animated hover-lift">
+                                <i class="fas fa-newspaper me-2"></i>Ver Ediciones
+                            </a>
+                            <a href="video/LogoRevealExplosinpic.mp4"
+                                class="btn btn-outline-light btn-animated hover-glow" target="_blank">
+                                <i class="fas fa-play me-2"></i>Ver Video
+                            </a>
                         </div>
-                      </div>
                     </div>
-                  </li>
-                </ul>
-              </div>
-            </nav>
-            <div class="nav-overlay"></div>
-          </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center reveal animate-fadeInRight delay-400">
+                        <div class="hero-video-container">
+                            <video autoplay muted loop class="hero-video">
+                                <source src="video/LogoRevealExplosinpic.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Indicadores de fondo -->
+        <div class="background-indicators">
+            <div class="indicator active" data-bg="0"></div>
+            <div class="indicator" data-bg="1"></div>
+            <div class="indicator" data-bg="2"></div>
+        </div>
+    </section>
+
+    <!-- Ediciones Section -->
+    <section id="ediciones" class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="section-title display-5 fw-bold text-white text-center mb-5 reveal animate-fadeInUp">
+                <span class="text-primary">Ediciones</span>
+            </h2>
+
+            <!-- Filtros -->
+            <div class="row mb-4 reveal animate-fadeInUp delay-200">
+                <div class="col-md-6">
+                    <div class="input-group glass">
+                        <span class="input-group-text bg-primary text-white border-primary">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control bg-dark text-white border-primary" 
+                               placeholder="buscar la edición..." style="border-left: none;">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <select id="categoryFilter" class="form-select bg-dark text-white border-primary">
+                        <option value="">Todas las ediciones</option>
+                        <option value="#1">Edición 1</option>
+                        <option value="#2">Edición 2</option>
+                        <option value="#3">Edición 3</option>
+                        <option value="#4">Edición 4</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Google Translate -->
+            <div class="text-center mb-4 reveal animate-fadeInUp delay-300">
+                <div id="google_translate_element" class="glass p-3 rounded bg-dark border border-primary"></div>
+                <p class="text-muted mt-2">
+                    <small>Con la tecnología de <i class="fab fa-google"></i> Traductor de Google</small>
+                </p>
+            </div>
+
+            <!-- Lista de Ediciones -->
+            <div id="bookList" class="row g-4">
+                <!-- Las ediciones se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Visor PDF -->
+    <div id="pdfModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <div class="d-flex align-items-center gap-3">
+                        <button id="prevPage" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="pageInfo" class="fw-bold">Página <span id="pageNum">0</span> de <span
+                                id="pageCount">0</span></span>
+                        <button id="nextPage" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="vr"></div>
+                        <button id="zoomOut" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="zoomIn" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="fullscreen" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 bg-dark">
+                    <div id="pdfContainer" class="d-flex justify-content-center align-items-center"
+                        style="min-height: 80vh;">
+                        <canvas id="pdfViewer"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- <div class="container-audio">
-      <audio controls  loop autoplay>
-                 <source src="audio/walen - .mp3" type="audio/mp3">
-             </audio>
-  </div>
-  <div class="container-audio"> -->
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-      <div class="colum1">
-          <div class="row"></div>
-      </div>
-  </div>
-  </header>
 
-  <!-- slider starts  -->
-  <section id="home" class="iq-main-slider p-0">
-    <div id="home-slider" class="slider m-0 p-0">
-      <div class="slide slick-bg s-bg-1">
-        <div class="container-fluid position-relative h-100">
-          <div class="slider-inner h-100">
-            <div class="row align-items-center h--100">
-              <div class="col-xl-6 col-lg-12 col-md-12">
-                <a class="ediciones1" href="javascript:void(0)">
-                  <div class="channel-logo" data-animation-in="fadeInLeft" data-delay-in="0.5">
-                    <img src="hagonoticias/LOGO HAGO NOTICIAS.png" class="c-logo" alt="" />
-                  </div>
-                </a>
-                
-           
-                <div class="trending-list" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <div class="text-primary title starring">
-                    
-                   
-                  </div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Información de la institución -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" height="50" class="me-3">
+                        <div>
+                            <h5 class="mb-0 text-primary">HAG Noticias</h5>
+                            <small class="text-muted">Portal Institucional</small>
+                        </div>
+                    </div>
+                    <p class="mb-2 text-light">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</p>
+                    <div class="d-flex gap-2 mb-3">
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Términos de Uso</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Privacy Policy</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">FAQ</a>
+                    </div>
+                    <small class="text-muted">&copy; 2024 Todos los derechos reservados @IE.HéctorAbadGómez</small>
+                <p class="mb-2 text-light">Desarrollo y Diseño Web -Docente Víctor Cañola</p>
                 </div>
-                <div class="d-flex align-items-center r-mb-23 mt-4" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <a href="video/Logo Reveal  Explosin pic.mp4" class="btn btn-hover iq-button"><i class="fa fa-play mr-3"></i>Ver Video</a>
-               
-                </div>
-              </div>
-            </div>
-           
-          </div>
-        </div>
-      </div>
-      <div class="slide slick-bg s-bg-2">
-        <div class="container-fluid position-relative h-100">
-          <div class="slider-inner h-100">
-            <div class="row align-items-center h--100">
-              <div class="col-xl-6 col-lg-12 col-md-12">
-                <a class="ediciones1" href="javascript:void(0)">
-                  <div class="channel-logo" data-animation-in="fadeInLeft" data-delay-in="0.5">
-                    <img src="hagonoticias/LOGO HAGO NOTICIAS.png" class="c-logo" alt="" />
-                  </div>
-                </a>
-
-              
-                <div class="trending-list" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <div class="text-primary title starring">
-               
-                    
-                  </div>
-                  
-                </div>
-                <div class="d-flex align-items-center r-mb-23 mt-4" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <a href="video/Logo Reveal  Explosin pic.mp4" class="btn btn-hover iq-button"><i class="fa fa-play mr-3"></i>Ver Video</a>
-                  <!-- <a href="#" class="btn btn-link">More Details</a> -->
-                </div>
-              </div>
-            </div>
             
-          </div>
-        </div>
-      </div>
-      <div class="slide slick-bg s-bg-3">
-        <div class="container-fluid position-relative h-100">
-          <div class="slider-inner h-100">
-            <div class="row align-items-center h--100">
-              <div class="col-xl-6 col-lg-12 col-md-12">
-                <a class="ediciones1" href="javascript:void(0)">
-                  <div class="channel-logo" data-animation-in="fadeInLeft" data-delay-in="0.5">
-                    <img src="hagonoticias/LOGO HAGO NOTICIAS.png" class="c-logo" alt="" />
-                  </div>
-                </a>
-               
-
-                <div class="trending-list" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <div class="text-primary title starring">
-                    
-                  
-                  </div>
-
+                <!-- Síguenos -->
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <h6 class="text-warning mb-3" style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                        Síguenos:
+                    </h6>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="https://www.facebook.com/AbadistaHAG" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UC1k1n-IAG9auH6aJr6Lm_kw" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
+                            <i class="fab fa-youtube fa-2x"></i>
+                        </a>
+                        <a href="https://www.instagram.com/i.e.hectorabadgomez" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
+                            <i class="fab fa-instagram fa-2x"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center r-mb-23 mt-4" data-animation-in="fadeInUp" data-delay-in="1.2">
-                  <a href="video/Logo Reveal  Explosin pic.mp4" class="btn btn-hover iq-button"><i class="fa fa-play mr-3"></i>Ver Video</a>
-               
+                
+                <!-- Créditos -->
+                <div class="col-md-4">
+                    <h6 class="text-warning mb-3" style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                        Créditos
+                    </h6>
+                    <div class="mb-3">
+                        <p class="mb-2 text-light" style="font-style: italic;">
+                            <strong>Colaboración y Elaboración</strong>
+                        </p>
+                        <p class="mb-1 text-light"><strong>Docentes:</strong></p>
+                        <ul class="list-unstyled text-light small">
+                            <li>• PROYECTO PERÍODICO INSTITUCIONAL.</li>
+
+                        </ul>
+                        <p class="mb-1 text-light"><strong>Estudiantes</strong></p>
+                        <p class="text-light small" style="font-style: italic;">Media Técnica</p>
+                    </div>
+                    <div>
+                        <h6 class="text-warning mb-2" style="font-size: 1.3rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                            Rector
+                        </h6>
+                        <p class="text-light" style="font-style: italic;">Elkin Osorio V.</p>
+                    </div>
                 </div>
-              </div>
             </div>
-          
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <!-- slider ends -->  <!-- main content starts  -->  <div class="main-content" id="ediciones">
-    
-    <!-- EDICIÓN NUMERO 1  -->
-    <div class="container">
-      <div class="header">
-          <h1>Ediciones</h1>
-          <div id="google_translate_element"></div>
-      </div>
-      
-      <div class="filters">
-          <input 
-              type="text" 
-              id="searchInput" 
-              placeholder="buscar la edición..."
-          >
-          <select id="categoryFilter">
-              <option value="">Todas la ediciones</option>
-              <option value="#1">Edición 1</option>
-              <option value="#2">Edición 2</option>
-              <option value="#3">Edición 3</option>
-              <option value="34">Edición 4</option>
-          </select>
+    </footer>
 
-          <!-- Contenedor para mostrar los temas -->
-    <div id="topicsContainer" class="topics-container"></div>
-    
-      </div>
+    <!-- Scripts -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/slick.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script>
+        // Configurar PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-      <div id="bookList" class="book-list">
-          <!-- Books will be added here dynamically -->
-      </div>
-  </div>
-
-  <!-- Enhanced PDF Viewer Modal -->
-  <div id="pdfModal" class="modal">
-      <div class="modal-content">
-          <div class="pdf-toolbar">
-              <div class="pdf-controls">
-                  <button id="prevPage" class="toolbar-button" title="Previous Page">
-                      <i class="fas fa-chevron-left"></i>
-                  </button>
-                  <span id="pageInfo">Page <span id="pageNum">0</span> of <span id="pageCount">0</span></span>
-                  <button id="nextPage" class="toolbar-button" title="Next Page">
-                      <i class="fas fa-chevron-right"></i>
-                  </button>
-                  <button id="zoomOut" class="toolbar-button" title="Zoom Out">
-                      <i class="fas fa-search-minus"></i>
-                  </button>
-                  <button id="zoomIn" class="toolbar-button" title="Zoom In">
-                      <i class="fas fa-search-plus"></i>
-                  </button>
-                  <button id="fullscreen" class="toolbar-button" title="Full Screen">
-                      <i class="fas fa-expand"></i>
-                  </button>
-              </div>
-              <button class="close-button" title="Close">
-                  <i class="fas fa-times"></i>
-              </button>
-          </div>
-          <div id="pdfContainer">
-              <canvas id="pdfViewer"></canvas>
-          </div>
-      </div>
-  </div>
-    
-  <!-- main content ends  -->
-
-
-  <footer class="iq-bg-dark">
-    <div class="footer-top">
-      <div class="container-fluid">
-        <div class="row footer-standard">
-          <div class="col-lg-5">
-            <div class="widget text-left">
-              <div>
-                <ul class="menu p-0">
-                  <li><a style="padding: 3px;"  href="#">Terminos de Uso</a></li>
-                  <li><a style="padding: 3px;" href="#">Privacy-Policy</a></li>
-                  <li><a style="padding: 3px;" href="#">FAQ</a></li>
-                  
-                </ul>
-              </div>
-            </div>
-            <div class="widget text-left">
-              <div class="textwidget">
-                
-                <p> <small>Todos los derechos reservados @IE.HéctorAbadGómez</small></p>
-                
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mt-4 mt-lg-0">
-            <h6 class="footer-link-title">
-              Siguenos:
-            </h6>
-            <ul class="info-share">
-              <li>
-                <a href="https://www.facebook.com/AbadistaHAG/?locale=es_LA">
-                  <i>
-                  <fa class="fa fa-facebook"></fa>
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/channel/UC1k1n-IAG9auH6aJr6Lm_kw">
-                  <i>
-                  <fa class="fa fa-youtube"></fa>
-                </a>
-              </li>
-              <li>
-                <a href="https://www.instagram.com/i.e.hectorabadgomez/?hl=en">
-                  <i>
-                  <fa class="fa fa-instagram"></fa>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-md-6 mt-4 mt-lg-0">
-            <div class="widget text-left">
-              <div class="textwidget">
-                <h6 class="footer-link-title">
-                 
-                </h6>
-                <div class="d-flex align-items-center">
-                
-                  <br>
-                
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- js files  -->
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/slick.min.js"></script>
-  <script src="js/owl.carousel.min.js"></script>
-  <script src="js/select2.min.js"></script>
-  <script src="js/jquery.magnific-popup.min.js"></script>
-  <script src="js/slick-animation.min.js"></script>
-  <script src="main.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-      // Inicializar el worker de PDF.js
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  </script>
-<script src="hagonoticias.js"></script>
-  
-  <div class="creditos">
-  <h6>Créditos</h6>
-  <h3>Colaboración y Elaboración</h3>
-  <h2><strong>Docentes:</strong></h2>
-      <li>ERIKA LILIANA URREGO E.</li>
-      <li>ANIBAL TAMAYO O.</li>
-      <li>OSMIN EDISON CORTES A.</li>
-      <li>VICTOR ALFONSO CAÑOLA V.</li>
-  </ul>
-  <h2><strong>Estudiantes</strong></h2>
-      <p>Media Técnica</p>
-  </ul>
-  <h6>Rector</h6>
-  <p><strong>Elkin Osorio V.</strong></p>
-  </ul>
-
-
+        // Inicializar Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                { pageLanguage: 'es' },
+                'google_translate_element'
+            );
+        }
+    </script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/pdf-viewer.js"></script>
+    <script src="js/hagonoticias-supabase.js"></script>
+    <script src="js/interactions.js"></script>
+    <script src="js/hero-background.js"></script>
 </body>
 
 </html>
+    <style>
+        /* Efectos hover para iconos sociales */
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            color: #007bff !important;
+            text-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+        
+        .social-icon:hover .fa-facebook {
+            color: #1877f2 !important;
+        }
+        
+        .social-icon:hover .fa-youtube {
+            color: #ff0000 !important;
+        }
+        
+        .social-icon:hover .fa-instagram {
+            color: #e4405f !important;
+        }
+        
+        /* Mejoras para el visor PDF */
+        .modal-header .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-header .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Efectos de carga mejorados */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 123, 255, 0.1);
+            border-left: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mejoras para el loader de página */
+        .loader-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Efectos de partículas flotantes */
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float-particle 6s ease-in-out infinite;
+        }
+        
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <!-- Contenido del body ya existe arriba -->
+    
+    <!-- Scripts -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/slick.min.js"></script>
+    <script src="js/slick-animation.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/select2.min.js"></script>
+    <script src="js/flatpickr.min.js"></script>
+    <script src="js/counter.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/interactions.js"></script>
+    <script src="js/hero-background.js"></script>
+    <script src="js/enhanced-pdf-viewer.js"></script>
+    <script src="js/hagonoticias.js"></script>
+
+    <!-- Google Translate Function -->
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'es',
+                includedLanguages: 'en,fr,pt,it,de,zh,ja,ko,ar,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+
+    <!-- Inicialización de animaciones -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar animaciones de entrada
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            // Observar elementos con clase 'reveal'
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Smooth scrolling para enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Efecto parallax simple
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.parallax-element');
+                
+                parallaxElements.forEach(element => {
+                    const speed = element.dataset.speed || 0.5;
+                    const yPos = -(scrolled * speed);
+                    element.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+
+            // Crear partículas flotantes
+            createFloatingParticles();
+        });
+
+        function createFloatingParticles() {
+            const heroSection = document.querySelector('.hero-section');
+            if (!heroSection) return;
+
+            const particlesContainer = document.createElement('div');
+            particlesContainer.className = 'floating-particles';
+            heroSection.appendChild(particlesContainer);
+
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = (Math.random() * 4 + 2) + 'px';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Actualizar el visor de PDF para usar el nuevo sistema
+        document.addEventListener('DOMContentLoaded', function() {
+            // Reemplazar los event listeners del visor PDF anterior
+            document.querySelectorAll('.view-pdf').forEach(button => {
+                button.addEventListener('click', function() {
+                    const pdfUrl = this.dataset.pdf;
+                    const title = this.closest('.card').querySelector('.card-title').textContent;
+                    
+                    // Usar el nuevo visor mejorado
+                    if (typeof enhancedPdfViewer !== 'undefined') {
+                        enhancedPdfViewer.open(pdfUrl, title);
+                    } else {
+                        // Fallback al visor anterior
+                        openPdfViewer(pdfUrl);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

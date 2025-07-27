@@ -1,0 +1,8 @@
+<svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="320" height="240" fill="#F5F5F5"/>
+<rect x="10" y="10" width="300" height="220" rx="8" fill="#E5E5E5" stroke="#D0D0D0" stroke-width="2"/>
+<circle cx="80" cy="80" r="20" fill="#C0C0C0"/>
+<path d="M60 160L120 100L180 120L260 80V200H60V160Z" fill="#D0D0D0"/>
+<text x="160" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#999999">Edición</text>
+<text x="160" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#BBBBBB">Sin imagen</text>
+</svg>

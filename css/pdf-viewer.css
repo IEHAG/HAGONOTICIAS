@@ -1,0 +1,261 @@
+/* Estilos para el visor de PDF moderno */
+.modern-pdf-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modern-pdf-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modern-pdf-container {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: 90%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modern-pdf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modern-pdf-title {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.modern-pdf-title::before {
+    content: "📄";
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.modern-pdf-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modern-pdf-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 36px;
+}
+
+.modern-pdf-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.modern-pdf-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modern-pdf-close {
+    background: rgba(220, 53, 69, 0.8);
+    border-color: rgba(220, 53, 69, 0.8);
+}
+
+.modern-pdf-close:hover {
+    background: rgba(220, 53, 69, 1);
+}
+
+.modern-pdf-page-info,
+.modern-pdf-zoom-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+}
+
+.modern-pdf-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 4px;
+}
+
+.modern-pdf-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    position: relative;
+    overflow: auto;
+    padding: 20px;
+}
+
+.modern-pdf-canvas {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    background: white;
+}
+
+.modern-pdf-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 16px;
+}
+
+.modern-pdf-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e9ecef;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: modernPdfSpin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+.modern-pdf-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #dc3545;
+    font-size: 16px;
+}
+
+.modern-pdf-error i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+@keyframes modernPdfSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Pantalla completa */
+.modern-pdf-modal:fullscreen {
+    background: #000;
+}
+
+.modern-pdf-modal:fullscreen .modern-pdf-container {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border-radius: 0;
+}
+
+.modern-pdf-modal:fullscreen .modern-pdf-content {
+    background: #000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modern-pdf-container {
+        width: 95%;
+        height: 95%;
+    }
+    
+    .modern-pdf-header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .modern-pdf-title {
+        font-size: 16px;
+    }
+    
+    .modern-pdf-controls {
+        gap: 4px;
+    }
+    
+    .modern-pdf-btn {
+        padding: 6px 8px;
+        min-width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    .modern-pdf-page-info,
+    .modern-pdf-zoom-info {
+        padding: 6px 8px;
+        font-size: 12px;
+        min-width: 50px;
+    }
+    
+    .modern-pdf-content {
+        padding: 10px;
+    }
+}
+
+/* Animaciones de entrada */
+.modern-pdf-modal {
+    animation: modernPdfFadeIn 0.3s ease-out;
+}
+
+.modern-pdf-container {
+    animation: modernPdfSlideIn 0.3s ease-out;
+}
+
+@keyframes modernPdfFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modernPdfSlideIn {
+    from {
+        transform: scale(0.9) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+

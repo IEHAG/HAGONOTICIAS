@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAG Noticias - Panel Administrativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .stat-card .card-body {
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #007bff;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            background: rgba(0,123,255,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #0056b3;
+            background: rgba(0,123,255,0.1);
+        }
+        
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: rgba(40,167,69,0.1);
+        }
+        
+        .file-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .file-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-custom {
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+        }
+        
+        .header-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .progress-custom {
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(0,123,255,0.1);
+        }
+        
+        .progress-bar-custom {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            border-radius: 10px;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Verificación de autenticación -->
+    <script>
+        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0">
+                <div class="sidebar">
+                    <div class="p-3 text-center border-bottom border-secondary">
+                        <img src="../img/LOGOHAGONOTICIAS.png" alt="Logo" class="img-fluid mb-2" style="max-width: 80px;">
+                        <h6 class="text-white mb-0">Panel Admin</h6>
+                    </div>
+                    
+                    <nav class="nav flex-column p-3">
+                        <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a class="nav-link" href="#upload" data-section="upload">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Subir PDFs
+                        </a>
+                        <a class="nav-link" href="#manage" data-section="manage">
+                            <i class="fas fa-folder-open me-2"></i>Gestionar PDFs
+                        </a>
+                        <a class="nav-link" href="#settings" data-section="settings">
+                            <i class="fas fa-cog me-2"></i>Configuración
+                        </a>
+                        <hr class="border-secondary">
+                        <a class="nav-link" href="../index.html">
+                            <i class="fas fa-home me-2"></i>Ver Sitio
+                        </a>
+                        <a class="nav-link text-danger" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <!-- Header -->
+                    <div class="header-bar">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="mb-1 text-primary fw-bold">Panel Administrativo</h2>
+                                <p class="text-muted mb-0">Gestiona las ediciones de HAG Noticias</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="../index.html" class="btn btn-outline-primary btn-custom">
+                                    <i class="fas fa-home me-2"></i>Ir a Página Principal
+                                </a>
+                                <div class="text-end">
+                                    <small class="text-muted">Último acceso:</small><br>
+                                    <span id="lastLogin" class="fw-bold"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dashboard Section -->
+                    <div id="dashboard-section" class="section">
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <div class="card stat-card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-file-pdf fa-2x mb-3"></i>
+                                        <div class="stat-number" id="totalPdfs">4</div>
+                                        <div>PDFs Totales</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                    <div class="card-body text-center text-white">
+                                        <i class="fas fa-eye fa-2x mb-3"></i>
+                                        <div class="stat-number">1,234</div>
+                                        <div>Visualizaciones</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                                    <div class="card-body text-center text-white">
+                                        <i class="fas fa-download fa-2x mb-3"></i>
+                                        <div class="stat-number">567</div>
+                                        <div>Descargas</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card" style="background: linear-gradient(135deg, #dc3545, #e83e8c);">
+                                    <div class="card-body text-center text-white">
+                                        <i class="fas fa-calendar fa-2x mb-3"></i>
+                                        <div class="stat-number">2025</div>
+                                        <div>Año Actual</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-4">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Actividad Reciente</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-success rounded-circle p-2 me-3">
+                                                <i class="fas fa-plus text-white"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Edición #4 subida</strong><br>
+                                                <small class="text-muted">Hace 2 horas</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-info rounded-circle p-2 me-3">
+                                                <i class="fas fa-eye text-white"></i>
+                                            </div>
+                                            <div>
+                                                <strong>50 nuevas visualizaciones</strong><br>
+                                                <small class="text-muted">Hace 4 horas</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-warning rounded-circle p-2 me-3">
+                                                <i class="fas fa-download text-white"></i>
+                                            </div>
+                                            <div>
+                                                <strong>25 nuevas descargas</strong><br>
+                                                <small class="text-muted">Hace 6 horas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Acciones Rápidas</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button class="btn btn-primary btn-custom w-100 mb-2" onclick="showSection('upload')">
+                                            <i class="fas fa-plus me-2"></i>Subir Nueva Edición
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-custom w-100 mb-2" onclick="showSection('manage')">
+                                            <i class="fas fa-edit me-2"></i>Gestionar PDFs
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-custom w-100" onclick="window.open('../index.html', '_blank')">
+                                            <i class="fas fa-external-link-alt me-2"></i>Ver Sitio Web
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Section -->
+                    <div id="upload-section" class="section" style="display: none;">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-cloud-upload-alt me-2"></i>Subir Nueva Edición</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="uploadForm">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="editionTitle" class="form-label">Título de la Edición</label>
+                                            <input type="text" class="form-control" id="editionTitle" placeholder="Ej: Edición #5" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editionYear" class="form-label">Año</label>
+                                            <input type="number" class="form-control" id="editionYear" value="2025" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="editionTopics" class="form-label">Temas Principales</label>
+                                        <textarea class="form-control" id="editionTopics" rows="3" placeholder="Describe los temas principales de esta edición..." required></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="thumbnailUrl" class="form-label">URL de la Miniatura (Google Drive)</label>
+                                        <input type="url" class="form-control" id="thumbnailUrl" placeholder="https://drive.google.com/thumbnail?id=...">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Archivo PDF</label>
+                                        <div class="upload-area" id="uploadArea">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                            <h5>Arrastra tu archivo PDF aquí</h5>
+                                            <p class="text-muted">o haz clic para seleccionar</p>
+                                            <input type="file" id="pdfFile" accept=".pdf" style="display: none;" required>
+                                        </div>
+                                        <div id="uploadProgress" class="mt-3" style="display: none;">
+                                            <div class="progress progress-custom">
+                                                <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                            <small class="text-muted mt-1 d-block">Subiendo archivo...</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-success btn-custom">
+                                            <i class="fas fa-save me-2"></i>Guardar Edición
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-custom" onclick="cancelEdit()">
+                                            <i class="fas fa-times me-2"></i>Cancelar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Manage Section -->
+                    <div id="manage-section" class="section" style="display: none;">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0"><i class="fa fa-folder-open me-2"></i>Gestionar PDFs Existentes</h5>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-dark btn-sm" id="refreshStats" title="Actualizar estadísticas">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
+                                        <button class="btn btn-outline-dark btn-sm" id="exportData" title="Exportar datos">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <button class="btn btn-outline-dark btn-sm" id="backupData" title="Crear backup">
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Filtros y búsqueda -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                            <input type="text" id="searchFiles" class="form-control" placeholder="Buscar por título o temas...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select id="yearFilter" class="form-select">
+                                            <option value="">Todos los años</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary w-100" onclick="enhancedDashboard.showSection('upload')">
+                                            <i class="fa fa-plus me-2"></i>Nueva Edición
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Lista de archivos -->
+                                <div id="filesList">
+                                    <!-- Los archivos se cargarán dinámicamente aquí -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Section -->
+                    <div id="settings-section" class="section" style="display: none;">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0"><i class="fa fa-cog me-2"></i>Configuración del Sistema</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="settingsForm">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary mb-3">
+                                                <i class="fa fa-globe me-2"></i>Configuración General
+                                            </h6>
+                                            <div class="mb-3">
+                                                <label for="siteName" class="form-label">Título del Sitio</label>
+                                                <input type="text" class="form-control" id="siteName" value="HAG Noticias">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="siteDescription" class="form-label">Descripción</label>
+                                                <textarea class="form-control" id="siteDescription" rows="3">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="maxFileSize" class="form-label">Tamaño máximo de archivo (MB)</label>
+                                                <input type="number" class="form-control" id="maxFileSize" value="10" min="1" max="50">
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="autoBackup">
+                                                    <label class="form-check-label" for="autoBackup">
+                                                        Backup automático diario
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-warning mb-3">
+                                                <i class="fa fa-shield me-2"></i>Configuración de Seguridad
+                                            </h6>
+                                            <div class="mb-3">
+                                                <label class="form-label">Cambiar Contraseña</label>
+                                                <input type="password" class="form-control" id="newPassword" placeholder="Nueva contraseña">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Confirmar Contraseña</label>
+                                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmar contraseña">
+                                            </div>
+                                            
+                                            <h6 class="text-info mb-3 mt-4">
+                                                <i class="fa fa-database me-2"></i>Gestión de Datos
+                                            </h6>
+                                            <div class="d-grid gap-2">
+                                                <button type="button" class="btn btn-outline-info btn-sm" id="exportData">
+                                                    <i class="fa fa-download me-2"></i>Exportar Datos
+                                                </button>
+                                                <button type="button" class="btn btn-outline-warning btn-sm" id="backupData">
+                                                    <i class="fa fa-save me-2"></i>Crear Backup Completo
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirm('¿Estás seguro? Esta acción eliminará todos los datos.') && alert('Función de limpieza no implementada por seguridad.')">
+                                                    <i class="fa fa-trash me-2"></i>Limpiar Datos
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">
+                                                <i class="fa fa-info-circle me-1"></i>
+                                                Los cambios se guardan automáticamente
+                                            </small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-custom">
+                                            <i class="fa fa-save me-2"></i>Guardar Configuración
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Acción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmMessage">¿Estás seguro de que deseas realizar esta acción?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmAction">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+        // Asegurar que el formulario tenga el event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('uploadForm');
+            if (form && typeof handleUpload === 'function') {
+                form.addEventListener('submit', handleUpload);
+            }
+        });
+    </script>
+</body>
+</html>

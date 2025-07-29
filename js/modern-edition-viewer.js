@@ -125,7 +125,7 @@ class ModernEditionViewer {
                 description: "Temas: Día de Maestro - Periodico Institucional",
                 category: "#5",
                 year: "Año 2025",
-                thumbnail: "img/default-thumbnail.png",
+                thumbnail: "img/logo-hag-noticias.png",
                 pdfUrl: "#",
                 tags: ["Día Maestro", "semana", "periodico"],
                 featured: false,

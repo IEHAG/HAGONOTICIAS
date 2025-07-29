@@ -122,12 +122,12 @@ class ModernEditionViewer {
             {
                 id: 5,
                 title: "Edición #5",
-                description: "Temas: Semana Democrática - Periodico Institucional",
+                description: "Temas: Día de Maestro - Periodico Institucional",
                 category: "#5",
                 year: "Año 2025",
                 thumbnail: "img/default-thumbnail.png",
                 pdfUrl: "#",
-                tags: ["democracia", "semana", "periodico"],
+                tags: ["Día Maestro", "semana", "periodico"],
                 featured: false,
                 comingSoon: true
             }

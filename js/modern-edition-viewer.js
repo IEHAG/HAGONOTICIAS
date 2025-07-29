@@ -157,7 +157,7 @@ class ModernEditionViewer {
         modernInterface.innerHTML = `
             <div class="modern-viewer-container">
                 <div class="modern-viewer-header">
-                    <h2 class="modern-viewer-title">Ediciones HAG Noticias</h2>
+                    <h2 class="modern-viewer-title">Ediciones HAGO Noticias</h2>
                     <p class="modern-viewer-subtitle">
                         Descubre nuestras publicaciones institucionales con contenido de calidad
                     </p>

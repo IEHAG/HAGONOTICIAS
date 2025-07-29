@@ -106,11 +106,22 @@
   --gradient-overlay: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
 }
 
-/* Theme Toggle Button */
+/* 
+  Botón de cambio de tema 
+  - Posición fija en la pantalla
+  - Ahora colocado en la parte superior IZQUIERDA (cambiamos right por left)
+  - Capa z-index alta para que esté por encima de otros elementos
+  - Fondo y borde usando variables CSS para adaptarse al tema
+  - Forma circular perfecta (border-radius 50%)
+  - Tamaño compacto
+  - Centrado de icono interno con flexbox
+  - Efectos visuales: sombra, transición y desenfoque de fondo
+  - Color del icono según tema
+*/
 .theme-toggle {
   position: fixed;
   top: 1rem;
-  right: 1rem;
+  left: 1rem; /* Cambiado de right a left para alinear a la izquierda */
   z-index: var(--z-fixed);
   background: var(--bg-primary);
   border: 2px solid var(--border-color);
@@ -118,11 +129,11 @@
   width: 38px;
   height: 38px;
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-theme);
   box-shadow: 0 4px 12px var(--shadow-color);
+  transition: all var(--transition-theme);
   backdrop-filter: blur(10px);
   color: var(--text-primary);
   font-size: 1.2rem;

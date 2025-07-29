@@ -1,4 +1,4 @@
-// Configuración de Supabase para HAG Noticias
+// Configuración de Supabase para HAGO Noticias
 // Este archivo contiene la configuración y funciones para interactuar con Supabase
 
 // IMPORTANTE: Estas credenciales deben ser reemplazadas con las reales de tu proyecto Supabase

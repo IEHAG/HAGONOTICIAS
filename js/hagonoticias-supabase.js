@@ -1,4 +1,4 @@
-// HAG Noticias - Versión con Supabase
+// HAGO Noticias - Versión con Supabase
 // Este archivo reemplaza la funcionalidad estática con integración a Supabase
 
 // Variables globales
@@ -482,7 +482,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Función para inicializar la aplicación
 async function inicializarAplicacion() {
-    console.log('Inicializando aplicación HAG Noticias...');
+    console.log('Inicializando aplicación HAGO Noticias...');
     
     // Verificar configuración de Supabase
     if (!validarConfiguracion()) {

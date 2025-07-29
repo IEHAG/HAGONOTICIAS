@@ -43,7 +43,7 @@ class EnhancedPDFViewer {
                                 <i class="fa fa-file-pdf-o"></i>
                                 Visor de PDF Profesional
                             </h3>
-                            <div class="enhanced-pdf-subtitle">HAG Noticias - Ediciones</div>
+                            <div class="enhanced-pdf-subtitle">HAGO Noticias - Ediciones</div>
                         </div>
                         
                         <div class="enhanced-pdf-toolbar">

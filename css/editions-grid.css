@@ -1,9 +1,20 @@
-/* Estilos para el Grid de Ediciones */
-
+/* 
+  Estilos para el contenedor principal del grid de ediciones 
+  - Añade un margen superior para separarlo de elementos anteriores
+*/
 .editions-grid {
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
+/* 
+  Estilos base para cada tarjeta de edición 
+  - Fondo con gradiente semitransparente para efecto de vidrio esmerilado
+  - Bordes redondeados y ocultamiento de contenido que sobresalga
+  - Transición suave para efectos hover
+  - Borde sutil semitransparente
+  - Efecto de desenfoque para el fondo (glass morphism)
+  - Altura completa del contenedor y disposición flexible en columna
+*/
 .edition-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
     border-radius: 20px;
@@ -16,12 +27,25 @@
     flex-direction: column;
 }
 
+/* 
+  Efectos al pasar el mouse sobre la tarjeta 
+  - Elevación con transformación
+  - Sombra azulada para destacar
+  - Cambio de color del borde
+*/
 .edition-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0, 123, 255, 0.3);
     border-color: rgba(0, 123, 255, 0.5);
 }
 
+/* 
+  Contenedor de la imagen de la edición 
+  - Posición relativa para elementos absolutos internos
+  - Altura fija y ocultamiento de exceso
+  - Gradiente de fondo por si no hay imagen
+  - Centrado de contenido con flexbox
+*/
 .edition-image {
     position: relative;
     height: 200px;
@@ -32,13 +56,26 @@
     justify-content: center;
 }
 
+/* 
+  Estilos para la imagen dentro del contenedor 
+  - Ocupa todo el espacio disponible
+  - Ajuste de tamaño para cubrir el área manteniendo proporciones
+  - Transición para efectos hover
+*/
 .edition-image img {
-    width: 100%;
-    height: 100%;
+    width: 10%;
+    height: 10%;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
 
+/* 
+  Overlay semitransparente para la imagen 
+  - Cubre toda la imagen
+  - Fondo oscuro semitransparente
+  - Centrado de contenido
+  - Inicialmente invisible (opacidad 0)
+*/
 .edition-overlay {
     position: absolute;
     top: 0;
@@ -53,21 +90,40 @@
     transition: opacity 0.3s ease;
 }
 
+/* 
+  Muestra el overlay al pasar el mouse 
+*/
 .edition-card:hover .edition-overlay {
     opacity: 1;
 }
 
+/* 
+  Efecto de zoom en la imagen al hacer hover 
+*/
 .edition-card:hover .edition-image img {
     transform: scale(1.1);
 }
 
+/* 
+  Contenedor del contenido de la tarjeta 
+  - Espaciado interno
+  - Crecimiento flexible para ocupar espacio sobrante
+  - Disposición en columna
+*/
 .edition-content {
     padding: 1.5rem;
-    flex-grow: 1;
+    flex-grow: 5;
     display: flex;
     flex-direction: column;
 }
 
+/* 
+  Estilos para el título de la edición 
+  - Color blanco
+  - Texto en negrita
+  - Margen inferior
+  - Tamaño de fuente grande
+*/
 .edition-title {
     color: white;
     font-weight: 700;
@@ -75,6 +131,13 @@
     font-size: 1.5rem;
 }
 
+/* 
+  Estilos para la descripción 
+  - Color blanco semitransparente
+  - Margen inferior
+  - Crecimiento flexible para alinear botones abajo
+  - Altura de línea cómoda para lectura
+*/
 .edition-description {
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1.5rem;
@@ -82,12 +145,26 @@
     line-height: 1.6;
 }
 
+/* 
+  Contenedor de botones de acción 
+  - Disposición en fila con espacio entre botones
+  - Ajuste para pantallas pequeñas (se convierte en columna)
+*/
 .edition-actions {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
 }
 
+/* 
+  Estilos base para los botones 
+  - Crecimiento flexible con ancho mínimo
+  - Bordes redondeados
+  - Espaciado interno
+  - Texto en negrita
+  - Transición para efectos hover
+  - Borde transparente por defecto
+*/
 .edition-actions .btn {
     flex: 1;
     min-width: 120px;
@@ -98,23 +175,47 @@
     border: 2px solid transparent;
 }
 
+/* 
+  Estilos para el botón primario 
+  - Gradiente azul
+  - Borde azul
+*/
 .edition-actions .btn-primary {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     border-color: #007bff;
 }
 
+/* 
+  Efectos hover para el botón primario 
+  - Gradiente azul más oscuro
+  - Elevación ligera
+  - Sombra azulada
+*/
 .edition-actions .btn-primary:hover {
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
 }
 
+/* 
+  Estilos para el botón con borde claro 
+  - Borde semitransparente
+  - Texto blanco
+  - Fondo transparente
+*/
 .edition-actions .btn-outline-light {
     border-color: rgba(255, 255, 255, 0.5);
     color: white;
     background: transparent;
 }
 
+/* 
+  Efectos hover para el botón con borde claro 
+  - Fondo semitransparente
+  - Borde blanco sólido
+  - Elevación ligera
+  - Sombra blanca
+*/
 .edition-actions .btn-outline-light:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: white;
@@ -123,70 +224,79 @@
     box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
 }
 
-/* Responsive Design */
+/* 
+  Media Queries para diseño responsivo 
+*/
+
+/* Pantallas medianas (tablets) */
 @media (max-width: 991.98px) {
     .editions-grid .row {
-        margin: 0 -0.5rem;
+        margin: 0 -0.5rem; /* Reduce márgenes laterales */
     }
     
     .editions-grid .col-lg-6 {
-        padding: 0 0.5rem;
-        margin-bottom: 1rem;
+        padding: 0 0.5rem; /* Añade padding interno */
+        margin-bottom: 1rem; /* Espacio entre filas */
     }
 }
 
+/* Pantallas pequeñas (móviles grandes) */
 @media (max-width: 767.98px) {
     .edition-card {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.5rem; /* Más espacio entre tarjetas */
     }
     
     .edition-image {
-        height: 180px;
+        height: 180px; /* Reduce altura de imagen */
     }
     
     .edition-content {
-        padding: 1.25rem;
+        padding: 1.25rem; /* Reduce padding interno */
     }
     
     .edition-title {
-        font-size: 1.3rem;
+        font-size: 1.3rem; /* Reduce tamaño de fuente */
     }
     
     .edition-actions {
-        flex-direction: column;
+        flex-direction: column; /* Botones en columna */
     }
     
     .edition-actions .btn {
-        min-width: auto;
-        flex: none;
+        min-width: auto; /* Ancho automático */
+        flex: none; /* Sin crecimiento flexible */
     }
 }
 
+/* Pantallas muy pequeñas (móviles) */
 @media (max-width: 575.98px) {
     .edition-image {
-        height: 160px;
+        height: 160px; /* Reduce más la imagen */
     }
     
     .edition-content {
-        padding: 1rem;
+        padding: 1rem; /* Reduce más el padding */
     }
     
     .edition-title {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* Fuente más pequeña */
     }
     
     .edition-description {
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+        font-size: 0.9rem; /* Texto más pequeño */
+        margin-bottom: 1rem; /* Menos margen */
     }
     
     .edition-actions .btn {
-        padding: 0.6rem 0.8rem;
-        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem; /* Padding más compacto */
+        font-size: 0.9rem; /* Texto más pequeño */
     }
 }
 
-/* Animaciones */
+/* 
+  Animaciones para las tarjetas 
+  - Efecto de aparición desplazándose desde abajo
+*/
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -198,16 +308,30 @@
     }
 }
 
+/* 
+  Aplica la animación a las tarjetas 
+  - Duración y curva de easing
+  - Mantiene el estado final (forwards)
+*/
 .edition-card {
     animation: fadeInUp 0.6s ease forwards;
 }
 
+/* 
+  Retrasos escalonados para cada tarjeta 
+  - Cada tarjeta aparece con un pequeño retraso respecto a la anterior
+*/
 .edition-card:nth-child(1) { animation-delay: 0.1s; }
 .edition-card:nth-child(2) { animation-delay: 0.2s; }
 .edition-card:nth-child(3) { animation-delay: 0.3s; }
 .edition-card:nth-child(4) { animation-delay: 0.4s; }
 
-/* Estados de carga */
+/* 
+  Estilos para estado de carga 
+  - Reduce opacidad
+  - Deshabilita interacciones
+  - Añade overlay oscuro
+*/
 .edition-card.loading {
     opacity: 0.7;
     pointer-events: none;
@@ -226,7 +350,10 @@
     justify-content: center;
 }
 
-/* Accesibilidad */
+/* 
+  Accesibilidad: Reduce movimiento para usuarios que lo prefieren 
+  - Elimina transiciones y animaciones
+*/
 @media (prefers-reduced-motion: reduce) {
     .edition-card,
     .edition-image img,
@@ -237,7 +364,12 @@
     }
 }
 
-/* Modo de alto contraste */
+/* 
+  Modo de alto contraste 
+  - Bordes más marcados
+  - Fondos más oscuros
+  - Texto más contrastante
+*/
 @media (prefers-contrast: high) {
     .edition-card {
         border: 2px solid white;
@@ -256,4 +388,3 @@
         border-width: 2px;
     }
 }
-

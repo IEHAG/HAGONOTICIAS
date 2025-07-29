@@ -1,4 +1,4 @@
-// Dashboard HAG Noticias - Integración con Supabase
+// Dashboard HAGO Noticias - Integración con Supabase
 // Este archivo maneja toda la lógica del dashboard administrativo
 
 // Variables globales

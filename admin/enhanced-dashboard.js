@@ -1,4 +1,4 @@
-// Dashboard Mejorado - HAG Noticias
+// Dashboard Mejorado - HAGO Noticias
 class EnhancedDashboard {
     constructor() {
         this.pdfData = [
@@ -682,7 +682,7 @@ class EnhancedDashboard {
         
         // Cargar configuraciones en el formulario
         const siteName = document.getElementById('siteName');
-        if (siteName) siteName.value = settings.siteName || 'HAG Noticias';
+        if (siteName) siteName.value = settings.siteName || 'HAGO Noticias';
         
         const siteDescription = document.getElementById('siteDescription');
         if (siteDescription) siteDescription.value = settings.siteDescription || 'Portal de Noticias Institucional';

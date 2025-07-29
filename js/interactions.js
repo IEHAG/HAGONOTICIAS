@@ -286,7 +286,7 @@ class LoadingEffects {
                     <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" style="height: 80px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));">
                 </div>
                 <div class="loading-spinner mb-3"></div>
-                <h3 class="mt-3 text-primary fw-bold">Cargando HAG Noticias...</h3>
+                <h3 class="mt-3 text-primary fw-bold">Cargando HAGO Noticias...</h3>
                 <p class="text-dark fw-semibold">Preparando el mejor contenido periodístico para ti</p>
                 <div class="progress mt-3" style="height: 6px; border-radius: 10px;">
                     <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" 

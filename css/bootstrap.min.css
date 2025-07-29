@@ -4594,7 +4594,7 @@ input[type=button].btn-block,input[type=reset].btn-block,input[type=submit].btn-
 
   .card-columns .card {
     display: inline-block;
-    width: 100%;
+    width: 0%;
   }
 }
 

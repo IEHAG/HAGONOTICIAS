@@ -1,0 +1,23 @@
+{
+  "name": "hagonoticias2",
+  "version": "1.0.0",
+  "description": "PERIODICO INSTITUCIONAL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IEHAG/HAGONOTICIAS2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IEHAG/HAGONOTICIAS2/issues"
+  },
+  "homepage": "https://github.com/IEHAG/HAGONOTICIAS2#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.11"
+  }
+}

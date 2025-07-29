@@ -1,0 +1,429 @@
+/* Modern Navbar with Left Toggler and Theme Toggle */
+
+.modern-navbar {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+.modern-navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+/* Modern Navbar Toggler (Left Side) */
+.modern-navbar-toggler {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1001;
+    order: 1;
+}
+
+.modern-navbar-toggler:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.modern-navbar-toggler:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+/* Custom Hamburger Lines */
+.modern-toggler-line {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    margin: 3px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+/* Animated Hamburger to X */
+.modern-navbar-toggler[aria-expanded="true"] .modern-toggler-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.modern-navbar-toggler[aria-expanded="true"] .modern-toggler-line:nth-child(2) {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.modern-navbar-toggler[aria-expanded="true"] .modern-toggler-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Brand (Center) */
+.modern-navbar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    order: 2;
+}
+
+.modern-navbar-brand:hover {
+    color: #007bff !important;
+    transform: scale(1.05);
+}
+
+.brand-logo {
+    transition: all 0.9s ease;
+    filter: drop-shadow(0 15px 4px rgba(0, 0, 0, 0.3));
+}
+
+.modern-navbar-brand:hover .brand-logo {
+    filter: drop-shadow(0 4px 8px rgba(0, 123, 255, 0.4));
+}
+
+.brand-text {
+    font-family: 'Arial', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #007bff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Theme Toggle (Right Side) */
+.navbar-theme-toggle {
+    order: 3;
+    z-index: 1001;
+}
+
+.theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.theme-toggle-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.theme-icon-light,
+.theme-icon-dark {
+    position: absolute;
+    font-size: 1.1rem;
+    transition: all 0.4s ease;
+    color: white;
+}
+
+.theme-icon-light {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-icon-dark {
+    opacity: 0;
+    transform: rotate(180deg) scale(0.5);
+}
+
+/* Dark theme active state */
+[data-theme="dark"] .theme-icon-light {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.5);
+}
+
+[data-theme="dark"] .theme-icon-dark {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Navbar Collapse Menu */
+.navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 0 0 20px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-collapse.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.navbar-nav {
+    padding: 1rem 0;
+    margin: 0 !important;
+}
+
+.nav-item {
+    margin: 0.25rem 1rem;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    color: white !important;
+    background: rgba(0, 123, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.nav-link:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+/* Mobile Responsive */
+@media (max-width: 991.98px) {
+    .modern-navbar-toggler {
+        display: flex;
+    }
+    
+    .brand-text {
+        display: none;
+    }
+    
+    .modern-navbar-brand {
+        position: static;
+        transform: none;
+    }
+    
+    .navbar-collapse {
+        margin-top: 0.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .modern-navbar-toggler {
+        display: none;
+    }
+    
+    .navbar-collapse {
+        position: static;
+        background: none;
+        backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .navbar-nav {
+        flex-direction: row;
+        padding: 0;
+        margin-left: auto !important;
+    }
+    
+    .nav-item {
+        margin: 0 0.25rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 1rem !important;
+        margin: 0;
+    }
+    
+    .nav-link:hover {
+        transform: translateY(-2px);
+    }
+    
+    .modern-navbar-brand {
+        position: static;
+        transform: none;
+    }
+    
+    .modern-navbar .container {
+        justify-content: space-between;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .brand-text {
+        display: inline;
+        font-size: 1rem;
+    }
+    
+    .modern-navbar-brand {
+        font-size: 1.1rem;
+    }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+    .modern-navbar {
+        padding: 0.25rem 0;
+    }
+    
+    .modern-navbar-toggler,
+    .theme-toggle-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modern-toggler-line {
+        width: 20px;
+        height: 2px;
+        margin: 2px 0;
+    }
+    
+    .theme-icon-light,
+    .theme-icon-dark {
+        font-size: 1rem;
+    }
+    
+    .brand-logo {
+        height: 35px;
+    }
+    
+    .nav-link {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.95rem;
+    }
+}
+
+/* Admin button repositioning to avoid conflicts */
+.admin-btn {
+    top: 10px !important;
+  
+    z-index: 999 !important;
+}
+
+@media (max-width: 768px) {
+    .admin-btn {
+        top: 0.75rem !important;
+        right: 60px !important;
+        padding: 0.1rem 0.6rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Smooth scrolling when navbar links are clicked */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+/* Navbar scroll effect */
+.modern-navbar.scrolled {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Accessibility improvements */
+.modern-navbar-toggler:focus-visible,
+.theme-toggle-btn:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .modern-navbar {
+        border-bottom: 2px solid white;
+    }
+    
+    .modern-navbar-toggler,
+    .theme-toggle-btn {
+        border: 2px solid white;
+    }
+    
+    .nav-link {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .modern-navbar,
+    .modern-navbar-toggler,
+    .theme-toggle-btn,
+    .nav-link,
+    .navbar-collapse,
+    .modern-toggler-line,
+    .theme-icon-light,
+    .theme-icon-dark {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .modern-navbar {
+        display: none !important;
+    }
+}
+

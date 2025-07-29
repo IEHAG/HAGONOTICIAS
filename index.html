@@ -3,8 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez">
+    <meta name="keywords" content="HAG Noticias, Institución Educativa, Héctor Abad Gómez, noticias, educación">
     <title>HAG Noticias - Portal de Noticias Institucional</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/mobile-responsive.css" as="style">
+    <link rel="preload" href="css/theme-system.css" as="style">
+    <link rel="preload" href="js/theme-system.js" as="script">
+    
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,7 +32,17 @@
     <link rel="stylesheet" href="css/pdf-viewer.css">
     <link rel="stylesheet" href="css/enhanced-pdf-viewer.css">
     <link rel="stylesheet" href="css/responsive-fixes.css">
-
+    
+    <!-- New Mobile-Optimized CSS -->
+    <link rel="stylesheet" href="css/mobile-responsive.css">
+    <link rel="stylesheet" href="css/theme-system.css">
+    <link rel="stylesheet" href="css/mobile-pdf-viewer.css">
+    <link rel="stylesheet" href="css/mobile-filters-cards.css">
+    
+    <!-- Modern Enhanced CSS -->
+    <link rel="stylesheet" href="css/modern-edition-viewer.css">
+    <link rel="stylesheet" href="css/modern-navbar.css">
+    <link rel="stylesheet" href="css/editions-grid.css">
 
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -32,12 +51,11 @@
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 
     <style>
-        /* Estilos adicionales para mejorar la apariencia */
+        /* Critical CSS for above-the-fold content */
         .admin-btn {
-            position: fixed;
             top: 10px;
-            left: 690px;
-            /* Cambiado de right a left */
+            left: 90px;
+            
             z-index: 1000;
             background: linear-gradient(45deg, #007bff, #0056b3);
             border: none;
@@ -55,130 +73,108 @@
             color: white;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
+        /* Mobile admin button positioning */
+        @media (max-width: 768px) {
+            .admin-btn {
+                top: 0.75rem;
+                left: auto;
+                right: 4rem;
+                padding: 0.1rem 0.71rem;
+                font-size: 0.875rem;
+            }
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .floating-elements {
-            position: absolute;
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
-        .floating-elements::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s linear infinite;
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-            }
-        }
-
-        .logo-container {
+        .loading-content {
             text-align: center;
-            margin-bottom: 2rem;
+            color: var(--text-primary);
         }
 
-        .logo-container img {
-            max-width: 200px;
-            height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-            animation: pulse 5s ease-in-out infinite alternate;
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            100% {
-                transform: scale(1.05);
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .btn-primary-custom {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            border: none;
-            border-radius: 50px;
-            padding: 15px 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        /* Ensure smooth scrolling */
+        html {
+            scroll-behavior: smooth;
         }
 
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.4);
-            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
-        }
-
-        .section-title {
-            position: relative;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border-radius: 2px;
+        /* Optimize font loading */
+        body {
+            font-display: swap;
         }
     </style>
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Cargando HAG Noticias...</h3>
+            <p>Preparando la mejor experiencia móvil</p>
+        </div>
+    </div>
+
     <!-- Botón de Administrador -->
     <button class="admin-btn" onclick="window.location.href='admin/login-supabase.html'">
-        <i class="fas fa-user-shield"></i> Admin
+        <i class="fas fa-user-shield"></i> 
     </button>
 
     <!-- Header -->
     <header id="main-header">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top modern-navbar">
             <div class="container">
-                <a class="navbar-brand" href="#home">
-                    <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" height="40">
+                <!-- Mobile Menu Toggle (Left Side) -->
+                <button class="navbar-toggler modern-navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="modern-toggler-line"></span>
+                    <span class="modern-toggler-line"></span>
+                    <span class="modern-toggler-line"></span>
+                </button>
+
+                <!-- Brand (Center) -->
+                <a class="navbar-brand modern-navbar-brand" href="#home">
+                    <img src="img/LOGOHAGONOTICIAS.png" alt="HAG Noticias" height="40" class="brand-logo">
+                    <span class="brand-text">HAG Noticias</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <!-- Theme Toggle (Right Side) -->
+
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Inicio</a>
+                            <a class="nav-link" href="index-mobile.html">Inicio</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#ediciones">Ediciones</a>
@@ -188,7 +184,8 @@
                                 Anteriores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://www.iehectorabadgomez.edu.co" target="_blank">Regresar</a>
+                            <a class="nav-link" href="https://www.iehectorabadgomez.edu.co"
+                                target="_blank">Regresar</a>
                         </li>
                     </ul>
                 </div>
@@ -239,7 +236,7 @@
                 <div class="col-lg-6">
                     <div class="text-center reveal animate-fadeInRight delay-400">
                         <div class="hero-video-container">
-                            <video autoplay muted loop class="hero-video">
+                            <video autoplay muted loop class="hero-video" playsinline>
                                 <source src="video/LogoRevealExplosinpic.mp4" type="video/mp4">
                             </video>
                         </div>
@@ -263,79 +260,108 @@
                 <span class="text-primary">Ediciones</span>
             </h2>
 
-            <!-- Filtros -->
-            <div class="row mb-4 reveal animate-fadeInUp delay-200">
-                <div class="col-md-6">
-                    <div class="input-group glass">
-                        <span class="input-group-text bg-primary text-white border-primary">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" id="searchInput" class="form-control bg-dark text-white border-primary"
-                            placeholder="buscar la edición..." style="border-left: none;">
+            <!-- Grid de 2 columnas para ediciones -->
+            <div class="editions-grid">
+                <div class="row g-4">
+                    <!-- Edición 1 -->
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="edition-card">
+                            <div class="edition-image">
+                                <img src="img/default-thumbnail.png" alt="Edición 1" class="img-fluid">
+                                <div class="edition-overlay">
+                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
+                                </div>
+                            </div>
+                            <div class="edition-content">
+                                <h4 class="edition-title">Edición 1</h4>
+                                <p class="edition-description">Primera edición del periódico institucional HAG Noticias</p>
+                                <div class="edition-actions">
+                                    <a href="pdf/EDICION1.pdf" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-eye me-2"></i>Ver PDF
+                                    </a>
+                                    <a href="pdf/EDICION1.pdf" download class="btn btn-outline-light">
+                                        <i class="fas fa-download me-2"></i>Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edición 2 -->
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="edition-card">
+                            <div class="edition-image">
+                                <img src="img/default-thumbnail.png" alt="Edición 2" class="img-fluid">
+                                <div class="edition-overlay">
+                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
+                                </div>
+                            </div>
+                            <div class="edition-content">
+                                <h4 class="edition-title">Edición 2</h4>
+                                <p class="edition-description">Segunda edición del periódico institucional HAG Noticias</p>
+                                <div class="edition-actions">
+                                    <a href="pdf/EDICION2.pdf" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-eye me-2"></i>Ver PDF
+                                    </a>
+                                    <a href="pdf/EDICION2.pdf" download class="btn btn-outline-light">
+                                        <i class="fas fa-download me-2"></i>Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edición 3 -->
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="edition-card">
+                            <div class="edition-image">
+                                <img src="img/default-thumbnail.png" alt="Edición 3" class="img-fluid">
+                                <div class="edition-overlay">
+                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
+                                </div>
+                            </div>
+                            <div class="edition-content">
+                                <h4 class="edition-title">Edición 3</h4>
+                                <p class="edition-description">Tercera edición del periódico institucional HAG Noticias</p>
+                                <div class="edition-actions">
+                                    <a href="pdf/EDICION3.pdf" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-eye me-2"></i>Ver PDF
+                                    </a>
+                                    <a href="pdf/EDICION3.pdf" download class="btn btn-outline-light">
+                                        <i class="fas fa-download me-2"></i>Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edición 4 -->
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="edition-card">
+                            <div class="edition-image">
+                                <img src="img/default-thumbnail.png" alt="Edición 4" class="img-fluid">
+                                <div class="edition-overlay">
+                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
+                                </div>
+                            </div>
+                            <div class="edition-content">
+                                <h4 class="edition-title">Edición 4</h4>
+                                <p class="edition-description">Cuarta edición del periódico institucional HAG Noticias</p>
+                                <div class="edition-actions">
+                                    <a href="pdf/EDICION4.pdf" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-eye me-2"></i>Ver PDF
+                                    </a>
+                                    <a href="pdf/EDICION4.pdf" download class="btn btn-outline-light">
+                                        <i class="fas fa-download me-2"></i>Descargar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <select id="categoryFilter" class="form-select bg-dark text-white border-primary">
-                        <option value="">Todas las ediciones</option>
-                        <option value="#1">Edición 1</option>
-                        <option value="#2">Edición 2</option>
-                        <option value="#3">Edición 3</option>
-                        <option value="#4">Edición 4</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Google Translate -->
-            <div class="text-center mb-4 reveal animate-fadeInUp delay-300">
-                <div id="google_translate_element" class="glass p-3 rounded bg-dark border border-primary"></div>
-                <p class="text-muted mt-2">
-                    <small>Con la tecnología de <i class="fab fa-google"></i> Traductor de Google</small>
-                </p>
-            </div>
-
-            <!-- Lista de Ediciones -->
-            <div id="bookList" class="row g-4">
-                <!-- Las ediciones se cargarán dinámicamente aquí -->
             </div>
         </div>
     </section>
-
-    <!-- Modal del Visor PDF -->
-    <div id="pdfModal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <div class="d-flex align-items-center gap-3">
-                        <button id="prevPage" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <span id="pageInfo" class="fw-bold">Página <span id="pageNum">0</span> de <span
-                                id="pageCount">0</span></span>
-                        <button id="nextPage" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                        <div class="vr"></div>
-                        <button id="zoomOut" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-search-minus"></i>
-                        </button>
-                        <button id="zoomIn" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-search-plus"></i>
-                        </button>
-                        <button id="fullscreen" class="btn btn-outline-light btn-sm">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-0 bg-dark">
-                    <div id="pdfContainer" class="d-flex justify-content-center align-items-center"
-                        style="min-height: 80vh;">
-                        <canvas id="pdfViewer"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-5" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
@@ -350,45 +376,40 @@
                             <small class="text-muted">Portal Institucional</small>
                         </div>
                     </div>
-                    <p class="mb-2 text-light">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez
-                    </p>
+                    <p class="mb-2 text-light">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</p>
                     <div class="d-flex gap-2 mb-3">
-                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Términos de
-                            Uso</a>
-                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Privacy
-                            Policy</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Términos de Uso</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">Privacy Policy</a>
                         <a href="#" class="btn btn-outline-primary btn-sm" style="border-radius: 20px;">FAQ</a>
                     </div>
                     <small class="text-muted">&copy; 2024 Todos los derechos reservados @IE.HéctorAbadGómez</small>
                     <p class="mb-2 text-light">Desarrollo y Diseño Web -Docente Víctor Cañola</p>
                 </div>
-
+            
                 <!-- Síguenos -->
                 <div class="col-md-4 text-center mb-4 mb-md-0">
-                    <h6 class="text-warning mb-3"
-                        style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                    <h6 class="text-warning mb-3" style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
                         Síguenos:
                     </h6>
                     <div class="d-flex gap-3 justify-content-center">
-                        <a href="https://www.facebook.com/AbadistaHAG" target="_blank" class="text-white social-icon"
-                            style="transition: all 0.3s ease;">
+                        <a href="https://www.facebook.com/AbadistaHAG" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
                             <i class="fab fa-facebook fa-2x"></i>
                         </a>
-                        <a href="https://www.youtube.com/channel/UC1k1n-IAG9auH6aJr6Lm_kw" target="_blank"
-                            class="text-white social-icon" style="transition: all 0.3s ease;">
+                        <a href="https://www.youtube.com/channel/UC1k1n-IAG9auH6aJr6Lm_kw" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
                             <i class="fab fa-youtube fa-2x"></i>
                         </a>
-                        <a href="https://www.instagram.com/i.e.hectorabadgomez" target="_blank"
-                            class="text-white social-icon" style="transition: all 0.3s ease;">
+                        <a href="https://www.instagram.com/i.e.hectorabadgomez" target="_blank" 
+                           class="text-white social-icon" style="transition: all 0.3s ease;">
                             <i class="fab fa-instagram fa-2x"></i>
                         </a>
                     </div>
                 </div>
-
+                
                 <!-- Créditos -->
                 <div class="col-md-4">
-                    <h6 class="text-warning mb-3"
-                        style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                    <h6 class="text-warning mb-3" style="font-size: 1.5rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
                         Créditos
                     </h6>
                     <div class="mb-3">
@@ -398,14 +419,12 @@
                         <p class="mb-1 text-light"><strong>Docentes:</strong></p>
                         <ul class="list-unstyled text-light small">
                             <li>• PROYECTO PERÍODICO INSTITUCIONAL.</li>
-
                         </ul>
                         <p class="mb-1 text-light"><strong>Estudiantes</strong></p>
                         <p class="text-light small" style="font-style: italic;">Media Técnica</p>
                     </div>
                     <div>
-                        <h6 class="text-warning mb-2"
-                            style="font-size: 1.3rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
+                        <h6 class="text-warning mb-2" style="font-size: 1.3rem; text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);">
                             Rector
                         </h6>
                         <p class="text-light" style="font-style: italic;">Elkin Osorio V.</p>
@@ -414,139 +433,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Scripts -->
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/slick.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script>
-        // Configurar PDF.js
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        // Inicializar Google Translate
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement(
-                { pageLanguage: 'es' },
-                'google_translate_element'
-            );
-        }
-    </script>
-    <script src="js/supabase-config.js"></script>
-    <script src="js/pdf-viewer.js"></script>
-    <script src="js/hagonoticias-supabase.js"></script>
-    <script src="js/interactions.js"></script>
-    <script src="js/hero-background.js"></script>
-    <!-- Al final del body, antes de cerrar </body> -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
-<style>
-    /* Efectos hover para iconos sociales */
-    .social-icon:hover {
-        transform: translateY(-5px) scale(1.1);
-        color: #007bff !important;
-        text-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
-    }
-
-    .social-icon:hover .fa-facebook {
-        color: #1877f2 !important;
-    }
-
-    .social-icon:hover .fa-youtube {
-        color: #ff0000 !important;
-    }
-
-    .social-icon:hover .fa-instagram {
-        color: #e4405f !important;
-    }
-
-    /* Mejoras para el visor PDF */
-    .modal-header .btn {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .modal-header .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-    }
-
-    /* Efectos de carga mejorados */
-    .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid rgba(0, 123, 255, 0.1);
-        border-left: 4px solid #007bff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* Mejoras para el loader de página */
-    .loader-content {
-        text-align: center;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 3rem;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-    }
-
-    /* Efectos de partículas flotantes */
-    .floating-particles {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        overflow: hidden;
-    }
-
-    .particle {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        animation: float-particle 6s ease-in-out infinite;
-    }
-
-    @keyframes float-particle {
-
-        0%,
-        100% {
-            transform: translateY(0px) rotate(0deg);
-            opacity: 0;
-        }
-
-        50% {
-            opacity: 1;
-        }
-
-        100% {
-            transform: translateY(-100px) rotate(180deg);
-            opacity: 0;
-        }
-    }
-</style>
-
-
-</head>
-
-<body>
-    <!-- Contenido del body ya existe arriba -->
 
     <!-- Scripts -->
     <script src="js/jquery-3.4.1.min.js"></script>
@@ -562,25 +448,50 @@
     <script src="js/main.js"></script>
     <script src="js/interactions.js"></script>
     <script src="js/hero-background.js"></script>
-    <script src="js/enhanced-pdf-viewer.js"></script>
-    <script src="js/hagonoticias.js"></script>
 
-    <!-- Google Translate Function -->
+    <!-- New Mobile-Optimized Scripts -->
+    <script src="js/theme-system.js"></script>
+    <script src="js/mobile-pdf-viewer.js"></script>
+    <script src="js/mobile-filters-cards.js"></script>
+    
+    <!-- Modern Enhanced Scripts -->
+    <script src="js/modern-edition-viewer.js"></script>
+    <script src="js/modern-navbar.js"></script>
+
+    <!-- Configuration Scripts -->
     <script>
+        // Configurar PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Inicializar Google Translate
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'es',
-                includedLanguages: 'en,fr,pt,it,de,zh,ja,ko,ar,ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
+            new google.translate.TranslateElement(
+                { 
+                    pageLanguage: 'es',
+                    includedLanguages: 'en,fr,pt,it,de,zh,ja,ko,ar,ru',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                },
+                'google_translate_element'
+            );
         }
-    </script>
 
-    <!-- Inicialización de animaciones -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Inicializar animaciones de entrada
+        // Loading screen management
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen after everything is loaded
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const loadingScreen = document.getElementById('loadingScreen');
+                    if (loadingScreen) {
+                        loadingScreen.classList.add('hidden');
+                        setTimeout(function() {
+                            loadingScreen.remove();
+                        }, 500);
+                    }
+                }, 1000);
+            });
+
+            // Initialize animations
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -594,12 +505,12 @@
                 });
             }, observerOptions);
 
-            // Observar elementos con clase 'reveal'
+            // Observe elements with class 'reveal'
             document.querySelectorAll('.reveal').forEach(el => {
                 observer.observe(el);
             });
 
-            // Smooth scrolling para enlaces internos
+            // Smooth scrolling for internal links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -613,11 +524,11 @@
                 });
             });
 
-            // Efecto parallax simple
+            // Simple parallax effect
             window.addEventListener('scroll', () => {
                 const scrolled = window.pageYOffset;
                 const parallaxElements = document.querySelectorAll('.parallax-element');
-
+                
                 parallaxElements.forEach(element => {
                     const speed = element.dataset.speed || 0.5;
                     const yPos = -(scrolled * speed);
@@ -625,8 +536,26 @@
                 });
             });
 
-            // Crear partículas flotantes
+            // Create floating particles
             createFloatingParticles();
+
+            // Performance optimization: Lazy load images
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
         });
 
         function createFloatingParticles() {
@@ -648,25 +577,47 @@
             }
         }
 
-        // Actualizar el visor de PDF para usar el nuevo sistema
-        document.addEventListener('DOMContentLoaded', function () {
-            // Reemplazar los event listeners del visor PDF anterior
-            document.querySelectorAll('.view-pdf').forEach(button => {
-                button.addEventListener('click', function () {
-                    const pdfUrl = this.dataset.pdf;
-                    const title = this.closest('.card').querySelector('.card-title').textContent;
-
-                    // Usar el nuevo visor mejorado
-                    if (typeof enhancedPdfViewer !== 'undefined') {
-                        enhancedPdfViewer.open(pdfUrl, title);
-                    } else {
-                        // Fallback al visor anterior
-                        openPdfViewer(pdfUrl);
-                    }
-                });
+        // Service Worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Register service worker when available
+                // navigator.serviceWorker.register('/sw.js');
             });
-        });
+        }
+
+        // Error handling for images
+        document.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.target.src = 'img/default-thumbnail.png';
+            }
+        }, true);
+
+        // Optimize touch interactions
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        document.addEventListener('touchmove', function() {}, {passive: true});
     </script>
+
+    <!-- Social Media Effects -->
+    <style>
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            color: #007bff !important;
+            text-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+        
+        .social-icon:hover .fa-facebook {
+            color: #1877f2 !important;
+        }
+        
+        .social-icon:hover .fa-youtube {
+            color: #ff0000 !important;
+        }
+        
+        .social-icon:hover .fa-instagram {
+            color: #e4405f !important;
+        }
+    </style>
 </body>
 
 </html>
+

@@ -68,8 +68,8 @@ input, select {
 }
 
 .book-card:hover {
-    transform: translateY(-10px); /* Efecto de elevación al pasar el mouse */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); /* Sombra más intensa al pasar el mouse */
+    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); /* Sombra más intensa al pasar el mouse */
 }
 
 .book-thumbnail {
@@ -91,7 +91,7 @@ input, select {
     margin: 0 10px 10px; /* Márgenes ajustados */
     font-size: 0.6em;
     line-height: 1.2; /* Espaciado entre líneas */
-    column-count: 1; /* Una sola columna */
+    column-count: 2; /* Una sola columna */
     column-gap: 10px; /* Espacio entre columnas */
     text-align: center; /* Justificar el texto */
     display: -webkit-box;     

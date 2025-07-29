@@ -81,7 +81,7 @@ class ModernEditionViewer {
                 description: "Temas: Día de la democracia, Madres, Maestro, Talentos Abadistas",
                 category: "#1",
                 year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w300-h200",
+                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w500-h400",
                 pdfUrl: "pdf/EDICION1.pdf",
                 tags: ["democracia", "madres", "maestro", "talentos"],
                 featured: true
@@ -92,7 +92,7 @@ class ModernEditionViewer {
                 description: "Temas: Periodico Institucional - Día de la Antioqueñidad",
                 category: "#2",
                 year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w400-h300",
+                thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w500-h400",
                 pdfUrl: "pdf/EDICION2.pdf",
                 tags: ["antioqueñidad", "cultura", "tradición", "periodico"],
                 featured: false
@@ -103,7 +103,7 @@ class ModernEditionViewer {
                 description: "Temas: Semana Abadista - Periodico Institucional",
                 category: "#3",
                 year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w400-h300",
+                thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w500-h400",
                 pdfUrl: "pdf/EDICION3.pdf",
                 tags: ["semana abadista", "foro", "museo", "escolar"],
                 featured: false
@@ -114,7 +114,7 @@ class ModernEditionViewer {
                 description: "Temas: La institución de la Inclusión, Gobierno Escolar 2025",
                 category: "#4",
                 year: "Año 2025",
-                thumbnail: "https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w400-h300",
+                thumbnail: "https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w500-h400",
                 pdfUrl: "pdf/EDICION4.pdf",
                 tags: ["inclusión", "gobierno escolar", "2025"],
                 featured: true

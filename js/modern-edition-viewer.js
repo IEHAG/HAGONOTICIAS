@@ -81,7 +81,7 @@ class ModernEditionViewer {
                 description: "Temas: Día de la democracia, Madres, Maestro, Talentos Abadistas",
                 category: "#1",
                 year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w400-h300",
+                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w300-h200",
                 pdfUrl: "pdf/EDICION1.pdf",
                 tags: ["democracia", "madres", "maestro", "talentos"],
                 featured: true

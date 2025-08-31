@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAG NOTICIAS - Campus Media</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* HEADER ESTUDIANTIL */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* NAVIGATION */
+        .nav-container {
+            background: var(--surface);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tab {
+            padding: 0.75rem 2rem;
+            background: var(--surface);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .tab.active, .tab:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* VIDEOS SECTION */
+        .videos-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .videos-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .video-card {
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            overflow: hidden;
+        }
+
+        .video-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: all 0.3s;
+        }
+
+        .video-card:hover .video-thumbnail::before {
+            transform: translateX(100%);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-content {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .video-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .video-duration {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* PODCAST SECTION */
+        .podcast-player {
+            background: var(--surface);
+            border-radius: 25px;
+            padding: 3rem;
+            margin: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .player-cover {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .player-info h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .player-info p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: var(--surface);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .play-btn {
+            background: var(--primary);
+            color: white;
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        /* PODCAST GRID */
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .podcast-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .podcast-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .podcast-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .podcast-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .podcast-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .podcast-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .podcast-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .podcast-duration {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        /* ANIMATIONS */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+        }
+
+        .bounce {
+            animation: bounce 1s;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .logo { font-size: 2rem; }
+            .videos-grid { grid-template-columns: 1fr; }
+            .podcast-player { padding: 2rem 1rem; }
+            .player-cover { width: 150px; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">HAG NOTICIAS</div>
+        <div class="subtitle">Campus Media Center</div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="nav-container">
+        <div class="nav-tabs">
+            <button class="tab active" onclick="showSection('videos')">
+                <i class="fas fa-video"></i> 📺 Videos
+            </button>
+            <button class="tab" onclick="showSection('podcast')">
+                <i class="fas fa-podcast"></i> 🎧 Podcast
+            </button>
+        </div>
+    </nav>
+
+    <!-- VIDEOS SECTION -->
+    <div id="videos-section" class="section active">
+        <div class="videos-header">
+            <h1 class="videos-title">🎓 Contenido Estudiantil</h1>
+            <p style="color: var(--text-light); font-size: 1.2rem;">Videos creados por y para estudiantes</p>
+        </div>
+
+        <div class="videos-grid">
+            <!-- Video 1 -->
+            <div class="video-card" onclick="playContent('video', 'director')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">🎓 Día en la vida de nuestro Director</div>
+                    <div class="video-description">Sigue a nuestro director un día completo desde las 7:00 AM hasta las reuniones estudiantiles. ¡Vive la experiencia!</div>
+                    <div class="video-meta">
+                        <span>👥 2.3K vistas</span>
+                        <div class="video-duration">25:30</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="video-card" onclick="playContent('video', 'hackathon')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-laptop-code"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">💻 Hackathon 2024 - Completo</div>
+                    <div class="video-description">Equipo estudiantil crea app educativa en 48 horas. ¡Conoce el proceso detrás de la innovación!</div>
+                    <div class="video-meta">
+                        <span>🚀 5.1K vistas</span>
+                        <div class="video-duration">18:45</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="video-card" onclick="playContent('video', 'graduacion')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">🎓 Graduación 2024 - Momentos Inolvidables</div>
+                    <div class="video-description">Los mejores momentos de la graduación 2024, incluyendo discursos y lágrimas de alegría.</div>
+                    <div class="video-meta">
+                        <span>😭 8.7K vistas</span>
+                        <div class="video-duration">22:15</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 4 -->
+            <div class="video-card" onclick="playContent('video', 'proyecto')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-project-diagram"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">💡 Proyecto Innovador: Robótica Educativa</div>
+                    <div class="video-description">Estudiantes de ingeniería presentan su robot autónomo diseñado para asistir en tareas educativas.</div>
+                    <div class="video-meta">
+                        <span>🤖 3.9K vistas</span>
+                        <div class="video-duration">15:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 5 -->
+            <div class="video-card" onclick="playContent('video', 'deporte')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-volleyball-ball"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">🏅 Campeonato Intercolegial: Lo Mejor del Deporte</div>
+                    <div class="video-description">Revive los momentos más emocionantes del campeonato, con entrevistas a los atletas destacados.</div>
+                    <div class="video-meta">
+                        <span>🏆 6.2K vistas</span>
+                        <div class="video-duration">10:30</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 6 -->
+            <div class="video-card" onclick="playContent('video', 'arte')">
+                <div class="video-thumbnail">
+                    <i class="fas fa-paint-brush"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">🎨 Exposición de Arte Anual: Talentos Ocultos</div>
+                    <div class="video-description">Un recorrido por las obras más impresionantes de nuestros estudiantes, desde pintura hasta escultura.</div>
+                    <div class="video-meta">
+                        <span>🖼️ 1.8K vistas</span>
+                        <div class="video-duration">08:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PODCAST SECTION -->
+    <div id="podcast-section" class="section">
+        <div class="videos-header">
+            <h1 class="videos-title">🎙️ Podcast Estudiantil</h1>
+            <p style="color: var(--text-light); font-size: 1.2rem;">Escucha las voces de nuestros estudiantes</p>
+        </div>
+
+        <div class="podcast-player">
+            <div class="player-cover">
+                <i class="fas fa-microphone-alt"></i>
+            </div>
+            <div class="player-info">
+                <h2>Episodio Actual: El Futuro de la Educación</h2>
+                <p>Invitados especiales discuten las tendencias y desafíos de la educación moderna.</p>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn"><i class="fas fa-backward"></i></button>
+                <button class="control-btn play-btn"><i class="fas fa-play"></i></button>
+                <button class="control-btn"><i class="fas fa-forward"></i></button>
+            </div>
+        </div>
+
+        <div class="podcast-grid">
+            <!-- Podcast 1 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'tecnologia')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-laptop-code"></i></div>
+                    <div class="podcast-title">Tecnología y Sociedad</div>
+                </div>
+                <div class="podcast-description">Exploramos cómo la tecnología está transformando nuestras vidas y el futuro.</div>
+                <div class="podcast-meta">
+                    <span>📅 15 de Agosto, 2024</span>
+                    <div class="podcast-duration">35:00</div>
+                </div>
+            </div>
+
+            <!-- Podcast 2 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'salud')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="podcast-title">Bienestar y Salud Mental</div>
+                </div>
+                <div class="podcast-description">Consejos y entrevistas sobre cómo mantener una vida equilibrada y saludable.</div>
+                <div class="podcast-meta">
+                    <span>📅 10 de Agosto, 2024</span>
+                    <div class="podcast-duration">28:30</div>
+                </div>
+            </div>
+
+            <!-- Podcast 3 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'cultura')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-palette"></i></div>
+                    <div class="podcast-title">Cultura y Arte Local</div>
+                </div>
+                <div class="podcast-description">Un viaje por las expresiones artísticas y culturales de nuestra comunidad.</div>
+                <div class="podcast-meta">
+                    <span>📅 05 de Agosto, 2024</span>
+                    <div class="podcast-duration">40:15</div>
+                </div>
+            </div>
+
+            <!-- Podcast 4 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'ciencia')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-flask"></i></div>
+                    <div class="podcast-title">Ciencia para Todos</div>
+                </div>
+                <div class="podcast-description">Desmitificando conceptos científicos complejos para hacerlos accesibles a todos.</div>
+                <div class="podcast-meta">
+                    <span>📅 01 de Agosto, 2024</span>
+                    <div class="podcast-duration">32:00</div>
+                </div>
+            </div>
+
+            <!-- Podcast 5 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'historia')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-book-open"></i></div>
+                    <div class="podcast-title">Ecos del Pasado</div>
+                </div>
+                <div class="podcast-description">Historias fascinantes y poco conocidas que han moldeado nuestro presente.</div>
+                <div class="podcast-meta">
+                    <span>📅 25 de Julio, 2024</span>
+                    <div class="podcast-duration">45:00</div>
+                </div>
+            </div>
+
+            <!-- Podcast 6 -->
+            <div class="podcast-card" onclick="playContent('podcast', 'emprendimiento')">
+                <div class="podcast-header">
+                    <div class="podcast-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="podcast-title">Mentes Emprendedoras</div>
+                </div>
+                <div class="podcast-description">Entrevistas con jóvenes emprendedores que están marcando la diferencia.</div>
+                <div class="podcast-meta">
+                    <span>📅 20 de Julio, 2024</span>
+                    <div class="podcast-duration">38:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/campus-media.js"></script>
+</body>
+</html>
+

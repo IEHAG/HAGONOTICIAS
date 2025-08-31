@@ -1,69 +1,61 @@
 // DATOS DE CONTENIDO - Reemplaza con tus archivos
 const contentData = {
-    videos: {
-        director: { 
-            title: 'Entrevista al Director General', 
-            file: 'videos/director-interview.mp4',
-            description: 'Acompaña a nuestro director en un día completo de actividades desde las 7:00 AM hasta las reuniones estudiantiles.'
-        },
-        hackathon: { 
-            title: 'Hackathon 2024 - Completo', 
-            file: 'videos/hackathon-2024.mp4',
-            description: 'Descubre cómo nuestros estudiantes crearon una aplicación educativa innovadora en solo 48 horas.'
-        },
-        graduacion: { 
-            title: 'Graduación 2024 - Momentos Inolvidables', 
-            file: 'videos/graduacion-2024.mp4',
-            description: 'Los mejores momentos de la graduación 2024, incluyendo discursos y lágrimas de alegría.'
-        },
-        proyecto: { 
-            title: 'Proyecto Innovador: Robótica Educativa', 
-            file: 'videos/proyecto-final.mp4',
-            description: 'Conoce el increíble proyecto de robótica desarrollado por estudiantes de ingeniería.'
-        },
-        deporte: { 
-            title: 'Campeonato Intercolegial: Lo Mejor del Deporte', 
-            file: 'videos/deporte-dia.mp4',
-            description: 'Los mejores momentos del campeonato intercolegial con entrevistas exclusivas.'
-        },
-        tutoriales: { 
-            title: 'Tutoriales de Estudio - Métodos Comprobados', 
-            file: 'videos/tutoriales-estudio.mp4',
-            description: 'Los mejores métodos de estudio probados por nuestros estudiantes de honor.'
-        }
+videos: {
+    apertura: { 
+        title: 'Apertura Día de la Antioqueñidad', 
+        file: 'videos/apertura-antioquenidad.mp4',
+        description: 'Inicio de la jornada con actos culturales, música típica y la presentación oficial del evento.'
     },
-    podcasts: {
-        bienvenida: { 
-            title: 'Bienvenida 2024 - ¡Vamos equipo!', 
-            file: 'audio/bienvenida-2024.mp3',
-            description: 'Mensaje motivacional de bienvenida con música de fondo y entrevistas a estudiantes nuevos.'
-        },
-        estudio: { 
-            title: 'Métodos de Estudio - Aprobados por Estudiantes', 
-            file: 'audio/metodos-estudio.mp3',
-            description: 'Estudiantes de honor comparten sus trucos para aprobar sin morir en el intento.'
-        },
-        vida: { 
-            title: 'Vida Universitaria - Realidad vs Expectativas', 
-            file: 'audio/vida-universitaria.mp3',
-            description: 'Estudiantes comparten sus experiencias reales sobre la vida universitaria sin filtros.'
-        },
-        tecnologia: { 
-            title: 'Apps que Cambiaron la Vida Estudiantil', 
-            file: 'audio/tecnologia-apps.mp3',
-            description: 'Nuestros estudiantes prueban las mejores apps de estudio y comparten resultados reales.'
-        },
-        exito: { 
-            title: 'De Cero a Héroe - Historias de Éxito Real', 
-            file: 'audio/consejos-exito.mp3',
-            description: 'Estudiantes que pasaron de casi abandonar a ser los mejores. Historias inspiradoras.'
-        },
-        consejos: { 
-            title: 'Consejos de Supervivencia - Testados por Estudiantes', 
-            file: 'audio/exitos-2024.mp3',
-            description: 'Los mejores hacks para sobrevivir la universidad compartidos por estudiantes exitosos.'
-        }
+    stands: { 
+        title: 'Recorrido por los Stands', 
+        file: 'videos/stands-antioquenidad.mp4',
+        description: 'Visita a los diferentes stands donde los estudiantes muestran creatividad en gastronomía, historia y tecnología.'
+    },
+    trovas: { 
+        title: 'Trovas Antioqueñas en Vivo', 
+        file: 'videos/trovas-en-vivo.mp4',
+        description: 'Un espacio de humor y tradición con trovadores estudiantiles que hacen reír y reflexionar.'
+    },
+    clausura: { 
+        title: 'Clausura y Presentaciones Finales', 
+        file: 'videos/clausura-antioquenidad.mp4',
+        description: 'Cierre del evento con danzas típicas, música parrandera y agradecimientos a toda la comunidad educativa.'
     }
+
+    },
+podcasts: {
+    bienvenida: { 
+        title: 'Bienvenida al Día de la Antioqueñidad', 
+        file: 'audio/bienvenida-antioquenidad.mp3',
+        description: 'Mensaje motivacional de apertura con la participación de estudiantes y docentes para dar inicio a la jornada cultural.'
+    },
+    historia: { 
+        title: 'Historia y Tradición Antioqueña', 
+        file: 'audio/historia-tradicion.mp3',
+        description: 'Un recorrido sonoro por las raíces de Antioquia: costumbres, personajes y anécdotas contadas por estudiantes.'
+    },
+    vida: { 
+        title: 'Así Vivimos la Antioqueñidad', 
+        file: 'audio/vida-antioquenidad.mp3',
+        description: 'Testimonios de estudiantes sobre cómo se celebra la cultura antioqueña en la institución educativa.'
+    },
+    musica: { 
+        title: 'Trovas y Música Parrandera', 
+        file: 'audio/musica-trovas.mp3',
+        description: 'Fragmentos de trovas y música típica paisa interpretadas en el evento.'
+    },
+    gastronomia: { 
+        title: 'Sabores Antioqueños en el Colegio', 
+        file: 'audio/gastronomia-antioquia.mp3',
+        description: 'Podcast sobre los platos típicos que se compartieron en la feria cultural de la institución.'
+    },
+    clausura: { 
+        title: 'Clausura Día de la Antioqueñidad', 
+        file: 'audio/clausura-antioquenidad.mp3',
+        description: 'Palabras de cierre con mensajes de agradecimiento, unión y orgullo cultural.'
+    }
+}
+
 };
 
 // FUNCIONES PRINCIPALES

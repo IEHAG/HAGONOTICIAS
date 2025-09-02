@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAG NOTICIAS - Campus Media Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/campus.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">HAGO NOTICIAS</div>
+        <div class="subtitle">Campus Media Center</div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="nav-container">
+        <div class="nav-tabs">
+            <button class="tab active" onclick="showSection('videos')">
+                <i class="fas fa-video"></i> 📺 Videos
+            </button>
+            <button class="tab" onclick="showSection('podcast')">
+                <i class="fas fa-podcast"></i> 🎧 Podcast
+            </button>
+        </div>
+    </nav>
+
+<!-- VIDEOS SECTION -->
+<div id="videos-section" class="section active">
+    <div class="videos-header">
+        <h1 class="videos-title">🌄 Día de la Antioqueñidad</h1>
+        <p style="color: var(--text-light); font-size: 1.2rem;">Revive los mejores momentos de nuestra celebración cultural</p>
+    </div>
+
+    <div class="videos-grid">
+        <!-- Video 1: Apertura -->
+        <div class="video-card" onclick="playContent('video', 'apertura')">
+            <div class="video-thumbnail">
+                <i class="fas fa-flag"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">🎉 Apertura Día de la Antioqueñidad</div>
+                <div class="video-description">Acto de apertura con música parrandera, desfile y bienvenida a toda la comunidad educativa.</div>
+                <div class="video-meta">
+                    <span>👥 2.1K vistas</span>
+                    <div class="video-duration">12:45</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 2: Stands -->
+        <div class="video-card" onclick="playContent('video', 'stands')">
+            <div class="video-thumbnail">
+                <i class="fas fa-store"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">🏞️ Recorrido por los Stands</div>
+                <div class="video-description">Visita a los stands de gastronomía, historia, arte y tecnología preparados por los estudiantes.</div>
+                <div class="video-meta">
+                    <span>👩‍🎓 3.4K vistas</span>
+                    <div class="video-duration">18:30</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 3: Trovas -->
+        <div class="video-card" onclick="playContent('video', 'trovas')">
+            <div class="video-thumbnail">
+                <i class="fas fa-music"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">🎤 Trovas Antioqueñas en Vivo</div>
+                <div class="video-description">Improvisación, humor y tradición con los trovadores estudiantiles en tarima.</div>
+                <div class="video-meta">
+                    <span>🎶 4.8K vistas</span>
+                    <div class="video-duration">15:20</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 4: Danzas -->
+        <div class="video-card" onclick="playContent('video', 'danzas')">
+            <div class="video-thumbnail">
+                <i class="fas fa-drum"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">💃 Danzas Típicas Antioqueñas</div>
+                <div class="video-description">Coloridas coreografías y bailes tradicionales interpretados por nuestros estudiantes.</div>
+                <div class="video-meta">
+                    <span>🕺 5.2K vistas</span>
+                    <div class="video-duration">20:15</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 5: Gastronomía -->
+        <div class="video-card" onclick="playContent('video', 'gastronomia')">
+            <div class="video-thumbnail">
+                <i class="fas fa-utensils"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">🍲 Sabores de Antioquia</div>
+                <div class="video-description">Platos típicos preparados en el evento con todo el sabor paisa.</div>
+                <div class="video-meta">
+                    <span>🍴 2.9K vistas</span>
+                    <div class="video-duration">10:45</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video 6: Clausura -->
+        <div class="video-card" onclick="playContent('video', 'clausura')">
+            <div class="video-thumbnail">
+                <i class="fas fa-handshake"></i>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="video-content">
+                <div class="video-title">🌟 Clausura Día de la Antioqueñidad</div>
+                <div class="video-description">Cierre de la jornada con música, agradecimientos y mensajes de unión cultural.</div>
+                <div class="video-meta">
+                    <span>💚 6.1K vistas</span>
+                    <div class="video-duration">14:10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PODCAST SECTION -->
+<div id="podcast-section" class="section">
+    <div class="podcast-player">
+        <div class="player-cover">
+            <i class="fas fa-microphone"></i>
+        </div>
+        <div class="player-info">
+            <h2>🎙️ Podcast Antioqueñidad</h2>
+            <p>Escucha las voces de nuestra comunidad educativa en esta celebración cultural</p>
+        </div>
+        <div class="player-controls">
+            <button class="control-btn" onclick="previousPodcast()">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="control-btn play-btn" onclick="togglePodcast()">
+                <i class="fas fa-play" id="playBtn"></i>
+            </button>
+            <button class="control-btn" onclick="nextPodcast()">
+                <i class="fas fa-step-forward"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="podcast-grid">
+        <!-- Podcast 1: Bienvenida -->
+        <div class="podcast-card" onclick="playContent('podcast', 'bienvenida')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-school"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">🎓 Bienvenida al Día de la Antioqueñidad</div>
+                    <div class="podcast-description">Saludo especial de apertura con la voz de docentes y estudiantes.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">12:00</div>
+            </div>
+        </div>
+
+        <!-- Podcast 2: Historia -->
+        <div class="podcast-card" onclick="playContent('podcast', 'historia')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">📖 Historia y Tradición Antioqueña</div>
+                    <div class="podcast-description">Un recorrido sonoro por las raíces, personajes y costumbres de Antioquia.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">18:20</div>
+            </div>
+        </div>
+
+        <!-- Podcast 3: Vida -->
+        <div class="podcast-card" onclick="playContent('podcast', 'vida')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">🎤 Así Vivimos la Antioqueñidad</div>
+                    <div class="podcast-description">Testimonios de estudiantes sobre cómo celebramos nuestra cultura en el colegio.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">20:10</div>
+            </div>
+        </div>
+
+        <!-- Podcast 4: Música -->
+        <div class="podcast-card" onclick="playContent('podcast', 'musica')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">🎶 Trovas y Música Parrandera</div>
+                    <div class="podcast-description">Fragmentos de trovas y música típica paisa interpretadas en el evento.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">16:40</div>
+            </div>
+        </div>
+
+        <!-- Podcast 5: Gastronomía -->
+        <div class="podcast-card" onclick="playContent('podcast', 'gastronomia')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">🍲 Sabores de Antioquia</div>
+                    <div class="podcast-description">Podcast sobre los platos típicos que se compartieron en la feria cultural.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">14:25</div>
+            </div>
+        </div>
+
+        <!-- Podcast 6: Clausura -->
+        <div class="podcast-card" onclick="playContent('podcast', 'clausura')">
+            <div class="podcast-header">
+                <div class="podcast-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div>
+                    <div class="podcast-title">🌟 Clausura Día de la Antioqueñidad</div>
+                    <div class="podcast-description">Cierre del evento con agradecimientos, música y mensajes de unión cultural.</div>
+                </div>
+            </div>
+            <div class="podcast-meta">
+                <span><i class="fas fa-calendar"></i> 29 Ago 2024</span>
+                <div class="podcast-duration">10:50</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="js/campus-media.js"></script>
+</body>
+</html>

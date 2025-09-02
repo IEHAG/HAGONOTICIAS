@@ -175,7 +175,7 @@
 }
 
 /* Mobile Theme Toggle */
-@media (max-width: 768px) {
+@media (max-width: 668px) {
   .theme-toggle {
     top: 0.75rem;
     right: 0.75rem;

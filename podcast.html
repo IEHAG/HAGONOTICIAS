@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎧 HAG Campus Radio - Estilo Musical</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* 🎵 HEADER CON LOGO */
+        .header {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 🎧 REPRODUCTOR PRINCIPAL */
+        .player-container {
+            background: #1a1a2e;
+            border-radius: 20px;
+            margin: 2rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .album-cover {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .track-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .track-info p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        /* 🔊 CONTROLES DE REPRODUCCIÓN */
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .play-btn {
+            background: #ff6b35;
+            font-size: 2rem;
+            width: 80px;
+            height: 80px;
+        }
+
+        /* 📊 PROGRESS BAR */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* 🎶 LISTA DE REPRODUCCIÓN */
+        .playlist {
+            background: #1a1a2e;
+            margin: 2rem;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .playlist-header {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .playlist-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .search-box {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            width: 200px;
+        }
+
+        .track-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #333;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .track-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .track-number {
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .track-info {
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .track-title {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .track-artist {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .track-duration {
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .track-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .track-btn {
+            background: none;
+            border: none;
+            color: #ff6b35;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            .player-container { margin: 1rem; }
+            .player-header { flex-direction: column; text-align: center; }
+            .album-cover { width: 100px; height: 100px; }
+            .player-controls { gap: 1rem; }
+            .back-btn { position: static; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 🎵 HEADER -->
+    <header class="header">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <div class="logo">🎧 HAG Campus Radio</div>
+        <div class="subtitle">Podcast Estudiantil - La mejor playlist del campus</div>
+    </header>
+
+    <!-- 🎧 REPRODUCTOR PRINCIPAL -->
+    <div class="player-container">
+        <div class="player-header">
+            <div class="album-cover">
+                <i class="fas fa-podcast"></i>
+            </div>
+            <div class="track-info">
+                <h2>📚 Campus Life Podcast</h2>
+                <p>HAG Estudiantes Hablan</p>
+            </div>
+        </div>
+
+        <!-- 🔊 CONTROLES -->
+        <div class="player-controls">
+            <button class="control-btn" onclick="previousTrack()">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="control-btn play-btn" onclick="togglePlay()">
+                <i class="fas fa-play" id="playIcon"></i>
+            </button>
+            <button class="control-btn" onclick="nextTrack()">
+                <i class="fas fa-step-forward"></i>
+            </button>
+        </div>
+
+        <!-- 📊 BARRA DE PROGRESO -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                <span id="currentTime">00:00</span>
+                <span id="duration">00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎶 PLAYLIST MUSICAL -->
+    <div class="playlist">
+        <div class="playlist-header">
+            <div class="playlist-title">📻 Playlist Estudiantil</div>
+            <input type="text" class="search-box" placeholder="🔍 Buscar episodios..." onkeyup="searchTracks(this.value)">
+        </div>
+
+        <div class="track-list" id="trackList">
+            <!-- 🎵 TRACK 1: Bienvenida -->
+            <div class="track-item" onclick="playTrack(0)">
+                <div class="track-number">01</div>
+                <div class="track-info">
+                    <div class="track-title">🎓 Bienvenida 2024 - ¡Vamos equipo!</div>
+                    <div class="track-artist">Estudiantes HAG</div>
+                </div>
+                <div class="track-duration">15:30</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(0)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🎵 TRACK 2: Estudio -->
+            <div class="track-item" onclick="playTrack(1)">
+                <div class="track-number">02</div>
+                <div class="track-info">
+                    <div class="track-title">🧠 Métodos de Estudio - Aprobados por Estudiantes</div>
+                    <div class="track-artist">Estudiantes Honor</div>
+                </div>
+                <div class="track-duration">25:30</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(1)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🎵 TRACK 3: Vida Universitaria -->
+            <div class="track-item" onclick="playTrack(2)">
+                <div class="track-number">03</div>
+                <div class="track-info">
+                    <div class="track-title">🎓 Vida Universitaria - Realidad vs Expectativas</div>
+                    <div class="track-artist">Estudiantes Reales</div>
+                </div>
+                <div class="track-duration">22:15</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(2)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🎵 TRACK 4: Tecnología -->
+            <div class="track-item" onclick="playTrack(3)">
+                <div class="track-number">04</div>
+                <div class="track-info">
+                    <div class="track-title">💻 Apps que Cambiaron la Vida Estudiantil</div>
+                    <div class="track-artist">Tech Students</div>
+                </div>
+                <div class="track-duration">18:20</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(3)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🎵 TRACK 5: Éxito -->
+            <div class="track-item" onclick="playTrack(4)">
+                <div class="track-number">05</div>
+                <div class="track-info">
+                    <div class="track-title">⭐ De Cero a Héroe - Historias de Éxito Real</div>
+                    <div class="track-artist">Estudiantes Inspiradores</div>
+                </div>
+                <div class="track-duration">28:45</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(4)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 🎵 TRACK 6: Consejos -->
+            <div class="track-item" onclick="playTrack(5)">
+                <div class="track-number">06</div>
+                <div class="track-info">
+                    <div class="track-title">💡 Consejos de Supervivencia - Testados por Estudiantes</div>
+                    <div class="track-artist">Estudiantes Exitosos</div>
+                </div>
+                <div class="track-duration">20:00</div>
+                <div class="track-controls">
+                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(5)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 📁 CONFIGURACIÓN DE ARCHIVOS
+        const tracks = [
+            {
+                title: "🎓 Bienvenida 2024 - ¡Vamos equipo!",
+                artist: "Estudiantes HAG",
+                file: "audio/walen-.mp3",
+                duration: "15:30",
+                description: "Mensaje motivacional de bienvenida con música de fondo y entrevistas a estudiantes nuevos."
+            },
+            {
+                title: "🧠 Métodos de Estudio - Aprobados por Estudiantes",
+                artist: "Estudiantes Honor",
+                file: "audio/walen-.mp3",
+                duration: "25:30",
+                description: "Estudiantes de honor comparten sus trucos para aprobar sin morir en el intento."
+            },
+            {
+                title: "🎓 Vida Universitaria - Realidad vs Expectativas",
+                artist: "Estudiantes Reales",
+                file: "audio/walen-.mp3",
+                duration: "22:15",
+                description: "Estudiantes comparten sus experiencias reales sobre la vida universitaria sin filtros."
+            },
+            {
+                title: "💻 Apps que Cambiaron la Vida Estudiantil",
+                artist: "Tech Students",
+                file: "audio/walen-.mp3",
+                duration: "18:20",
+                description: "Nuestros estudiantes prueban las mejores apps de estudio y comparten resultados reales."
+            },
+            {
+                title: "⭐ De Cero a Héroe - Historias de Éxito Real",
+                artist: "Estudiantes Inspiradores",
+                file: "audio/walen-.mp3",
+                duration: "28:45",
+                description: "Estudiantes que pasaron de casi abandonar a ser los mejores. Historias inspiradoras."
+            },
+            {
+                title: "💡 Consejos de Supervivencia - Testados por Estudiantes",
+                artist: "Estudiantes Exitosos",
+                file: "audio/walen-.mp3",
+                duration: "20:00",
+                description: "Los mejores hacks para sobrevivir la universidad compartidos por estudiantes exitosos."
+            }
+        ];
+
+        // 🔧 FUNCIONES DEL REPRODUCTOR
+        let currentTrack = 0;
+        let isPlaying = false;
+        let audioPlayer = null;
+
+        function togglePlay() {
+            const playBtn = document.getElementById('playIcon');
+            isPlaying = !isPlaying;
+            playBtn.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+            
+            if (isPlaying) {
+                playTrack(currentTrack);
+            } else {
+                pauseTrack();
+            }
+        }
+
+        function playTrack(index) {
+            currentTrack = index;
+            const track = tracks[index];
+            
+            // Actualizar info
+            document.querySelector('.track-info h2').textContent = track.title;
+            document.querySelector('.track-info p').textContent = track.artist;
+            
+            // Crear/actualizar reproductor
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.remove();
+            }
+            
+            audioPlayer = new Audio(track.file);
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                document.getElementById('duration').textContent = track.duration;
+            });
+            
+            audioPlayer.addEventListener('timeupdate', () => {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                
+                const currentTime = formatTime(audioPlayer.currentTime);
+                document.getElementById('currentTime').textContent = currentTime;
+            });
+            
+            if (isPlaying) {
+                audioPlayer.play().catch(e => {
+                    console.log('Error al reproducir audio:', e);
+                    // Mostrar mensaje al usuario
+                    alert('No se pudo reproducir el audio. Verifica que el archivo existe.');
+                });
+            }
+        }
+
+        function previousTrack() {
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            playTrack(currentTrack);
+        }
+
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            playTrack(currentTrack);
+        }
+
+        function pauseTrack() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function searchTracks(query) {
+            const filtered = tracks.filter(track => 
+                track.title.toLowerCase().includes(query.toLowerCase()) || 
+                track.artist.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            // Aquí podrías implementar la lógica de filtrado visual
+            console.log('Buscando:', query, 'Resultados:', filtered);
+        }
+
+        // Inicializar el primer track
+        document.addEventListener('DOMContentLoaded', function() {
+            playTrack(0);
+        });
+    </script>
+</body>
+</html>
+

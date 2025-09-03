@@ -38,15 +38,35 @@
             color: white;
         }
 
-        .search-box {
+        .search-container {
             flex: 1;
+            display: flex;
             max-width: 600px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
             padding: 12px 20px;
             border: none;
-            border-radius: 25px;
+            border-radius: 25px 0 0 25px;
             background: rgba(255,255,255,0.1);
             color: white;
             font-size: 1.1rem;
+        }
+
+        .search-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         .back-btn {
@@ -92,6 +112,7 @@
             justify-content: center;
             font-size: 4rem;
             color: rgba(255,255,255,0.3);
+            cursor: pointer;
         }
 
         .video-controls {
@@ -237,13 +258,52 @@
             max-width: 90%;
             max-height: 90%;
             overflow: hidden;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10001;
         }
 
         /* 📱 RESPONSIVE */
         @media (max-width: 768px) {
             .player-section { grid-template-columns: 1fr; }
             .video-grid { grid-template-columns: 1fr; }
-            .search-box { width: 100%; }
+            .search-container { width: 100%; }
+            .header-content { flex-wrap: wrap; }
+        }
+
+        /* 🔍 RESULTADOS DE BÚSQUEDA */
+        .search-results {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #aaa;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -252,17 +312,35 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">🎬 HAG Videos</div>
-            <input type="text" class="search-box" placeholder="🔍 Buscar videos estudiantiles..." onkeyup="searchVideos(this.value)">
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar videos estudiantiles...">
+                <button class="search-btn" onclick="performSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
             <a href="index.html" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
         </div>
     </header>
 
+    <!-- 🔍 SECCIÓN DE RESULTADOS DE BÚSQUEDA -->
+    <div class="search-results" id="searchResults">
+        <div class="results-header">
+            <h2 class="mix-title">Resultados de búsqueda</h2>
+            <button class="back-btn" onclick="clearSearch()">
+                <i class="fas fa-times"></i> Limpiar búsqueda
+            </button>
+        </div>
+        <div class="video-grid" id="resultsGrid">
+            <!-- Los resultados se insertarán aquí dinámicamente -->
+        </div>
+    </div>
+
     <!-- 🎥 REPRODUCTOR PRINCIPAL -->
-    <div class="player-section">
+    <div class="player-section" id="mainContent">
         <div class="main-player">
-            <div class="video-area">
+            <div class="video-area" onclick="playVideo('main')">
                 <i class="fas fa-play-circle"></i>
                 <div class="video-controls">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -317,7 +395,7 @@
     </div>
 
     <!-- 🎶 PLAYLIST ESTILO MIX -->
-    <div class="mixes-section">
+    <div class="mixes-section" id="mixesSection">
         <h2 class="mix-title">🎶 Mix: Estudiantes Hablan</h2>
         
         <div class="stats-bar">
@@ -432,55 +510,91 @@
         // 📁 CONFIGURACIÓN DE VIDEOS
         const videos = [
             {
-                title: "🎓 Campus Life: El día a día",
+                id: "main",
+                title: "🎓 Campus Life: El día a día de un estudiante HAG",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "25:30",
                 views: "526.9k",
-                thumbnail: "fas fa-play-circle"
+                thumbnail: "fas fa-play-circle",
+                channel: "HAG Estudiantes"
             },
             {
+                id: "director",
                 title: "🎓 Día con el Director - Experiencia completa",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "25:30",
                 views: "2.3k",
-                thumbnail: "fas fa-user-tie"
+                thumbnail: "fas fa-user-tie",
+                channel: "HAG Estudiantes"
             },
             {
+                id: "hackathon",
                 title: "💻 Hackathon 2024 - 48 horas de innovación",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "18:45",
                 views: "5.1k",
-                thumbnail: "fas fa-laptop-code"
+                thumbnail: "fas fa-laptop-code",
+                channel: "Tech Students"
             },
             {
+                id: "graduacion",
                 title: "🎓 Graduación 2024 - Lo mejor del evento",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "22:15",
                 views: "8.7k",
-                thumbnail: "fas fa-graduation-cap"
+                thumbnail: "fas fa-graduation-cap",
+                channel: "HAG Estudiantes"
             },
             {
+                id: "proyecto",
                 title: "🔬 Proyecto final - Robótica educativa",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "35:00",
                 views: "3.4k",
-                thumbnail: "fas fa-project-diagram"
+                thumbnail: "fas fa-project-diagram",
+                channel: "Ingeniería HAG"
             },
             {
+                id: "deporte",
                 title: "⚽ Campeonato - Mejores momentos",
                 file: "video/LogoRevealExplosinpic.mp4",
                 duration: "15:20",
                 views: "4.2k",
-                thumbnail: "fas fa-running"
+                thumbnail: "fas fa-running",
+                channel: "Deportes HAG"
+            },
+            {
+                id: "tutoriales",
+                title: "📚 Tutoriales de estudio - Métodos probados",
+                file: "video/LogoRevealExplosinpic.mp4",
+                duration: "20:30",
+                views: "6.8k",
+                thumbnail: "fas fa-chalkboard-teacher",
+                channel: "Estudiantes Honor"
+            },
+            {
+                id: "ciencia",
+                title: "🧪 Feria de Ciencias - Experimentos increíbles",
+                file: "video/LogoRevealExplosinpic.mp4",
+                duration: "28:15",
+                views: "7.2k",
+                thumbnail: "fas fa-flask",
+                channel: "Ciencias HAG"
+            },
+            {
+                id: "arte",
+                title: "🎨 Exposición de Arte - Talentos estudiantiles",
+                file: "video/LogoRevealExplosinpic.mp4",
+                duration: "16:45",
+                views: "3.9k",
+                thumbnail: "fas fa-palette",
+                channel: "Arte HAG"
             }
         ];
 
         // 🎬 FUNCIONES DEL REPRODUCTOR
-        let currentVideo = 0;
-        let videoPlayer = null;
-
         function playVideo(id) {
-            const video = videos.find(v => v.file.includes('LogoRevealExplosinpic')) || videos[0];
+            const video = videos.find(v => v.id === id) || videos[0];
             
             // Crear modal reproductor
             const modal = document.createElement('div');
@@ -488,12 +602,12 @@
             modal.style.display = 'flex';
             modal.innerHTML = `
                 <div class="modal-content">
+                    <button class="close-modal" onclick="closeVideoModal()">×</button>
                     <div style="padding: 1rem; background: #181818;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <h3>${video.title}</h3>
-                            <button onclick="closeVideoModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
                         </div>
-                        <video controls style="width: 100%; max-width: 800px; border-radius: 10px;">
+                        <video controls autoplay style="width: 100%; max-width: 800px; border-radius: 10px;">
                             <source src="${video.file}" type="video/mp4">
                             Tu navegador no soporta videos HTML5.
                         </video>
@@ -509,6 +623,8 @@
             `;
             
             document.body.appendChild(modal);
+            
+            // Cerrar modal al hacer clic fuera
             modal.onclick = function(e) {
                 if (e.target === modal) {
                     closeVideoModal();
@@ -519,18 +635,85 @@
         function closeVideoModal() {
             const modal = document.querySelector('.video-modal');
             if (modal) {
+                // Detener el video antes de eliminar el modal
+                const video = modal.querySelector('video');
+                if (video) {
+                    video.pause();
+                }
                 modal.remove();
             }
         }
 
-        function searchVideos(query) {
-            const filtered = videos.filter(video => 
-                video.title.toLowerCase().includes(query.toLowerCase())
+        // 🔍 FUNCIONALIDAD DE BÚSQUEDA
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (query === '') {
+                return; // No buscar si está vacío
+            }
+            
+            // Filtrar videos que coincidan con la búsqueda
+            const filteredVideos = videos.filter(video => 
+                video.title.toLowerCase().includes(query) || 
+                video.channel.toLowerCase().includes(query)
             );
             
-            // Aquí podrías implementar la lógica de filtrado visual
-            console.log('Buscando:', query, 'Resultados:', filtered);
+            // Ocultar contenido principal y mostrar resultados
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('mixesSection').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'block';
+            
+            const resultsGrid = document.getElementById('resultsGrid');
+            resultsGrid.innerHTML = ''; // Limpiar resultados anteriores
+            
+            if (filteredVideos.length > 0) {
+                // Mostrar videos filtrados
+                filteredVideos.forEach(video => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.onclick = () => playVideo(video.id);
+                    
+                    videoCard.innerHTML = `
+                        <div class="video-thumbnail">
+                            <i class="${video.thumbnail}"></i>
+                            <div class="video-duration">${video.duration}</div>
+                        </div>
+                        <div class="video-details">
+                            <div class="video-card-title">${video.title}</div>
+                            <div class="video-card-meta">
+                                <span>${video.channel}</span>
+                                <span>👁️ ${video.views}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    resultsGrid.appendChild(videoCard);
+                });
+            } else {
+                // Mostrar mensaje de no resultados
+                resultsGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>No se encontraron resultados</h3>
+                        <p>Intenta con otros términos de búsqueda</p>
+                    </div>
+                `;
+            }
         }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'grid';
+            document.getElementById('mixesSection').style.display = 'block';
+        }
+
+        // Búsqueda al presionar Enter
+        document.getElementById('searchInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
 
         // Cerrar modal con tecla Escape
         document.addEventListener('keydown', function(e) {
@@ -541,4 +724,3 @@
     </script>
 </body>
 </html>
-

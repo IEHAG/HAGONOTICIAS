@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎧 HAG Campus Radio - Estilo Musical</title>
+    <title>🎧 HAG Campus Radio - Voces Institucionales</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -197,6 +197,11 @@
             background: rgba(255,255,255,0.1);
         }
 
+        .track-item.playing {
+            background: rgba(255, 107, 53, 0.2);
+            border-left: 4px solid #ff6b35;
+        }
+
         .track-number {
             width: 30px;
             text-align: center;
@@ -244,6 +249,8 @@
             .album-cover { width: 100px; height: 100px; }
             .player-controls { gap: 1rem; }
             .back-btn { position: static; margin-bottom: 1rem; }
+            .playlist-header { flex-direction: column; gap: 1rem; }
+            .search-box { width: 100%; }
         }
     </style>
 </head>
@@ -253,19 +260,19 @@
         <a href="index.html" class="back-btn">
             <i class="fas fa-arrow-left"></i> Volver
         </a>
-        <div class="logo">🎧 HAG Campus Radio</div>
-        <div class="subtitle">Podcast Estudiantil - La mejor playlist del campus</div>
+        <div class="logo">🎧 HAGO Campus Radio</div>
+        <div class="subtitle">Voces Institucionales - I.E.Héctor Abad Gómez</div>
     </header>
 
     <!-- 🎧 REPRODUCTOR PRINCIPAL -->
     <div class="player-container">
         <div class="player-header">
             <div class="album-cover">
-                <i class="fas fa-podcast"></i>
+                <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="track-info">
-                <h2>📚 Campus Life Podcast</h2>
-                <p>HAG Estudiantes Hablan</p>
+                <h2 id="currentTitle">Selecciona un artículo</h2>
+                <p id="currentArtist">Manual de Convivencia</p>
             </div>
         </div>
 
@@ -284,7 +291,7 @@
 
         <!-- 📊 BARRA DE PROGRESO -->
         <div class="progress-container">
-            <div class="progress-bar">
+            <div class="progress-bar" onclick="seekAudio(event)">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
@@ -294,103 +301,15 @@
         </div>
     </div>
 
-    <!-- 🎶 PLAYLIST MUSICAL -->
+    <!-- 🎶 PLAYLIST MANUAL DE CONVIVENCIA -->
     <div class="playlist">
         <div class="playlist-header">
-            <div class="playlist-title">📻 Playlist Estudiantil</div>
-            <input type="text" class="search-box" placeholder="🔍 Buscar episodios..." onkeyup="searchTracks(this.value)">
+            <div class="playlist-title">📚 Manual de Convivencia - Podcast</div>
+            <input type="text" class="search-box" placeholder="🔍 Buscar artículo..." onkeyup="searchTracks(this.value)">
         </div>
 
         <div class="track-list" id="trackList">
-            <!-- 🎵 TRACK 1: Bienvenida -->
-            <div class="track-item" onclick="playTrack(0)">
-                <div class="track-number">01</div>
-                <div class="track-info">
-                    <div class="track-title">🎓 Bienvenida 2024 - ¡Vamos equipo!</div>
-                    <div class="track-artist">Estudiantes HAG</div>
-                </div>
-                <div class="track-duration">15:30</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(0)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 🎵 TRACK 2: Estudio -->
-            <div class="track-item" onclick="playTrack(1)">
-                <div class="track-number">02</div>
-                <div class="track-info">
-                    <div class="track-title">🧠 Métodos de Estudio - Aprobados por Estudiantes</div>
-                    <div class="track-artist">Estudiantes Honor</div>
-                </div>
-                <div class="track-duration">25:30</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(1)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 🎵 TRACK 3: Vida Universitaria -->
-            <div class="track-item" onclick="playTrack(2)">
-                <div class="track-number">03</div>
-                <div class="track-info">
-                    <div class="track-title">🎓 Vida Universitaria - Realidad vs Expectativas</div>
-                    <div class="track-artist">Estudiantes Reales</div>
-                </div>
-                <div class="track-duration">22:15</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(2)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 🎵 TRACK 4: Tecnología -->
-            <div class="track-item" onclick="playTrack(3)">
-                <div class="track-number">04</div>
-                <div class="track-info">
-                    <div class="track-title">💻 Apps que Cambiaron la Vida Estudiantil</div>
-                    <div class="track-artist">Tech Students</div>
-                </div>
-                <div class="track-duration">18:20</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(3)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 🎵 TRACK 5: Éxito -->
-            <div class="track-item" onclick="playTrack(4)">
-                <div class="track-number">05</div>
-                <div class="track-info">
-                    <div class="track-title">⭐ De Cero a Héroe - Historias de Éxito Real</div>
-                    <div class="track-artist">Estudiantes Inspiradores</div>
-                </div>
-                <div class="track-duration">28:45</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(4)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 🎵 TRACK 6: Consejos -->
-            <div class="track-item" onclick="playTrack(5)">
-                <div class="track-number">06</div>
-                <div class="track-info">
-                    <div class="track-title">💡 Consejos de Supervivencia - Testados por Estudiantes</div>
-                    <div class="track-artist">Estudiantes Exitosos</div>
-                </div>
-                <div class="track-duration">20:00</div>
-                <div class="track-controls">
-                    <button class="track-btn" onclick="event.stopPropagation(); playTrack(5)">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            </div>
+            <!-- Las pistas se generarán automáticamente con JavaScript -->
         </div>
     </div>
 
@@ -398,46 +317,46 @@
         // 📁 CONFIGURACIÓN DE ARCHIVOS
         const tracks = [
             {
-                title: "🎓 Bienvenida 2024 - ¡Vamos equipo!",
-                artist: "Estudiantes HAG",
-                file: "audio/walen-.mp3",
-                duration: "15:30",
-                description: "Mensaje motivacional de bienvenida con música de fondo y entrevistas a estudiantes nuevos."
+                title: "Artículo 5. Visión",
+                artist: "Capítulo 1. Datos generales e identidad de la institución",
+                file: "campus/podcast/Artículo 5. Visión.mp3",
+                duration: "02:47",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez."
             },
             {
-                title: "🧠 Métodos de Estudio - Aprobados por Estudiantes",
-                artist: "Estudiantes Honor",
-                file: "audio/walen-.mp3",
-                duration: "25:30",
-                description: "Estudiantes de honor comparten sus trucos para aprobar sin morir en el intento."
+                title: "Artículo 7. Símbolos institucionales",
+                artist: "Capítulo 1. Datos generales e identidad de la institución",
+                file: "campus/podcast/Artículo 7. Símbolos institucionales.mp3",
+                duration: "03:29",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez."
             },
             {
-                title: "🎓 Vida Universitaria - Realidad vs Expectativas",
-                artist: "Estudiantes Reales",
-                file: "audio/walen-.mp3",
-                duration: "22:15",
-                description: "Estudiantes comparten sus experiencias reales sobre la vida universitaria sin filtros."
+                title: "Artículo 8. El uniforme",
+                artist: "Capítulo 1. Datos generales e identidad de la institución",
+                file: "campus/podcast/Artículo 8. El uniforme.mp3",
+                duration: "02:16",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez"
             },
             {
-                title: "💻 Apps que Cambiaron la Vida Estudiantil",
-                artist: "Tech Students",
-                file: "audio/walen-.mp3",
-                duration: "18:20",
-                description: "Nuestros estudiantes prueban las mejores apps de estudio y comparten resultados reales."
+                title: "Artículo 9. Postulados de la convivencia en la institución educativa",
+                artist: "Capítulo 2. Filosofía de la Convivencia en la institución educativa",
+                file: "campus/podcast/Artículo 9. Postulados de la convivencia en la institución educativa.mp3",
+                duration: "02:45",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez"
             },
             {
-                title: "⭐ De Cero a Héroe - Historias de Éxito Real",
-                artist: "Estudiantes Inspiradores",
-                file: "audio/walen-.mp3",
-                duration: "28:45",
-                description: "Estudiantes que pasaron de casi abandonar a ser los mejores. Historias inspiradoras."
+                title: "Artículo 15. Prácticas educativas para la promoción de los DDHH Y DHSH",
+                artist: "Capítulo 5. Enfoque de derechos",
+                file: "campus/podcast/Artículo 15. Prácticas educativas para la promoción de los DDHH Y DHSH.mp3",
+                duration: "01:55",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez"
             },
             {
-                title: "💡 Consejos de Supervivencia - Testados por Estudiantes",
-                artist: "Estudiantes Exitosos",
-                file: "audio/walen-.mp3",
-                duration: "20:00",
-                description: "Los mejores hacks para sobrevivir la universidad compartidos por estudiantes exitosos."
+                title: "Artículo 16. Enfoque diferencial",
+                artist: "Capítulo 5. Enfoque de derechos",
+                file: "campus/podcast/Artículo 16. Enfoque diferencial.mp3",
+                duration: "02:12",
+                description: "Tomado del Manual de Convivencia Héctor Abad Gómez"
             }
         ];
 
@@ -446,15 +365,51 @@
         let isPlaying = false;
         let audioPlayer = null;
 
+        // Generar la lista de pistas desde el array
+        function renderTrackList() {
+            const trackList = document.getElementById('trackList');
+            trackList.innerHTML = '';
+            
+            tracks.forEach((track, index) => {
+                const trackItem = document.createElement('div');
+                trackItem.className = 'track-item';
+                trackItem.setAttribute('data-index', index);
+                trackItem.onclick = () => playTrack(index);
+                
+                trackItem.innerHTML = `
+                    <div class="track-number">${(index + 1).toString().padStart(2, '0')}</div>
+                    <div class="track-info">
+                        <div class="track-title">${track.title}</div>
+                        <div class="track-artist">${track.artist}</div>
+                    </div>
+                    <div class="track-duration">${track.duration}</div>
+                    <div class="track-controls">
+                        <button class="track-btn" onclick="event.stopPropagation(); playTrack(${index})">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                `;
+                
+                trackList.appendChild(trackItem);
+            });
+        }
+
         function togglePlay() {
+            if (!audioPlayer) {
+                playTrack(currentTrack);
+                return;
+            }
+            
             const playBtn = document.getElementById('playIcon');
             isPlaying = !isPlaying;
             playBtn.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
             
             if (isPlaying) {
-                playTrack(currentTrack);
+                audioPlayer.play().catch(e => {
+                    console.log('Error al reproducir:', e);
+                });
             } else {
-                pauseTrack();
+                audioPlayer.pause();
             }
         }
 
@@ -462,103 +417,113 @@
             currentTrack = index;
             const track = tracks[index];
             
-            // Actualizar info
-            document.querySelector('.track-info h2').textContent = track.title;
-            document.querySelector('.track-info p').textContent = track.artist;
+            // Actualizar info del reproductor
+            document.getElementById('currentTitle').textContent = track.title;
+            document.getElementById('currentArtist').textContent = track.artist;
+            document.getElementById('duration').textContent = track.duration;
             
-            // Crear/actualizar reproductor
+            // Actualizar estado visual de la lista
+            updateTrackListUI();
+            
+            // Crear/actualizar reproductor de audio
             if (audioPlayer) {
                 audioPlayer.pause();
-                audioPlayer.remove();
             }
             
             audioPlayer = new Audio(track.file);
             audioPlayer.addEventListener('loadedmetadata', () => {
-                document.getElementById('duration').textContent = track.duration;
+                document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
             });
             
-            audioPlayer.addEventListener('timeupdate', () => {
+            audioPlayer.addEventListener('timeupdate', updateProgress);
+            audioPlayer.addEventListener('ended', nextTrack);
+            
+            // Reproducir si estaba en play
+            if (isPlaying) {
+                audioPlayer.play().catch(e => {
+                    console.log('Error al reproducir audio:', e);
+                    alert('No se pudo reproducir el audio. Verifica que el archivo existe.');
+                });
+                document.getElementById('playIcon').className = 'fas fa-pause';
+            }
+        }
+
+        function updateProgress() {
+            if (audioPlayer && audioPlayer.duration) {
                 const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
                 document.getElementById('progressFill').style.width = `${progress}%`;
                 
                 const currentTime = formatTime(audioPlayer.currentTime);
                 document.getElementById('currentTime').textContent = currentTime;
-            });
-            
-            if (isPlaying) {
-                audioPlayer.play().catch(e => {
-                    console.log('Error al reproducir audio:', e);
-                    // Mostrar mensaje al usuario
-                    alert('No se pudo reproducir el audio. Verifica que el archivo existe.');
-                });
             }
+        }
+
+        function seekAudio(event) {
+            if (!audioPlayer) return;
+            
+            const progressBar = document.querySelector('.progress-bar');
+            const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
+            const progressBarWidth = progressBar.offsetWidth;
+            const seekTime = (clickPosition / progressBarWidth) * audioPlayer.duration;
+            
+            audioPlayer.currentTime = seekTime;
+            updateProgress();
         }
 
         function previousTrack() {
             currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
             playTrack(currentTrack);
+            if (isPlaying) {
+                audioPlayer.play();
+            }
         }
 
         function nextTrack() {
             currentTrack = (currentTrack + 1) % tracks.length;
             playTrack(currentTrack);
-        }
-
-        function pauseTrack() {
-            if (audioPlayer) {
-                audioPlayer.pause();
+            if (isPlaying) {
+                audioPlayer.play();
             }
         }
 
         function formatTime(seconds) {
+            if (isNaN(seconds)) return "00:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function searchTracks(query) {
-            const filtered = tracks.filter(track => 
-                track.title.toLowerCase().includes(query.toLowerCase()) || 
-                track.artist.toLowerCase().includes(query.toLowerCase())
-            );
-            
-            // Aquí podrías implementar la lógica de filtrado visual
-            console.log('Buscando:', query, 'Resultados:', filtered);
+        function updateTrackListUI() {
+            const trackItems = document.querySelectorAll('.track-item');
+            trackItems.forEach((item, index) => {
+                if (index === currentTrack) {
+                    item.classList.add('playing');
+                } else {
+                    item.classList.remove('playing');
+                }
+            });
         }
 
-        // Inicializar el primer track
+        function searchTracks(query) {
+            const list = document.getElementById('trackList');
+            const items = list.querySelectorAll('.track-item');
+
+            items.forEach((item, idx) => {
+                const title  = tracks[idx].title.toLowerCase();
+                const artist = tracks[idx].artist.toLowerCase();
+                const match  = title.includes(query.toLowerCase()) ||
+                               artist.includes(query.toLowerCase());
+                
+                item.style.display = match ? 'flex' : 'none';
+            });
+        }
+
+        // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
+            renderTrackList();
             playTrack(0);
+            isPlaying = false;
         });
-
-        /* … tu código anterior (tracks, togglePlay, etc.) … */
-
-/* -------------------------------------------------
-   🔍 FILTRO DE BÚSQUEDA
---------------------------------------------------*/
-function searchTracks(query) {
-    const list = document.getElementById('trackList');
-    const items = list.querySelectorAll('.track-item');
-
-    items.forEach((item, idx) => {
-        const title  = tracks[idx].title.toLowerCase();
-        const artist = tracks[idx].artist.toLowerCase();
-        const match  = title.includes(query.toLowerCase()) ||
-                       artist.includes(query.toLowerCase());
-        
-        item.style.display = match ? 'flex' : 'none';
-    });
-}
-
-/* -------------------------------------------------
-   🚀 INICIALIZAR
---------------------------------------------------*/
-document.addEventListener('DOMContentLoaded', () => {
-    playTrack(0);          // ya lo tenías
-    // (Opcional) guardar referencias para optimizar
-});
     </script>
-    
 </body>
 </html>
-

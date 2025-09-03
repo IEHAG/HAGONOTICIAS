@@ -530,7 +530,35 @@
         document.addEventListener('DOMContentLoaded', function() {
             playTrack(0);
         });
+
+        /* … tu código anterior (tracks, togglePlay, etc.) … */
+
+/* -------------------------------------------------
+   🔍 FILTRO DE BÚSQUEDA
+--------------------------------------------------*/
+function searchTracks(query) {
+    const list = document.getElementById('trackList');
+    const items = list.querySelectorAll('.track-item');
+
+    items.forEach((item, idx) => {
+        const title  = tracks[idx].title.toLowerCase();
+        const artist = tracks[idx].artist.toLowerCase();
+        const match  = title.includes(query.toLowerCase()) ||
+                       artist.includes(query.toLowerCase());
+        
+        item.style.display = match ? 'flex' : 'none';
+    });
+}
+
+/* -------------------------------------------------
+   🚀 INICIALIZAR
+--------------------------------------------------*/
+document.addEventListener('DOMContentLoaded', () => {
+    playTrack(0);          // ya lo tenías
+    // (Opcional) guardar referencias para optimizar
+});
     </script>
+    
 </body>
 </html>
 

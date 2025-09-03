@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 HAG Videos - Estilo YouTube Mix</title>
+    <title>🎭 HAGO Noticias - Videos Institucionales</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,14 +14,14 @@
             color: white;
         }
 
-        /* 🎬 HEADER ESTILO YOUTUBE */
+        /* 🎬 HEADER ESTILO YOUTUBE CON TEMÁTICA ANTIOQUEÑA */
         .header {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
+            background: linear-gradient(135deg, #2d6ad4, #0b179d);
             padding: 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(255,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(14, 13, 11, 0.3);
         }
 
         .header-content {
@@ -35,7 +35,8 @@
         .logo {
             font-size: 2rem;
             font-weight: bold;
-            color: white;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
 
         .search-container {
@@ -101,18 +102,49 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #f8c300;
         }
 
         .video-area {
             position: relative;
             aspect-ratio: 16/9;
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
             color: rgba(255,255,255,0.3);
             cursor: pointer;
+            overflow: hidden;
+        }
+
+        .video-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-area:hover .video-thumb {
+            transform: scale(1.05);
+        }
+
+        .play-icon {
+            position: absolute;
+            z-index: 2;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .video-area:hover .play-icon {
+            background: rgba(248, 195, 0, 0.8);
+            transform: scale(1.1);
         }
 
         .video-controls {
@@ -123,6 +155,7 @@
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
             padding: 20px;
             opacity: 1;
+            z-index: 3;
         }
 
         .video-info {
@@ -152,7 +185,8 @@
         .mix-title {
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
-            color: white;
+            color: #f8c300;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .video-grid {
@@ -167,22 +201,47 @@
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
+            border: 1px solid #333;
         }
 
         .video-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255,0,0,0.3);
+            box-shadow: 0 10px 20px rgba(248, 195, 0, 0.3);
+            border-color: #f8c300;
         }
 
         .video-thumbnail {
             position: relative;
             aspect-ratio: 16/9;
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.5);
+            overflow: hidden;
+        }
+
+        .thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail-img {
+            transform: scale(1.05);
+        }
+
+        .card-play-icon {
+            position: absolute;
+            color: white;
+            font-size: 2rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover .card-play-icon {
+            color: #f8c300;
+            transform: scale(1.2);
         }
 
         .video-duration {
@@ -193,6 +252,7 @@
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.8rem;
+            z-index: 2;
         }
 
         .video-details {
@@ -225,6 +285,7 @@
             background: #181818;
             margin: 1rem 0;
             border-radius: 10px;
+            border: 1px solid #333;
         }
 
         .stats-item {
@@ -235,7 +296,7 @@
         .stats-number {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #ff6b35;
+            color: #f8c300;
         }
 
         /* 🎬 MODAL VIDEO PLAYER */
@@ -259,6 +320,7 @@
             max-height: 90%;
             overflow: hidden;
             position: relative;
+            border: 2px solid #f8c300;
         }
 
         .close-modal {
@@ -305,15 +367,64 @@
             color: #aaa;
             font-size: 1.2rem;
         }
+
+        /* ELEMENTOS DECORATIVOS ANTIOQUEÑOS */
+        .antioquia-banner {
+            background: linear-gradient(90deg, #f8c300, #d4a506, #f8c300);
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+        }
+
+        .typical-element {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .typical-element-1 {
+            top: 20%;
+            left: 5%;
+        }
+
+        .typical-element-2 {
+            top: 40%;
+            right: 5%;
+        }
+
+        .typical-element-3 {
+            bottom: 20%;
+            left: 10%;
+        }
+
+        .typical-element-4 {
+            bottom: 30%;
+            right: 10%;
+        }
     </style>
 </head>
 <body>
+    <!-- BANNER DE ANTIOQUEÑIDAD -->
+    <div class="antioquia-banner">
+        ¡Hago Noticias! 🎭 I.E Héctor abad Gómez
+    </div>
+
+    <!-- ELEMENTOS DECORATIVOS TÍPICOS -->
+    <div class="typical-element typical-element-1">🎭</div>
+    <div class="typical-element typical-element-2">☕</div>
+    <div class="typical-element typical-element-3">🧢</div>
+    <div class="typical-element typical-element-4">🎶</div>
+
     <!-- 🎬 HEADER -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">🎬 HAG Videos</div>
+            <div class="logo">🎭 videos Institucionales</div>
             <div class="search-container">
-                <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar videos estudiantiles...">
+                <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar contenido paisa...">
                 <button class="search-btn" onclick="performSearch()">
                     <i class="fas fa-search"></i>
                 </button>
@@ -340,11 +451,14 @@
     <!-- 🎥 REPRODUCTOR PRINCIPAL -->
     <div class="player-section" id="mainContent">
         <div class="main-player">
-            <div class="video-area" onclick="playVideo('main')">
-                <i class="fas fa-play-circle"></i>
+            <div class="video-area" onclick="playVideo('feria')">
+                <img src="https://placehold.co/800x450/2d6ad4/FFFFFF?text=Feria+de+Flores+2024" alt="Feria de las Flores" class="video-thumb">
+                <div class="play-icon">
+                    <i class="fas fa-play-circle" style="font-size: 3rem;"></i>
+                </div>
                 <div class="video-controls">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <button class="control-btn" onclick="playVideo('main')">
+                        <button class="control-btn" onclick="playVideo('feria')">
                             <i class="fas fa-play"></i>
                         </button>
                         <span>Ver Video</span>
@@ -352,42 +466,48 @@
                 </div>
             </div>
             <div class="video-info">
-                <div class="video-title">🎓 Campus Life: El día a día de un estudiante HAG</div>
+                <div class="video-title">🎭 Feria de las Flores 2024 - Desfile de Silleteros</div>
                 <div class="video-stats">
-                    <span>👁️ 526.9k vistas</span>
-                    <span>📅 Hace 1 semana</span>
-                    <span>⏱️ 25:30</span>
+                    <span>👁️ 856.3k vistas</span>
+                    <span>📅 Hace 3 días</span>
+                    <span>⏱️ 42:15</span>
                 </div>
             </div>
         </div>
 
         <!-- 📱 SUGERENCIAS -->
         <div class="suggestions">
-            <h3>💡 Más Contenido</h3>
-            <div class="video-card" onclick="playVideo('director')">
+            <h3>💡 Más Contenido Paisa</h3>
+            <div class="video-card" onclick="playVideo('cultura')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-user-tie"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Música+Antioqueña" alt="Música Antioqueña" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">25:30</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">🎓 Día con el Director - Experiencia completa</div>
+                    <div class="video-card-title">🎶 Música Antioqueña - Tradición y Folclor</div>
                     <div class="video-card-meta">
-                        <span>HAG Estudiantes</span>
-                        <span>👁️ 2.3K vistas</span>
+                        <span>Cultura Paisa</span>
+                        <span>👁️ 45.3K vistas</span>
                     </div>
                 </div>
             </div>
 
-            <div class="video-card" onclick="playVideo('hackathon')">
+            <div class="video-card" onclick="playVideo('gastronomia')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-laptop-code"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Gastronomía+Paisa" alt="Gastronomía Paisa" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">18:45</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">💻 Hackathon 2024 - 48 horas de innovación</div>
+                    <div class="video-card-title">🍲 Gastronomía Antioqueña - La bandeja paisa</div>
                     <div class="video-card-meta">
-                        <span>Tech Students</span>
-                        <span>👁️ 5.1K vistas</span>
+                        <span>Sabores de Antioquia</span>
+                        <span>👁️ 78.1K vistas</span>
                     </div>
                 </div>
             </div>
@@ -396,110 +516,128 @@
 
     <!-- 🎶 PLAYLIST ESTILO MIX -->
     <div class="mixes-section" id="mixesSection">
-        <h2 class="mix-title">🎶 Mix: Estudiantes Hablan</h2>
+        <h2 class="mix-title">🎶 Mix: Cultura Antioqueña</h2>
         
         <div class="stats-bar">
             <div class="stats-item">
-                <div class="stats-number">526.9K</div>
+                <div class="stats-number">1.2M</div>
                 <div>Reproducciones Totales</div>
             </div>
             <div class="stats-item">
-                <div class="stats-number">38</div>
+                <div class="stats-number">24</div>
                 <div>Videos</div>
             </div>
             <div class="stats-item">
-                <div class="stats-number">5:24</div>
+                <div class="stats-number">8:15</div>
                 <div>Duración Promedio</div>
             </div>
         </div>
 
         <div class="video-grid" id="videoGrid">
             <!-- 📽️ VIDEO 1 -->
-            <div class="video-card" onclick="playVideo('graduacion')">
+            <div class="video-card" onclick="playVideo('artesania')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-graduation-cap"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Artesanías+Antioqueñas" alt="Artesanías Antioqueñas" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">22:15</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">🎓 Graduación 2024 - Lo mejor del evento</div>
+                    <div class="video-card-title">🧵 Artesanías de Antioquia - Tejiendo tradición</div>
                     <div class="video-card-meta">
-                        <span>HAG Estudiantes</span>
-                        <span>👁️ 8.7K vistas</span>
+                        <span>Artesanías Paisas</span>
+                        <span>👁️ 32.7K vistas</span>
                     </div>
                 </div>
             </div>
 
             <!-- 📽️ VIDEO 2 -->
-            <div class="video-card" onclick="playVideo('proyecto')">
+            <div class="video-card" onclick="playVideo('pueblos')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-project-diagram"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Pueblos+Patrimonio" alt="Pueblos Patrimonio" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">35:00</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">🔬 Proyecto final - Robótica educativa</div>
+                    <div class="video-card-title">🏞️ Pueblos Patrimonio - Joyas de Antioquia</div>
                     <div class="video-card-meta">
-                        <span>Ingeniería HAG</span>
-                        <span>👁️ 3.4K vistas</span>
+                        <span>Turismo Antioquia</span>
+                        <span>👁️ 56.4K vistas</span>
                     </div>
                 </div>
             </div>
 
             <!-- 📽️ VIDEO 3 -->
-            <div class="video-card" onclick="playVideo('deporte')">
+            <div class="video-card" onclick="playVideo('baile')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-running"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Bailes+Típicos" alt="Bailes Típicos" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">15:20</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">⚽ Campeonato - Mejores momentos</div>
+                    <div class="video-card-title">💃 Bailes Típicos - El ritmo de la montaña</div>
                     <div class="video-card-meta">
-                        <span>Deportes HAG</span>
-                        <span>👁️ 4.2K vistas</span>
+                        <span>Folclor Paisa</span>
+                        <span>👁️ 41.2K vistas</span>
                     </div>
                 </div>
             </div>
 
             <!-- 📽️ VIDEO 4 -->
-            <div class="video-card" onclick="playVideo('tutoriales')">
+            <div class="video-card" onclick="playVideo('cafe')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-chalkboard-teacher"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Cultura+Cafetera" alt="Cultura Cafetera" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">20:30</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">📚 Tutoriales de estudio - Métodos probados</div>
+                    <div class="video-card-title">☕ Cultura Cafetera - Del grano a la taza</div>
                     <div class="video-card-meta">
-                        <span>Estudiantes Honor</span>
-                        <span>👁️ 6.8K vistas</span>
+                        <span>Café de Antioquia</span>
+                        <span>👁️ 68.8K vistas</span>
                     </div>
                 </div>
             </div>
 
             <!-- 📽️ VIDEO 5 -->
-            <div class="video-card" onclick="playVideo('ciencia')">
+            <div class="video-card" onclick="playVideo('historia')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-flask"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Historia+Antioqueña" alt="Historia Antioqueña" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">28:15</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">🧪 Feria de Ciencias - Experimentos increíbles</div>
+                    <div class="video-card-title">🏛️ Historia Antioqueña - Raíces y tradición</div>
                     <div class="video-card-meta">
-                        <span>Ciencias HAG</span>
-                        <span>👁️ 7.2K vistas</span>
+                        <span>Memoria Paisa</span>
+                        <span>👁️ 37.2K vistas</span>
                     </div>
                 </div>
             </div>
 
             <!-- 📽️ VIDEO 6 -->
-            <div class="video-card" onclick="playVideo('arte')">
+            <div class="video-card" onclick="playVideo('fiestas')">
                 <div class="video-thumbnail">
-                    <i class="fas fa-palette"></i>
+                    <img src="https://placehold.co/300x169/2d6ad4/FFFFFF?text=Fiestas+Populares" alt="Fiestas Populares" class="thumbnail-img">
+                    <div class="card-play-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <div class="video-duration">16:45</div>
                 </div>
                 <div class="video-details">
-                    <div class="video-card-title">🎨 Exposición de Arte - Talentos estudiantiles</div>
+                    <div class="video-card-title">🎉 Fiestas Populares - Alegría paisa</div>
                     <div class="video-card-meta">
-                        <span>Arte HAG</span>
-                        <span>👁️ 3.9K vistas</span>
+                        <span>Festejos Antioqueños</span>
+                        <span>👁️ 43.9K vistas</span>
                     </div>
                 </div>
             </div>
@@ -507,88 +645,88 @@
     </div>
 
     <script>
-        // 📁 CONFIGURACIÓN DE VIDEOS
+        // 📁 CONFIGURACIÓN DE VIDEOS CON TEMÁTICA ANTIOQUEÑA
         const videos = [
             {
-                id: "main",
-                title: "🎓 Campus Life: El día a día de un estudiante HAG",
-                file: "video/LogoRevealExplosinpic.mp4",
-                duration: "25:30",
-                views: "526.9k",
-                thumbnail: "fas fa-play-circle",
-                channel: "HAG Estudiantes"
+                id: "feria",
+                title: "🎭 Feria de las Flores 2024 - Desfile de Silleteros",
+                file: "video/feria-flores.mp4",
+                thumbnail: "https://placehold.co/800x450/2d6ad4/FFFFFF?text=Feria+de+Flores+2024",
+                duration: "42:15",
+                views: "856.3k",
+                channel: "Cultura Antioqueña"
             },
             {
-                id: "director",
-                title: "🎓 Día con el Director - Experiencia completa",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "cultura",
+                title: "🎶 Música Antioqueña - Tradición y Folclor",
+                file: "video/musica-antioquena.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Música+Antioqueña",
                 duration: "25:30",
-                views: "2.3k",
-                thumbnail: "fas fa-user-tie",
-                channel: "HAG Estudiantes"
+                views: "45.3k",
+                channel: "Cultura Paisa"
             },
             {
-                id: "hackathon",
-                title: "💻 Hackathon 2024 - 48 horas de innovación",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "gastronomia",
+                title: "🍲 Gastronomía Antioqueña - La bandeja paisa",
+                file: "video/gastronomia-paisa.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Gastronomía+Paisa",
                 duration: "18:45",
-                views: "5.1k",
-                thumbnail: "fas fa-laptop-code",
-                channel: "Tech Students"
+                views: "78.1k",
+                channel: "Sabores de Antioquia"
             },
             {
-                id: "graduacion",
-                title: "🎓 Graduación 2024 - Lo mejor del evento",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "artesania",
+                title: "🧵 Artesanías de Antioquia - Tejiendo tradición",
+                file: "video/artesanias-paisas.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Artesanías+Antioqueñas",
                 duration: "22:15",
-                views: "8.7k",
-                thumbnail: "fas fa-graduation-cap",
-                channel: "HAG Estudiantes"
+                views: "32.7k",
+                channel: "Artesanías Paisas"
             },
             {
-                id: "proyecto",
-                title: "🔬 Proyecto final - Robótica educativa",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "pueblos",
+                title: "🏞️ Pueblos Patrimonio - Joyas de Antioquia",
+                file: "video/pueblos-antioquia.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Pueblos+Patrimonio",
                 duration: "35:00",
-                views: "3.4k",
-                thumbnail: "fas fa-project-diagram",
-                channel: "Ingeniería HAG"
+                views: "56.4k",
+                channel: "Turismo Antioquia"
             },
             {
-                id: "deporte",
-                title: "⚽ Campeonato - Mejores momentos",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "baile",
+                title: "💃 Bailes Típicos - El ritmo de la montaña",
+                file: "video/bailes-tipicos.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Bailes+Típicos",
                 duration: "15:20",
-                views: "4.2k",
-                thumbnail: "fas fa-running",
-                channel: "Deportes HAG"
+                views: "41.2k",
+                channel: "Folclor Paisa"
             },
             {
-                id: "tutoriales",
-                title: "📚 Tutoriales de estudio - Métodos probados",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "cafe",
+                title: "☕ Cultura Cafetera - Del grano a la taza",
+                file: "video/cultura-cafetera.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Cultura+Cafetera",
                 duration: "20:30",
-                views: "6.8k",
-                thumbnail: "fas fa-chalkboard-teacher",
-                channel: "Estudiantes Honor"
+                views: "68.8k",
+                channel: "Café de Antioquia"
             },
             {
-                id: "ciencia",
-                title: "🧪 Feria de Ciencias - Experimentos increíbles",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "historia",
+                title: "🏛️ Historia Antioqueña - Raíces y tradición",
+                file: "video/historia-antioquena.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Historia+Antioqueña",
                 duration: "28:15",
-                views: "7.2k",
-                thumbnail: "fas fa-flask",
-                channel: "Ciencias HAG"
+                views: "37.2k",
+                channel: "Memoria Paisa"
             },
             {
-                id: "arte",
-                title: "🎨 Exposición de Arte - Talentos estudiantiles",
-                file: "video/LogoRevealExplosinpic.mp4",
+                id: "fiestas",
+                title: "🎉 Fiestas Populares - Alegría paisa",
+                file: "video/fiestas-populares.mp4",
+                thumbnail: "https://placehold.co/300x169/2d6ad4/FFFFFF?text=Fiestas+Populares",
                 duration: "16:45",
-                views: "3.9k",
-                thumbnail: "fas fa-palette",
-                channel: "Arte HAG"
+                views: "43.9k",
+                channel: "Festejos Antioqueños"
             }
         ];
 
@@ -612,7 +750,7 @@
                             Tu navegador no soporta videos HTML5.
                         </video>
                         <div style="padding: 1rem; color: #aaa;">
-                            <p>Contenido estudiantil de calidad de la Institución Educativa Héctor Abad Gómez</p>
+                            <p>Contenido cultural para celebrar el Día de la Antioqueñidad</p>
                             <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
                                 <span>⏱️ ${video.duration}</span>
                                 <span>👁️ ${video.views}</span>
@@ -675,7 +813,10 @@
                     
                     videoCard.innerHTML = `
                         <div class="video-thumbnail">
-                            <i class="${video.thumbnail}"></i>
+                            <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail-img">
+                            <div class="card-play-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
                             <div class="video-duration">${video.duration}</div>
                         </div>
                         <div class="video-details">
@@ -694,8 +835,8 @@
                 resultsGrid.innerHTML = `
                     <div class="no-results">
                         <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <h3>No se encontraron resultados</h3>
-                        <p>Intenta con otros términos de búsqueda</p>
+                        <h3>¡Uy, qué pena!</h3>
+                        <p>No encontramos resultados para tu búsqueda</p>
                     </div>
                 `;
             }

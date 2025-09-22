@@ -2,8 +2,8 @@
 
 // Credenciales válidas (en un entorno real, esto estaría en el backend)
 const validCredentials = {
-    username: 'admin',
-    password: 'hag2024'
+    username: 'adminhag@gmail.com',
+    password: 'CAÑOLA2027*'
 };
 
 // Variables globales

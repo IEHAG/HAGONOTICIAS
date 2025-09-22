@@ -37,6 +37,115 @@
             padding: 2rem;
         }
         
+        /* Responsive Design para móviles */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                width: 250px;
+                height: 100vh;
+                z-index: 1050;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 1040;
+                display: none;
+            }
+            
+            .overlay.show {
+                display: block;
+            }
+            
+            .mobile-header {
+                display: block;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin-bottom: 1rem;
+            }
+            
+            .header-bar .d-flex {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-bar .d-flex > div:first-child {
+                text-align: center;
+            }
+            
+            .header-bar .d-flex > div:last-child {
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn-custom {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header-bar {
+                padding: 1rem;
+            }
+            
+            .header-bar h2 {
+                font-size: 1.5rem;
+            }
+            
+            .btn-custom {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn-custom .fas {
+                display: none;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+        }
+        
+        .mobile-header {
+            display: none;
+        }
+        
+        .mobile-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #007bff;
+            cursor: pointer;
+        }
+        
         .card {
             border: none;
             border-radius: 15px;
@@ -208,6 +317,19 @@
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10">
                 <div class="main-content">
+                    <!-- Mobile Header -->
+                    <div class="mobile-header d-md-none">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="mobile-toggle" onclick="toggleSidebar()">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <h5 class="mb-0 text-primary fw-bold">Panel Admin</h5>
+                            <a href="../index.html" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Header -->
                     <div class="header-bar">
                         <div class="d-flex justify-content-between align-items-center">
@@ -216,12 +338,16 @@
                                 <p class="text-muted mb-0">Gestiona las ediciones de HAGO Noticias</p>
                             </div>
                             <div class="d-flex align-items-center gap-3">
-                                <a href="../index.html" class="btn btn-outline-primary btn-custom">
+                                <a href="../index.html" class="btn btn-outline-primary btn-custom d-none d-md-inline-flex">
                                     <i class="fas fa-home me-2"></i>Ir a Página Principal
                                 </a>
-                                <div class="text-end">
+                                <div class="text-end d-none d-md-block">
                                     <small class="text-muted">Último acceso:</small><br>
                                     <span id="lastLogin" class="fw-bold"></span>
+                                </div>
+                                <div class="d-md-none text-center">
+                                    <small class="text-muted d-block">Último acceso:</small>
+                                    <span id="lastLoginMobile" class="fw-bold small"></span>
                                 </div>
                             </div>
                         </div>
@@ -388,25 +514,28 @@
                     <div id="manage-section" class="section" style="display: none;">
                         <div class="card">
                             <div class="card-header bg-warning text-dark">
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                                     <h5 class="mb-0"><i class="fa fa-folder-open me-2"></i>Gestionar PDFs Existentes</h5>
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex gap-2 flex-wrap">
                                         <button class="btn btn-outline-dark btn-sm" id="refreshStats" title="Actualizar estadísticas">
                                             <i class="fa fa-refresh"></i>
+                                            <span class="d-md-none ms-1">Actualizar</span>
                                         </button>
                                         <button class="btn btn-outline-dark btn-sm" id="exportData" title="Exportar datos">
                                             <i class="fa fa-download"></i>
+                                            <span class="d-md-none ms-1">Exportar</span>
                                         </button>
                                         <button class="btn btn-outline-dark btn-sm" id="backupData" title="Crear backup">
                                             <i class="fa fa-save"></i>
+                                            <span class="d-md-none ms-1">Backup</span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <!-- Filtros y búsqueda -->
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
+                                <div class="row mb-4 g-3">
+                                    <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fa fa-search"></i>
@@ -414,7 +543,7 @@
                                             <input type="text" id="searchFiles" class="form-control" placeholder="Buscar por título o temas...">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-12 col-md-3">
                                         <select id="yearFilter" class="form-select">
                                             <option value="">Todos los años</option>
                                             <option value="2025">2025</option>
@@ -422,8 +551,8 @@
                                             <option value="2023">2023</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
-                                        <button class="btn btn-primary w-100" onclick="enhancedDashboard.showSection('upload')">
+                                    <div class="col-12 col-md-3">
+                                        <button class="btn btn-primary w-100" onclick="showSection('upload')">
                                             <i class="fa fa-plus me-2"></i>Nueva Edición
                                         </button>
                                     </div>
@@ -523,6 +652,9 @@
         </div>
     </div>
 
+    <!-- Mobile Overlay -->
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
     <!-- Modal de Confirmación -->
     <div class="modal fade" id="confirmModal" tabindex="-1">
         <div class="modal-dialog">
@@ -545,13 +677,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="dashboard.js"></script>
     <script>
+        // Funciones para móvil
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.overlay');
+            
+            if (sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+            }
+        }
+
+        // Sincronizar último login en móvil
+        function syncLastLogin() {
+            const lastLogin = document.getElementById('lastLogin');
+            const lastLoginMobile = document.getElementById('lastLoginMobile');
+            if (lastLogin && lastLoginMobile) {
+                lastLoginMobile.textContent = lastLogin.textContent;
+            }
+        }
+
         // Asegurar que el formulario tenga el event listener
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('uploadForm');
             if (form && typeof handleUpload === 'function') {
                 form.addEventListener('submit', handleUpload);
             }
+            
+            // Sincronizar último login
+            setTimeout(syncLastLogin, 100);
+            
+            // Cerrar sidebar al hacer clic en enlaces en móvil
+            const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        setTimeout(() => {
+                            toggleSidebar();
+                        }, 100);
+                    }
+                });
+            });
         });
     </script>
 </body>
 </html>
+

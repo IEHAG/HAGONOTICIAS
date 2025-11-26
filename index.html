@@ -328,114 +328,17 @@
     </section>
 
     <!-- Ediciones Section -->
+    <!-- Las ediciones se cargan dinámicamente desde ediciones-data.js mediante modern-edition-viewer.js -->
     <section id="ediciones" class="py-5 bg-dark">
         <div class="container">
             <h2 class="section-title display-5 fw-bold text-white text-center mb-5 reveal animate-fadeInUp">
                 <span class="text-primary">Ediciones</span>
             </h2>
-
-            <!-- Grid de 2 columnas para ediciones -->
-            <div class="editions-grid">
-                <div class="row g-4">
-                    <!-- Edición 1 -->
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="edition-card">
-                            <div class="edition-image">
-                                <img src="img/default-thumbnail.png" alt="Edición 1" class="img-fluid">
-                                <div class="edition-overlay">
-                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
-                                </div>
-                            </div>
-                            <div class="edition-content">
-                                <h4 class="edition-title">Edición 1</h4>
-                                <p class="edition-description">Primera edición del periódico institucional HAGO Noticias</p>
-                                <div class="edition-actions">
-                                    <a href="pdf/EDICION1.pdf" target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-eye me-2"></i>Ver PDF
-                                    </a>
-                                    <a href="pdf/EDICION1.pdf" download class="btn btn-outline-light">
-                                        <i class="fas fa-download me-2"></i>Descargar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Edición 2 -->
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="edition-card">
-                            <div class="edition-image">
-                                <img src="img/default-thumbnail.png" alt="Edición 2" class="img-fluid">
-                                <div class="edition-overlay">
-                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
-                                </div>
-                            </div>
-                            <div class="edition-content">
-                                <h4 class="edition-title">Edición 2</h4>
-                                <p class="edition-description">Segunda edición del periódico institucional HAGO Noticias</p>
-                                <div class="edition-actions">
-                                    <a href="pdf/EDICION2.pdf" target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-eye me-2"></i>Ver PDF
-                                    </a>
-                                    <a href="pdf/EDICION2.pdf" download class="btn btn-outline-light">
-                                        <i class="fas fa-download me-2"></i>Descargar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Edición 3 -->
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="edition-card">
-                            <div class="edition-image">
-                                <img src="img/default-thumbnail.png" alt="Edición 3" class="img-fluid">
-                                <div class="edition-overlay">
-                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
-                                </div>
-                            </div>
-                            <div class="edition-content">
-                                <h4 class="edition-title">Edición 3</h4>
-                                <p class="edition-description">Tercera edición del periódico institucional HAGO Noticias</p>
-                                <div class="edition-actions">
-                                    <a href="pdf/EDICION3.pdf" target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-eye me-2"></i>Ver PDF
-                                    </a>
-                                    <a href="pdf/EDICION3.pdf" download class="btn btn-outline-light">
-                                        <i class="fas fa-download me-2"></i>Descargar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Edición 4 -->
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="edition-card">
-                            <div class="edition-image">
-                                <img src="img/default-thumbnail.png" alt="Edición 4" class="img-fluid">
-                                <div class="edition-overlay">
-                                    <i class="fas fa-file-pdf fa-3x text-white"></i>
-                                </div>
-                            </div>
-                            <div class="edition-content">
-                                <h4 class="edition-title">Edición 4</h4>
-                                <p class="edition-description">Cuarta edición del periódico institucional HAGO Noticias</p>
-                                <div class="edition-actions">
-                                    <a href="pdf/EDICION4.pdf" target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-eye me-2"></i>Ver PDF
-                                    </a>
-                                    <a href="pdf/EDICION4.pdf" download class="btn btn-outline-light">
-                                        <i class="fas fa-download me-2"></i>Descargar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- El contenido de las ediciones se genera automáticamente por modern-edition-viewer.js -->
         </div>
     </section>
+
+    
 
     <!-- Multimedia Section -->
     <section id="multimedia" class="multimedia-section">
@@ -521,6 +424,7 @@
     <script src="js/jquery.magnific-popup.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/hero-background.js"></script>
+    <script src="js/ediciones-data.js"></script>
     <script src="js/theme-system.js"></script>
     <script src="js/modern-navbar.js"></script>
     <script src="js/enhanced-pdf-viewer.js"></script>

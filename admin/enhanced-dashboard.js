@@ -1,60 +1,11 @@
 // Dashboard Mejorado - HAGO Noticias
 class EnhancedDashboard {
     constructor() {
-        this.pdfData = [
-            {
-                id: 1,
-                title: "Edición # 1",
-                author: "Día de la democracia, Madres, Maestro, Talentos Abadistas",
-                category: "#1",
-                year: 2024,
-                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240",
-                pdfUrl: "pdf/EDICION1.pdf",
-                uploadDate: "2024-01-15",
-                size: "2.5 MB",
-                views: 234,
-                downloads: 89
-            },
-            {
-                id: 2,
-                title: "Edición # 2",
-                author: "Día de la Antioqueñidad",
-                category: "#2",
-                year: 2024,
-                thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w320-h240",
-                pdfUrl: "pdf/EDICION2.pdf",
-                uploadDate: "2024-03-20",
-                size: "3.1 MB",
-                views: 189,
-                downloads: 67
-            },
-            {
-                id: 3,
-                title: "Edición # 3",
-                author: "Semana Abadista - Foro - Museo Escolar",
-                category: "#3",
-                year: 2024,
-                thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240",
-                pdfUrl: "pdf/EDICION3.pdf",
-                uploadDate: "2024-06-10",
-                size: "2.8 MB",
-                views: 156,
-                downloads: 45
-            },
-            {
-                id: 4,
-                title: "Edición # 4",
-                author: "La institución de la Inclusión, Gobierno Escolar 2025",
-                category: "#4",
-                year: 2025,
-                thumbnail: "https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w320-h240",
-                pdfUrl: "pdf/EDICION4.pdf",
-                uploadDate: "2025-01-15",
-                size: "3.5 MB",
-                views: 312,
-                downloads: 123
-            }
-        ];
+        // Cargar ediciones desde el archivo centralizado
+        // NOTA: Asegúrate de cargar ediciones-data.js antes de este archivo
+        this.pdfData = (typeof getEdicionesAsEnhancedPdfData === 'function') 
+            ? getEdicionesAsEnhancedPdfData() 
+            : [];
         
         this.currentSection = 'dashboard';
         this.fileToDelete = null;

@@ -74,64 +74,11 @@ class ModernEditionViewer {
     }
     
     loadBooks() {
-        this.books = [
-            {
-                id: 1,
-                title: "Edición #1",
-                description: "Temas: Día de la democracia, Madres, Maestro, Talentos Abadistas",
-                category: "#1",
-                year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w500-h400",
-                pdfUrl: "pdf/EDICION1.pdf",
-                tags: ["democracia", "madres", "maestro", "talentos"],
-                featured: true
-            },
-            {
-                id: 2,
-                title: "Edición #2",
-                description: "Temas: Periodico Institucional - Día de la Antioqueñidad",
-                category: "#2",
-                year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w500-h400",
-                pdfUrl: "pdf/EDICION2.pdf",
-                tags: ["antioqueñidad", "cultura", "tradición", "periodico"],
-                featured: false
-            },
-            {
-                id: 3,
-                title: "Edición #3",
-                description: "Temas: Semana Abadista - Periodico Institucional",
-                category: "#3",
-                year: "Año 2024",
-                thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w500-h400",
-                pdfUrl: "pdf/EDICION3.pdf",
-                tags: ["semana abadista", "foro", "museo", "escolar"],
-                featured: false
-            },
-            {
-                id: 4,
-                title: "Edición #4",
-                description: "Temas: La institución de la Inclusión, Gobierno Escolar 2025",
-                category: "#4",
-                year: "Año 2025",
-                thumbnail: "https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w500-h400",
-                pdfUrl: "pdf/EDICION4.pdf",
-                tags: ["inclusión", "gobierno escolar", "2025"],
-                featured: true
-            },
-            {
-                id: 5,
-                title: "Edición #5",
-                description: "Temas: Día de Maestro - Periodico Institucional",
-                category: "#5",
-                year: "Año 2025",
-                thumbnail: "img/logo-hag-noticias.png",
-                pdfUrl: "#",
-                tags: ["Día Maestro", "semana", "periodico"],
-                featured: false,
-                comingSoon: true
-            }
-        ];
+        // Cargar ediciones desde el archivo centralizado
+        // NOTA: Asegúrate de cargar ediciones-data.js antes de este archivo
+        this.books = (typeof getEdicionesAsModernBooks === 'function') 
+            ? getEdicionesAsModernBooks() 
+            : [];
         
         this.filteredBooks = [...this.books];
     }
@@ -439,21 +386,14 @@ class ModernEditionViewer {
                      onerror="this.src='img/default-thumbnail.png'">
                 
                 <div class="modern-card-overlay">
-                    <div class="modern-card-overlay-content">
-                        <h4 style="margin-bottom: 1rem;">${book.title}</h4>
-                        <p style="margin-bottom: 1.5rem; opacity: 0.9;">${book.description}</p>
-                        ${!isComingSoon ? `
-                            <button class="modern-card-button modern-card-button-primary" 
-                                    onclick="modernViewer.handleViewPDF('${book.pdfUrl}', '${book.title}')">
-                                <i class="fas fa-eye"></i>
-                                <span>Ver Ahora</span>
-                            </button>
-                        ` : `
-                            <div style="color: rgba(255,255,255,0.8); font-style: italic;">
-                                <i class="fas fa-clock"></i> Próximamente
+                    ${isComingSoon ? `
+                        <div class="modern-card-overlay-content">
+                            <div style="color: rgba(255,255,255,0.9); font-style: italic; text-align: center;">
+                                <i class="fas fa-clock" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                <div style="font-size: 1.1rem;">Próximamente</div>
                             </div>
-                        `}
-                    </div>
+                        </div>
+                    ` : ''}
                 </div>
                 
                 <div class="modern-card-badge ${isFeatured ? 'featured' : ''}">${book.category}</div>
@@ -461,16 +401,9 @@ class ModernEditionViewer {
                     <i class="fas fa-calendar me-1"></i>${book.year}
                 </div>
                 
-                ${isComingSoon ? '<div class="coming-soon-badge"><i class="fas fa-clock"></i> Próximamente</div>' : ''}
-            </div>
-            
-            <div class="modern-card-content">
-                <h3 class="modern-card-title">${book.title}</h3>
-                <p class="modern-card-description">${book.description}</p>
-                
-                <div class="modern-card-actions">
-                    ${!isComingSoon ? `
-                        <button class="modern-card-button modern-card-button-primary view-pdf-modern" 
+                ${!isComingSoon ? `
+                    <div class="modern-card-side-buttons">
+                        <button class="modern-card-button modern-card-button-primary view-pdf-modern modern-card-button-left" 
                                 data-pdf="${book.pdfUrl}" 
                                 data-title="${book.title}">
                             <i class="fas fa-eye"></i>
@@ -478,21 +411,24 @@ class ModernEditionViewer {
                         </button>
                         <a href="${book.pdfUrl}" 
                            download 
-                           class="modern-card-button modern-card-button-secondary"
+                           class="modern-card-button modern-card-button-secondary modern-card-button-right"
                            title="Descargar PDF">
                             <i class="fas fa-download"></i>
+                            <span>Descargar</span>
                         </a>
-                    ` : `
-                        <button class="modern-card-button modern-card-button-primary" disabled>
-                            <i class="fas fa-clock"></i>
-                            <span>Próximamente</span>
-                        </button>
-                    `}
-                </div>
+                    </div>
+                ` : `
+                    <div class="coming-soon-badge"><i class="fas fa-clock"></i> Próximamente</div>
+                `}
+            </div>
+            
+            <div class="modern-card-content">
+                <h3 class="modern-card-title">${book.title}</h3>
+                <p class="modern-card-description">${book.description}</p>
             </div>
         `;
         
-        // Bind events
+        // Bind events para el botón de ver PDF
         const viewBtn = card.querySelector('.view-pdf-modern');
         if (viewBtn && !isComingSoon) {
             viewBtn.addEventListener('click', (e) => {

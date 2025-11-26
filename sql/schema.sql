@@ -91,11 +91,14 @@ CREATE POLICY "Eliminación de thumbnails para usuarios autenticados" ON storage
     FOR DELETE USING (bucket_id = 'thumbnails' AND auth.role() = 'authenticated');
 
 -- Datos de ejemplo (opcional, para testing)
+-- NOTA: Los datos se sincronizan desde js/ediciones-data.js
+-- Este INSERT es solo para inicialización. Para actualizar, usa el dashboard administrativo.
 INSERT INTO ediciones (titulo, autor, categoria, anio, descripcion, pdf_url, thumbnail_url, orden_visualizacion) VALUES
-('Edición # 1', 'Día de la democracia, Madres, Maestro, Talentos Abadistas', '#1', 2024, 'Primera edición del periódico institucional', 'pdf/Edición1.pdf', 'https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240', 1),
-('Edición # 2', 'Día de la Antioqueñidad', '#2', 2024, 'Segunda edición del periódico institucional', 'pdf/Edición2.pdf', 'https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w320-h240', 2),
-('Edición # 3', 'Semana Abadista - Foro - Museo Escolar', '#3', 2024, 'Tercera edición del periódico institucional', 'pdf/Edición3.pdf', 'https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240', 3),
-('Edición # 4', 'La institución de la Inclusión, Gobierno Escolar 2025', '#4', 2025, 'Cuarta edición del periódico institucional', 'pdf/Edición4.pdf', 'https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w320-h240', 4)
+('Edición # 1', 'Día de la democracia, Madres, Maestro, Talentos Abadistas', '#1', 2024, 'Primera edición del periódico institucional', 'pdf/EDICION1.pdf', 'https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240', 1),
+('Edición # 2', 'Día de la Antioqueñidad', '#2', 2024, 'Segunda edición del periódico institucional', 'pdf/EDICION2.pdf', 'https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w320-h240', 2),
+('Edición # 3', 'Semana Abadista - Foro - Museo Escolar', '#3', 2024, 'Tercera edición del periódico institucional', 'pdf/EDICION3.pdf', 'https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240', 3),
+('Edición # 4', 'La institución de la Inclusión, Gobierno Escolar 2025', '#4', 2025, 'Cuarta edición del periódico institucional', 'pdf/EDICION4.pdf', 'https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w320-h240', 4),
+('Edición # 5', 'La institución de la Inclusión, Gobierno Escolar 2025', '#5', 2025, 'Quinta edición del periódico institucional', 'pdf/EDICION5.pdf', 'https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w320-h240', 5)
 ON CONFLICT (id) DO NOTHING;
 
 -- Comentarios sobre el esquema:

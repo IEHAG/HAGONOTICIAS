@@ -1,38 +1,8 @@
-// Datos de las ediciones
-const books = [
-    {
-        title: "Edición # 1",
-        author: "Día de la democracia, Madres, Maestro, Talentos Abadistas",
-        category: "#1",
-        year: 2024,
-        thumbnail: "https://drive.google.com/thumbnail?id=1UICpZu7v8SyBjJaA29YYYzZa2F97i25m&sz=w320-h240",
-        pdfUrl: "pdf/EDICION1.pdf"
-    },
-    {
-        title: "Edición # 2",
-        author: "Día de la Antioqueñidad",
-        category: "#2",
-        year: 2024,
-        thumbnail: "https://drive.google.com/thumbnail?id=1UjFe_Jj1lN-_vTAqr3A_MH4sSthQWzPv&sz=w320-h240",
-        pdfUrl: "pdf/EDICION2.pdf"
-    },
-    {
-        title: "Edición # 3",
-        author: "Semana Abadista - Foro - Museo Escolar",
-        category: "#3",
-        year: 2024,
-        thumbnail: "https://drive.google.com/thumbnail?id=1q6lmYNtsZKa1_WPglzVAbG9q0OuEoHy5&sz=w320-h240",
-        pdfUrl: "pdf/EDICION3.pdf"
-    },
-    {
-        title: "Edición # 4",
-        author: "La institución de la Inclusión, Gobierno Escolar 2025",
-        category: "#4",
-        year: 2025,
-        thumbnail: "https://drive.google.com/thumbnail?id=13fWBxbiOMp8MMZIsOO-gPyX14VP361Ql&sz=w320-h240",
-        pdfUrl: "pdf/EDICION4.pdf"
-    }
-];
+// Datos de las ediciones - Importado desde ediciones-data.js
+// NOTA: Asegúrate de cargar ediciones-data.js antes de este archivo
+const books = (typeof getEdicionesAsBooks === 'function') 
+    ? getEdicionesAsBooks() 
+    : [];
 
 // Variables del visor PDF
 let pdfDoc = null;
@@ -80,11 +50,11 @@ function createBookCard(book) {
                     <strong class="text-dark">Temas:</strong> ${book.author}
                 </p>
                 <div class="d-flex gap-2 mt-auto">
-                    <button class="btn btn-primary flex-fill view-pdf btn-animated hover-glow" data-pdf="${book.pdfUrl}">
+                    <button class="btn btn-primary flex-fill view-pdf btn-animated hover-glow" data-pdf="${book.pdfUrl}" style="min-width: 140px;">
                         <i class="fas fa-eye me-1"></i>Ver PDF
                     </button>
-                    <a href="${book.pdfUrl}" download class="btn btn-outline-primary btn-animated hover-lift" title="Descargar PDF">
-                        <i class="fas fa-download"></i>
+                    <a href="${book.pdfUrl}" download class="btn btn-outline-primary btn-animated hover-lift" title="Descargar PDF" style="min-width: 140px;">
+                        <i class="fas fa-download me-1"></i>Descargar
                     </a>
                 </div>
             </div>
@@ -96,24 +66,26 @@ function createBookCard(book) {
 
     // Agregar evento para ver PDF
     const viewButton = col.querySelector('.view-pdf');
-    viewButton.addEventListener('click', () => {
-        // Efecto de loading en el botón
-        const originalText = viewButton.innerHTML;
-        viewButton.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i>Cargando...';
-        viewButton.disabled = true;
-        
-        setTimeout(() => {
-            // Usar el nuevo visor mejorado
-            if (typeof enhancedPdfViewer !== 'undefined') {
-                enhancedPdfViewer.open(book.pdfUrl, book.title);
-            } else {
-                // Fallback al visor anterior
-                openPdfViewer(book.pdfUrl);
-            }
-            viewButton.innerHTML = originalText;
-            viewButton.disabled = false;
-        }, 500);
-    });
+    if (viewButton) {
+        viewButton.addEventListener('click', () => {
+            // Efecto de loading en el botón
+            const originalText = viewButton.innerHTML;
+            viewButton.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i>Cargando...';
+            viewButton.disabled = true;
+            
+            setTimeout(() => {
+                // Usar el nuevo visor mejorado
+                if (typeof enhancedPdfViewer !== 'undefined') {
+                    enhancedPdfViewer.open(book.pdfUrl, book.title);
+                } else {
+                    // Fallback al visor anterior
+                    openPdfViewer(book.pdfUrl);
+                }
+                viewButton.innerHTML = originalText;
+                viewButton.disabled = false;
+            }, 500);
+        });
+    }
 
     return col;
 }

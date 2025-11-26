@@ -6,41 +6,21 @@ let currentUser = null;
 let isEditing = false;
 let editingId = null;
 
-// Elementos del DOM
-const alertContainer = document.getElementById('alertContainer');
-const connectionStatus = document.getElementById('connectionStatus');
-const edicionForm = document.getElementById('edicionForm');
-const submitBtn = document.getElementById('submitBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const refreshBtn = document.getElementById('refreshBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-
-// Elementos del formulario
-const tituloInput = document.getElementById('titulo');
-const categoriaInput = document.getElementById('categoria');
-const autorInput = document.getElementById('autor');
-const anioInput = document.getElementById('anio');
-const descripcionInput = document.getElementById('descripcion');
-const pdfFileInput = document.getElementById('pdfFile');
-const thumbnailFileInput = document.getElementById('thumbnailFile');
-
-// Áreas de upload
-const pdfUploadArea = document.getElementById('pdfUploadArea');
-const thumbnailUploadArea = document.getElementById('thumbnailUploadArea');
-
-// Elementos de la tabla
-const loadingEdiciones = document.getElementById('loadingEdiciones');
-const edicionesTable = document.getElementById('edicionesTable');
-const edicionesTableBody = document.getElementById('edicionesTableBody');
-const noEdiciones = document.getElementById('noEdiciones');
-
-// Modal de confirmación
-const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
-const confirmMessage = document.getElementById('confirmMessage');
-const confirmAction = document.getElementById('confirmAction');
+// Elementos del DOM (se inicializarán cuando el DOM esté listo)
+let alertContainer, connectionStatus, edicionForm, submitBtn, cancelBtn, refreshBtn, logoutBtn;
+let tituloInput, categoriaInput, autorInput, anioInput, descripcionInput, pdfFileInput, thumbnailFileInput;
+let pdfUploadArea, thumbnailUploadArea;
+let loadingEdiciones, edicionesTable, edicionesTableBody, noEdiciones;
+let confirmModal, confirmMessage, confirmAction;
 
 // Función para mostrar alertas
 function mostrarAlerta(mensaje, tipo = 'info', duracion = 5000) {
+    if (!alertContainer) {
+        console.error('alertContainer no está inicializado');
+        alert(mensaje); // Fallback a alert nativo
+        return;
+    }
+    
     const alertId = 'alert-' + Date.now();
     const alertHTML = `
         <div id="${alertId}" class="alert alert-${tipo} alert-dismissible fade show" role="alert">
@@ -189,11 +169,15 @@ function manejarCambioArchivo(input) {
             return;
         }
         
-        if (file.size > 10 * 1024 * 1024) { // 10MB
-            mostrarAlerta('El archivo PDF es demasiado grande (máximo 10MB)', 'danger');
+        if (file.size > 50 * 1024 * 1024) { // 50MB
+            mostrarAlerta(`El archivo PDF es demasiado grande (${(file.size / 1024 / 1024).toFixed(2)}MB). Máximo permitido: 50MB`, 'danger');
             input.value = '';
             return;
         }
+        
+        // Mostrar información del archivo seleccionado
+        const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+        console.log(`Archivo PDF seleccionado: ${file.name} (${fileSizeMB}MB)`);
 
         document.getElementById('pdfFileName').textContent = file.name;
         document.getElementById('pdfPreview').style.display = 'block';
@@ -224,15 +208,24 @@ function manejarCambioArchivo(input) {
 // Función para subir archivo a Supabase Storage
 async function subirArchivo(archivo, bucket, nombreArchivo) {
     try {
+        console.log(`Iniciando subida de archivo: ${archivo.name} (${(archivo.size / 1024 / 1024).toFixed(2)}MB) al bucket: ${bucket}`);
+        
+        if (!edicionesManager) {
+            throw new Error('El sistema de gestión de ediciones no está inicializado. Por favor, recarga la página.');
+        }
+        
         const resultado = await edicionesManager.subirArchivo(bucket, archivo, nombreArchivo);
         
         if (!resultado.success) {
-            throw new Error(resultado.error);
+            console.error('Error en subida de archivo:', resultado.error);
+            throw new Error(resultado.error || 'Error desconocido al subir el archivo');
         }
 
+        console.log('Archivo subido exitosamente:', resultado.publicUrl);
         return resultado.publicUrl;
     } catch (error) {
         console.error('Error al subir archivo:', error);
+        mostrarAlerta(`Error al subir el archivo: ${error.message}`, 'danger');
         throw error;
     }
 }
@@ -248,6 +241,13 @@ function generarNombreArchivo(archivo, prefijo = '') {
 async function enviarFormulario(e) {
     e.preventDefault();
     
+    // Verificar que edicionesManager esté inicializado
+    if (!edicionesManager) {
+        mostrarAlerta('Error: El sistema no está inicializado correctamente. Por favor, recarga la página.', 'danger');
+        console.error('edicionesManager no está definido');
+        return;
+    }
+    
     // Validar campos requeridos
     if (!tituloInput.value.trim() || !categoriaInput.value.trim() || !anioInput.value) {
         mostrarAlerta('Por favor completa todos los campos requeridos', 'danger');
@@ -255,8 +255,24 @@ async function enviarFormulario(e) {
     }
 
     if (!isEditing && !pdfFileInput.files[0]) {
-        mostrarAlerta('Por favor selecciona un archivo PDF', 'danger');
+        mostrarAlerta('Por favor selecciona un archivo PDF para la nueva edición', 'danger');
+        pdfFileInput.focus();
         return;
+    }
+    
+    // Validar archivo PDF si se está subiendo uno nuevo
+    if (pdfFileInput.files[0]) {
+        const pdfFile = pdfFileInput.files[0];
+        if (pdfFile.type !== 'application/pdf') {
+            mostrarAlerta('El archivo seleccionado no es un PDF válido', 'danger');
+            pdfFileInput.value = '';
+            return;
+        }
+        if (pdfFile.size > 50 * 1024 * 1024) {
+            mostrarAlerta(`El archivo PDF es demasiado grande (${(pdfFile.size / 1024 / 1024).toFixed(2)}MB). Máximo permitido: 50MB`, 'danger');
+            pdfFileInput.value = '';
+            return;
+        }
     }
 
     // Deshabilitar botón y mostrar loading
@@ -272,7 +288,9 @@ async function enviarFormulario(e) {
         if (pdfFileInput.files[0]) {
             const pdfFile = pdfFileInput.files[0];
             const nombrePdf = generarNombreArchivo(pdfFile, 'pdf_');
+            mostrarAlerta(`Subiendo archivo PDF: ${pdfFile.name}...`, 'info', 0);
             pdfUrl = await subirArchivo(pdfFile, 'pdfs', nombrePdf);
+            console.log('PDF subido exitosamente:', pdfUrl);
         }
 
         // Subir thumbnail si hay uno
@@ -319,7 +337,15 @@ async function enviarFormulario(e) {
 
     } catch (error) {
         console.error('Error al guardar edición:', error);
-        mostrarAlerta(`Error al guardar la edición: ${error.message}`, 'danger');
+        let mensajeError = 'Error al guardar la edición';
+        
+        if (error.message) {
+            mensajeError = `Error al guardar la edición: ${error.message}`;
+        } else if (typeof error === 'string') {
+            mensajeError = `Error al guardar la edición: ${error}`;
+        }
+        
+        mostrarAlerta(mensajeError, 'danger');
     } finally {
         // Restaurar botón
         submitBtn.disabled = false;
@@ -334,6 +360,9 @@ function limpiarFormulario() {
     document.getElementById('thumbnailPreview').style.display = 'none';
     isEditing = false;
     editingId = null;
+    
+    // Restaurar atributo required del input de PDF para nuevas ediciones
+    pdfFileInput.setAttribute('required', 'required');
     
     submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Edición';
     document.querySelector('.card-header h5').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Agregar Nueva Edición';
@@ -443,6 +472,9 @@ async function editarEdicion(id) {
         isEditing = true;
         editingId = id;
         
+        // Remover atributo required del input de PDF cuando se está editando
+        pdfFileInput.removeAttribute('required');
+        
         submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Edición';
         document.querySelector('.card-header h5').innerHTML = '<i class="fas fa-edit me-2"></i>Editar Edición';
 
@@ -484,17 +516,73 @@ async function eliminarEdicion(id) {
     }
 }
 
+// Función para inicializar elementos del DOM
+function inicializarElementosDOM() {
+    alertContainer = document.getElementById('alertContainer');
+    connectionStatus = document.getElementById('connectionStatus');
+    edicionForm = document.getElementById('edicionForm');
+    submitBtn = document.getElementById('submitBtn');
+    cancelBtn = document.getElementById('cancelBtn');
+    refreshBtn = document.getElementById('refreshBtn');
+    logoutBtn = document.getElementById('logoutBtn');
+
+    // Elementos del formulario
+    tituloInput = document.getElementById('titulo');
+    categoriaInput = document.getElementById('categoria');
+    autorInput = document.getElementById('autor');
+    anioInput = document.getElementById('anio');
+    descripcionInput = document.getElementById('descripcion');
+    pdfFileInput = document.getElementById('pdfFile');
+    thumbnailFileInput = document.getElementById('thumbnailFile');
+
+    // Áreas de upload
+    pdfUploadArea = document.getElementById('pdfUploadArea');
+    thumbnailUploadArea = document.getElementById('thumbnailUploadArea');
+    
+    // Elementos de la tabla
+    loadingEdiciones = document.getElementById('loadingEdiciones');
+    edicionesTable = document.getElementById('edicionesTable');
+    edicionesTableBody = document.getElementById('edicionesTableBody');
+    noEdiciones = document.getElementById('noEdiciones');
+    
+    // Modal de confirmación
+    const confirmModalElement = document.getElementById('confirmModal');
+    if (confirmModalElement) {
+        confirmModal = new bootstrap.Modal(confirmModalElement);
+    }
+    confirmMessage = document.getElementById('confirmMessage');
+    confirmAction = document.getElementById('confirmAction');
+    
+    // Verificar que los elementos críticos existan
+    if (!edicionForm || !submitBtn || !alertContainer) {
+        console.error('Elementos críticos no encontrados:', {
+            edicionForm: !!edicionForm,
+            submitBtn: !!submitBtn,
+            alertContainer: !!alertContainer
+        });
+        return false;
+    }
+    
+    return true;
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', async () => {
+    // Inicializar elementos del DOM
+    if (!inicializarElementosDOM()) {
+        console.error('Error al inicializar elementos del DOM');
+        return;
+    }
+    
     // Verificar configuración de Supabase
-    if (!validarConfiguracion()) {
+    if (typeof validarConfiguracion === 'function' && !validarConfiguracion()) {
         actualizarEstadoConexion(false, 'Configuración incompleta');
-        mostrarAlerta('Las credenciales de Supabase no están configuradas correctamente. Por favor, actualiza el archivo supabase-config.js', 'warning', 0);
+        mostrarAlerta('Las credenciales de Supabase no están configuradas correctamente. Por favor, actualiza el archivo supabase-config.js con tus credenciales de Supabase.', 'warning', 0);
         return;
     }
 
     // Inicializar sistema
-    if (!inicializarSistema()) {
+    if (typeof inicializarSistema === 'function' && !inicializarSistema()) {
         actualizarEstadoConexion(false, 'Error de inicialización');
         mostrarAlerta('Error al inicializar el sistema. Verifica la configuración de Supabase.', 'danger');
         return;
@@ -515,7 +603,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarEdiciones();
     
     // Configurar año por defecto
-    anioInput.value = new Date().getFullYear();
+    if (anioInput) {
+        anioInput.value = new Date().getFullYear();
+    }
+    
+    // Configurar event listeners
+    if (edicionForm) {
+        edicionForm.addEventListener('submit', enviarFormulario);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', limpiarFormulario);
+    }
+    
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', cargarEdiciones);
+    }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', cerrarSesion);
+    }
+    
+    // Event listeners para archivos
+    if (pdfFileInput) {
+        pdfFileInput.addEventListener('change', () => manejarCambioArchivo(pdfFileInput));
+    }
+    
+    if (thumbnailFileInput) {
+        thumbnailFileInput.addEventListener('change', () => manejarCambioArchivo(thumbnailFileInput));
+    }
 });
 
 // Event listeners para formulario
@@ -525,8 +641,13 @@ refreshBtn.addEventListener('click', cargarEdiciones);
 logoutBtn.addEventListener('click', cerrarSesion);
 
 // Event listeners para archivos
-pdfFileInput.addEventListener('change', () => manejarCambioArchivo(pdfFileInput));
-thumbnailFileInput.addEventListener('change', () => manejarCambioArchivo(thumbnailFileInput));
+if (pdfFileInput) {
+    pdfFileInput.addEventListener('change', () => manejarCambioArchivo(pdfFileInput));
+}
+
+if (thumbnailFileInput) {
+    thumbnailFileInput.addEventListener('change', () => manejarCambioArchivo(thumbnailFileInput));
+}
 
 // Hacer funciones globales para uso en HTML
 window.editarEdicion = editarEdicion;

@@ -83,6 +83,26 @@ class ModernEditionViewer {
         this.filteredBooks = [...this.books];
     }
     
+    generateFilterOptions() {
+        // Obtener todas las categorías únicas y ordenarlas
+        const categories = [...new Set(this.books.map(book => book.category))];
+        categories.sort((a, b) => {
+            // Extraer el número de la categoría (#1, #2, etc.)
+            const numA = parseInt(a.replace('#', '')) || 0;
+            const numB = parseInt(b.replace('#', '')) || 0;
+            return numA - numB;
+        });
+        
+        // Generar las opciones del select
+        let optionsHTML = '<option value="">Todas las ediciones</option>';
+        categories.forEach(category => {
+            const editionNum = category.replace('#', '');
+            optionsHTML += `<option value="${category}">Edición #${editionNum}</option>`;
+        });
+        
+        return optionsHTML;
+    }
+    
     createModernInterface() {
         const edicionesSection = document.getElementById('ediciones');
         if (!edicionesSection) return;
@@ -125,12 +145,7 @@ class ModernEditionViewer {
                         </div>
                         
                         <select class="modern-filter-select" id="modernFilterSelect">
-                            <option value="">Todas las ediciones</option>
-                            <option value="#1">Edición #1</option>
-                            <option value="#2">Edición #2</option>
-                            <option value="#3">Edición #3</option>
-                            <option value="#4">Edición #4</option>
-                            <option value="#5">Edición #5</option>
+                            ${this.generateFilterOptions()}
                         </select>
                     </div>
                     

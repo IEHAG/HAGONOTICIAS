@@ -569,21 +569,20 @@
     <!-- 🎥 REPRODUCTOR PRINCIPAL -->
     <div class="player-section" id="mainContent">
         <div class="main-player">
-            <div class="video-area" onclick="playVideo('logo')">
-                <img src="https://placehold.co/800x450/3498db/FFFFFF?text=Logo+Reveal+Explosion" alt="Logo Reveal Explosion" class="video-thumb">
+            <div class="video-area" id="mainVideoArea" onclick="playYouTubeVideo('', 'Video Institucional - HAGO Noticias')">
+                <img src="https://img.youtube.com/vi/UJGV4POfz2k/maxresdefault.jpg" alt="Video Institucional" class="video-thumb" id="mainVideoThumb" onerror="this.src='https://img.youtube.com/vi/UJGV4POfz2k/hqdefault.jpg'">
                 <div class="play-icon">
                     <i class="fas fa-play"></i>
                 </div>
             </div>
             <div class="video-info">
-                <div class="video-title">🎬 Logo Reveal Explosion - HAGO Noticias</div>
-                <div class="video-description">
-                    Una espectacular presentación del logo de HAGO Noticias con efectos especiales. 
-                    Perfecta para iniciar nuestros noticieros y videos institucionales.
+                <div class="video-title" id="mainVideoTitle">Video Institucional - HAGO Noticias</div>
+                <div class="video-description" id="mainVideoDescription">
+                    Contenido institucional de la Institución Educativa Héctor Abad Gómez.
                 </div>
                 <div class="video-stats">
-                    <span>📅 Hace 1 semana</span>
-                    <span>⏱️ 0:30</span>
+                    <span>📅 Reciente</span>
+                    <span>📺 YouTube</span>
                 </div>
             </div>
         </div>
@@ -591,33 +590,9 @@
         <!-- 📱 SUGERENCIAS -->
         <div class="suggestions">
             <h3>📺 Videos sugeridos</h3>
-            <div class="suggestion-card" onclick="playVideo('entrevista')">
-                <div class="suggestion-thumb">
-                    <img src="https://placehold.co/160x90/3498db/FFFFFF?text=Entrevista" alt="Entrevista">
-                </div>
-                <div class="suggestion-info">
-                    <div class="suggestion-title">Entrevista con el Rector - Nuevos proyectos educativos</div>
-                    <div class="suggestion-channel">HAGO Noticias</div>
-                </div>
-            </div>
-
-            <div class="suggestion-card" onclick="playVideo('deportes')">
-                <div class="suggestion-thumb">
-                    <img src="https://placehold.co/160x90/3498db/FFFFFF?text=Deportes" alt="Deportes">
-                </div>
-                <div class="suggestion-info">
-                    <div class="suggestion-title">Triunfo del equipo de fútbol en el torneo intercolegial</div>
-                    <div class="suggestion-channel">Deportes HAGO</div>
-                </div>
-            </div>
-
-            <div class="suggestion-card" onclick="playVideo('festival')">
-                <div class="suggestion-thumb">
-                    <img src="https://placehold.co/160x90/3498db/FFFFFF?text=Festival" alt="Festival">
-                </div>
-                <div class="suggestion-info">
-                    <div class="suggestion-title">Festival de Arte y Cultura 2024 - Lo mejor del evento</div>
-                    <div class="suggestion-channel">Cultura HAGO</div>
+            <div id="suggestionsContainer">
+                <div style="text-align: center; padding: 1rem; color: #7f8c8d;">
+                    <i class="fas fa-spinner fa-spin"></i> Cargando videos...
                 </div>
             </div>
         </div>
@@ -625,109 +600,39 @@
 
     <!-- 🎬 SECCIÓN DE VIDEOS RECIENTES -->
     <div class="videos-section" id="videosSection">
-        <h2 class="section-title"><i class="fas fa-play-circle"></i> Videos recientes</h2>
+        <h2 class="section-title"><i class="fas fa-play-circle"></i> Videos del Canal de YouTube</h2>
         
+        <!-- Canal embebido de YouTube -->
+        <div style="max-width: 1200px; margin: 0 auto 3rem; background: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08);">
+            <h3 style="margin-bottom: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-youtube" style="color: #e74c3c; font-size: 1.5rem;"></i>
+                Institución Educativa Héctor Abad Gómez
+            </h3>
+            <p style="color: #7f8c8d; margin-bottom: 1.5rem;">
+                Explora todos nuestros videos institucionales en nuestro canal oficial de YouTube.
+            </p>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <iframe 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                    src="https://www.youtube.com/embed/UJGV4POfz2k?rel=0&showinfo=0" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen
+                    id="youtubeChannelEmbed">
+                </iframe>
+            </div>
+            <div style="text-align: center;">
+                <a href="https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad/videos" target="_blank" style="display: inline-block; background: #e74c3c; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background 0.3s;">
+                    <i class="fab fa-youtube"></i> Ver todos los videos en YouTube
+                </a>
+            </div>
+        </div>
+        
+        <h3 class="section-title" style="margin-top: 2rem;"><i class="fas fa-video"></i> Videos recientes</h3>
         <div class="video-grid" id="videoGrid">
-            <!-- 📽️ VIDEO 1 -->
-            <div class="video-card" onclick="playVideo('noticia1')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/e74c3c/FFFFFF?text=Noticia+Principal" alt="Noticia Principal" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">2:15</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Inauguración del nuevo laboratorio de ciencias</div>
-                    <div class="video-card-meta">
-                        <span>Noticias</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📽️ VIDEO 2 -->
-            <div class="video-card" onclick="playVideo('noticia2')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/3498db/FFFFFF?text=Evento+Especial" alt="Evento Especial" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">5:30</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Celebración del Día del Idioma - Actividades y premiaciones</div>
-                    <div class="video-card-meta">
-                        <span>Eventos</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📽️ VIDEO 3 -->
-            <div class="video-card" onclick="playVideo('entrevista')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/2ecc71/FFFFFF?text=Entrevista" alt="Entrevista" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">8:20</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Entrevista exclusiva con el ganador de las olimpiadas de matemáticas</div>
-                    <div class="video-card-meta">
-                        <span>Entrevistas</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📽️ VIDEO 4 -->
-            <div class="video-card" onclick="playVideo('deportes')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/e67e22/FFFFFF?text=Deportes" alt="Deportes" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">4:30</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Resumen del torneo interclases de baloncesto 2024</div>
-                    <div class="video-card-meta">
-                        <span>Deportes</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📽️ VIDEO 5 -->
-            <div class="video-card" onclick="playVideo('cultura')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/9b59b6/FFFFFF?text=Cultura" alt="Cultura" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">6:15</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Presentación del grupo de teatro - Obra "El mundo de los sueños"</div>
-                    <div class="video-card-meta">
-                        <span>Cultura</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 📽️ VIDEO 6 -->
-            <div class="video-card" onclick="playVideo('festival')">
-                <div class="video-thumbnail">
-                    <img src="https://placehold.co/300x169/1abc9c/FFFFFF?text=Festival" alt="Festival" class="thumbnail-img">
-                    <div class="card-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                    <div class="video-duration">10:45</div>
-                </div>
-                <div class="video-details">
-                    <div class="video-card-title">Festival de la Canción 2024 - Todas las presentaciones</div>
-                    <div class="video-card-meta">
-                        <span>Eventos</span>
-                    </div>
-                </div>
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #7f8c8d;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p>Cargando videos del canal...</p>
             </div>
         </div>
     </div>
@@ -755,8 +660,459 @@
     </div>
 
     <script>
-        // 📁 CONFIGURACIÓN DE VIDEOS
-        const videos = [
+        // 📁 CONFIGURACIÓN DEL CANAL DE YOUTUBE
+        const YOUTUBE_CHANNEL_HANDLE = '@InstituciónEducativaHéctorAbad';
+        const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad/videos';
+        let videos = [];
+        let isLoading = true;
+
+        // 🎬 FUNCIÓN PARA OBTENER VIDEOS DEL CANAL DE YOUTUBE
+        async function loadYouTubeVideos() {
+            const videoGrid = document.getElementById('videoGrid');
+            if (!videoGrid) return;
+
+            try {
+                // El handle del canal es: @InstituciónEducativaHéctorAbad
+                // URL del canal: https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad/videos
+                // Intentar obtener el RSS feed del canal
+                // El RSS feed de YouTube para un canal con handle es: https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID
+                // Pero necesitamos el channel ID, no el handle
+                
+                // Método 1: Intentar obtener el RSS feed usando un proxy
+                // Primero intentar con el handle directamente en el RSS feed
+                const channelHandle = 'InstituciónEducativaHéctorAbad';
+                const channelHandleEncoded = encodeURIComponent(channelHandle);
+                
+                // Intentar con diferentes formatos de RSS feed
+                const rssUrls = [
+                    `https://www.youtube.com/feeds/videos.xml?channel_id=${channelHandle}`,
+                    `https://www.youtube.com/feeds/videos.xml?user=${channelHandle}`,
+                    `https://www.youtube.com/@${channelHandleEncoded}/videos.rss`
+                ];
+
+                for (const rssUrl of rssUrls) {
+                    try {
+                        const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+                        
+                        const response = await fetch(proxyUrl);
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            if (data.status === 'ok' && data.items && data.items.length > 0) {
+                                displayYouTubeVideos(data.items);
+                                return;
+                            }
+                        }
+                    } catch (error) {
+                        console.log(`Error con RSS URL ${rssUrl}:`, error);
+                        continue;
+                    }
+                }
+
+                // Método 2: Si no podemos obtener el RSS, mostrar los videos destacados
+                displayFeaturedVideos();
+                
+            } catch (error) {
+                console.error('Error al cargar videos:', error);
+                showYouTubeChannelWidget();
+            }
+        }
+
+        // Función para mostrar videos de YouTube en el grid
+        async function displayYouTubeVideos(items) {
+            const videoGrid = document.getElementById('videoGrid');
+            if (!videoGrid) return;
+
+            videoGrid.innerHTML = '';
+
+            // Videos destacados específicos del canal (mostrar primero)
+            const featuredVideos = [
+                {
+                    id: 'aoUBZFonsPI',
+                    title: 'Video Institucional - HAGO Noticias', // Se actualizará con el título real
+                    link: 'https://youtu.be/aoUBZFonsPI',
+                    pubDate: new Date()
+                },
+                {
+                    id: '2fxFWa6ZMN0',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/2fxFWa6ZMN0',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'SgkARuqzZGc',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/SgkARuqzZGc',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'D3ElH0RSezk',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/D3ElH0RSezk',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'UJGV4POfz2k',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/UJGV4POfz2k',
+                    pubDate: new Date()
+                }
+            ];
+
+            // Obtener títulos reales de YouTube
+            const videoIds = featuredVideos.map(v => v.id);
+            const titles = await getYouTubeVideoTitles(videoIds);
+
+            // Actualizar títulos con los reales
+            featuredVideos.forEach(video => {
+                if (titles[video.id]) {
+                    video.title = titles[video.id];
+                }
+            });
+
+            // Agregar videos destacados primero con títulos actualizados
+            featuredVideos.forEach((video) => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.onclick = () => {
+                    playYouTubeVideo(video.id, video.title);
+                    updateMainVideo(video.id, video.title);
+                };
+                
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" 
+                             alt="${video.title}" 
+                             class="thumbnail-img"
+                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                        <div class="card-play-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-card-title">${video.title}</div>
+                        <div class="video-card-meta">
+                            <span>Institución Educativa Héctor Abad</span>
+                            <span>📅 Reciente</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoGrid.appendChild(videoCard);
+            });
+
+            // Mostrar hasta 15 videos adicionales del RSS feed
+            items.slice(0, 15).forEach((item, index) => {
+                // Extraer el video ID del link
+                const videoId = extractVideoId(item.link);
+                if (!videoId) return;
+
+                // Extraer la descripción y fecha
+                const description = item.description || '';
+                const pubDate = new Date(item.pubDate);
+                const timeAgo = getTimeAgo(pubDate);
+
+                // Crear la tarjeta de video
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.onclick = () => playYouTubeVideo(videoId, item.title);
+                
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" 
+                             alt="${item.title}" 
+                             class="thumbnail-img"
+                             onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+                        <div class="card-play-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-card-title">${item.title}</div>
+                        <div class="video-card-meta">
+                            <span>Institución Educativa Héctor Abad</span>
+                            <span>📅 ${timeAgo}</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoGrid.appendChild(videoCard);
+            });
+
+            // Actualizar también la sección de sugerencias con los primeros 3 videos
+            displaySuggestedVideos(items.slice(0, 3));
+        }
+
+        // Función para mostrar videos sugeridos
+        async function displaySuggestedVideos(items) {
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            if (!suggestionsContainer) return;
+
+            suggestionsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; color: #7f8c8d;"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+
+            // Videos destacados específicos del canal
+            const featuredVideos = [
+                {
+                    id: 'aoUBZFonsPI',
+                    title: 'Video Institucional - HAGO Noticias' // Se actualizará con el título real
+                },
+                {
+                    id: '2fxFWa6ZMN0',
+                    title: 'Video Institucional - HAGO Noticias'
+                },
+                {
+                    id: 'SgkARuqzZGc',
+                    title: 'Video Institucional - HAGO Noticias'
+                },
+                {
+                    id: 'D3ElH0RSezk',
+                    title: 'Video Institucional - HAGO Noticias'
+                },
+                {
+                    id: 'UJGV4POfz2k',
+                    title: 'Video Institucional - HAGO Noticias'
+                }
+            ];
+
+            // Obtener títulos reales de YouTube
+            const videoIds = featuredVideos.map(v => v.id);
+            const titles = await getYouTubeVideoTitles(videoIds);
+
+            // Actualizar títulos con los reales
+            featuredVideos.forEach(video => {
+                if (titles[video.id]) {
+                    video.title = titles[video.id];
+                }
+            });
+
+            // Limpiar el contenedor
+            suggestionsContainer.innerHTML = '';
+
+            // Agregar videos destacados primero con títulos actualizados
+            featuredVideos.forEach((video) => {
+                const suggestionCard = document.createElement('div');
+                suggestionCard.className = 'suggestion-card';
+                suggestionCard.onclick = () => {
+                    playYouTubeVideo(video.id, video.title);
+                    // Actualizar el video principal también
+                    updateMainVideo(video.id, video.title);
+                };
+                
+                suggestionCard.innerHTML = `
+                    <div class="suggestion-thumb">
+                        <img src="https://img.youtube.com/vi/${video.id}/mqdefault.jpg" 
+                             alt="${video.title}"
+                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                    </div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-title">${video.title}</div>
+                        <div class="suggestion-channel">Institución Educativa Héctor Abad</div>
+                    </div>
+                `;
+                
+                suggestionsContainer.appendChild(suggestionCard);
+            });
+
+            // Agregar videos del RSS feed si están disponibles
+            if (items && items.length > 0) {
+                items.slice(0, 1).forEach((item) => {
+                    const videoId = extractVideoId(item.link);
+                    if (!videoId) return;
+
+                    const suggestionCard = document.createElement('div');
+                    suggestionCard.className = 'suggestion-card';
+                    suggestionCard.onclick = () => {
+                        playYouTubeVideo(videoId, item.title);
+                        updateMainVideo(videoId, item.title);
+                    };
+                    
+                    suggestionCard.innerHTML = `
+                        <div class="suggestion-thumb">
+                            <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" 
+                                 alt="${item.title}"
+                                 onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+                        </div>
+                        <div class="suggestion-info">
+                            <div class="suggestion-title">${item.title}</div>
+                            <div class="suggestion-channel">Institución Educativa Héctor Abad</div>
+                        </div>
+                    `;
+                    
+                    suggestionsContainer.appendChild(suggestionCard);
+                });
+            }
+        }
+
+        // Función para actualizar el video principal
+        function updateMainVideo(videoId, title) {
+            const mainVideoArea = document.getElementById('mainVideoArea');
+            const mainVideoThumb = document.getElementById('mainVideoThumb');
+            const mainVideoTitle = document.getElementById('mainVideoTitle');
+            const mainVideoDescription = document.getElementById('mainVideoDescription');
+
+            if (mainVideoArea) {
+                mainVideoArea.onclick = () => playYouTubeVideo(videoId, title);
+            }
+            if (mainVideoThumb) {
+                mainVideoThumb.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                mainVideoThumb.alt = title;
+                mainVideoThumb.onerror = function() {
+                    this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                };
+            }
+            if (mainVideoTitle) {
+                mainVideoTitle.textContent = title;
+            }
+            if (mainVideoDescription) {
+                mainVideoDescription.textContent = 'Contenido institucional de la Institución Educativa Héctor Abad Gómez.';
+            }
+        }
+
+        // Función para obtener el título real de un video de YouTube
+        async function getYouTubeVideoTitle(videoId) {
+            try {
+                const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+                const response = await fetch(oembedUrl);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.title || 'Video Institucional - HAGO Noticias';
+                }
+            } catch (error) {
+                console.log(`Error obteniendo título para video ${videoId}:`, error);
+            }
+            return 'Video Institucional - HAGO Noticias'; // Título por defecto
+        }
+
+        // Función para obtener títulos de múltiples videos
+        async function getYouTubeVideoTitles(videoIds) {
+            const titles = {};
+            const promises = videoIds.map(async (id) => {
+                const title = await getYouTubeVideoTitle(id);
+                titles[id] = title;
+            });
+            await Promise.all(promises);
+            return titles;
+        }
+
+        // Función para mostrar videos destacados siempre
+        async function displayFeaturedVideos() {
+            const videoGrid = document.getElementById('videoGrid');
+            if (!videoGrid) return;
+
+            videoGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #7f8c8d;"><i class="fas fa-spinner fa-spin"></i> Cargando videos...</div>';
+
+            // Videos destacados específicos del canal (mostrar primero)
+            const featuredVideos = [
+                {
+                    id: 'aoUBZFonsPI',
+                    title: 'Video Institucional - HAGO Noticias', // Título temporal
+                    link: 'https://youtu.be/aoUBZFonsPI',
+                    pubDate: new Date()
+                },
+                {
+                    id: '2fxFWa6ZMN0',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/2fxFWa6ZMN0',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'SgkARuqzZGc',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/SgkARuqzZGc',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'D3ElH0RSezk',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/D3ElH0RSezk',
+                    pubDate: new Date()
+                },
+                {
+                    id: 'UJGV4POfz2k',
+                    title: 'Video Institucional - HAGO Noticias',
+                    link: 'https://youtu.be/UJGV4POfz2k',
+                    pubDate: new Date()
+                }
+            ];
+
+            // Obtener títulos reales de YouTube
+            const videoIds = featuredVideos.map(v => v.id);
+            const titles = await getYouTubeVideoTitles(videoIds);
+
+            // Actualizar títulos con los reales
+            featuredVideos.forEach(video => {
+                if (titles[video.id]) {
+                    video.title = titles[video.id];
+                }
+            });
+
+            // Limpiar el grid
+            videoGrid.innerHTML = '';
+
+            // Agregar videos destacados con títulos reales
+            featuredVideos.forEach((video) => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.onclick = () => {
+                    playYouTubeVideo(video.id, video.title);
+                    updateMainVideo(video.id, video.title);
+                };
+                
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail">
+                        <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" 
+                             alt="${video.title}" 
+                             class="thumbnail-img"
+                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                        <div class="card-play-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-card-title">${video.title}</div>
+                        <div class="video-card-meta">
+                            <span>Institución Educativa Héctor Abad</span>
+                            <span>📅 Reciente</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoGrid.appendChild(videoCard);
+            });
+
+            // También actualizar las sugerencias con títulos reales
+            displaySuggestedVideos(featuredVideos);
+        }
+
+        // Función para mostrar el widget del canal de YouTube
+        function showYouTubeChannelWidget() {
+            // Mostrar siempre los videos destacados
+            displayFeaturedVideos();
+        }
+
+        // Función auxiliar para extraer el ID del video de YouTube
+        function extractVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Función para calcular tiempo transcurrido
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Hoy';
+            if (days === 1) return 'Ayer';
+            if (days < 7) return `Hace ${days} días`;
+            if (days < 30) return `Hace ${Math.floor(days / 7)} semanas`;
+            if (days < 365) return `Hace ${Math.floor(days / 30)} meses`;
+            return `Hace ${Math.floor(days / 365)} años`;
+        }
+
+        // 📁 CONFIGURACIÓN DE VIDEOS (mantener algunos videos locales si existen)
+        const localVideos = [
             {
                 id: "logo",
                 title: "🎬 Logo Reveal Explosion - HAGO Noticias",
@@ -764,7 +1120,8 @@
                 thumbnail: "https://placehold.co/800x450/3498db/FFFFFF?text=Logo+Reveal+Explosion",
                 duration: "0:30",
                 channel: "HAGO Noticias",
-                category: "Todos"
+                category: "Todos",
+                type: "local"
             },
             {
                 id: "entrevista",
@@ -824,9 +1181,20 @@
 
         // 🎬 FUNCIONES DEL REPRODUCTOR
         function playVideo(id) {
-            const video = videos.find(v => v.id === id) || videos[0];
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
             
-            // Crear modal reproductor
+            // Si es un video local, usar el reproductor de video
+            if (video.type === 'local' && video.file) {
+                playLocalVideo(video);
+            } else if (video.youtubeId) {
+                // Si es un video de YouTube
+                playYouTubeVideo(video.youtubeId, video.title);
+            }
+        }
+
+        // Función para reproducir video local
+        function playLocalVideo(video) {
             const modal = document.createElement('div');
             modal.className = 'video-modal';
             modal.style.display = 'flex';
@@ -851,15 +1219,46 @@
             
             document.body.appendChild(modal);
             
-            // Cerrar modal al hacer clic fuera
             modal.onclick = function(e) {
                 if (e.target === modal) {
                     closeVideoModal();
                 }
             };
+        }
+
+        // Función para reproducir video de YouTube
+        function playYouTubeVideo(videoId, title) {
+            const modal = document.createElement('div');
+            modal.className = 'video-modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="close-modal" onclick="closeVideoModal()">×</button>
+                    <div style="padding: 0;">
+                        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                            <iframe 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                                src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div style="padding: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem; color: #2c3e50;">${title}</h3>
+                            <p style="color: #7f8c8d; margin-bottom: 1rem;">Institución Educativa Héctor Abad Gómez</p>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            // Enfocar el modal para poder usar teclado
-            modal.focus();
+            document.body.appendChild(modal);
+            
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    closeVideoModal();
+                }
+            };
         }
 
         function closeVideoModal() {
@@ -965,6 +1364,59 @@
                 const category = this.textContent;
                 // Aquí iría la lógica para filtrar los videos por categoría
             });
+        });
+
+        // Función para seleccionar un video aleatorio
+        function getRandomVideo() {
+            const featuredVideoIds = ['aoUBZFonsPI', '2fxFWa6ZMN0', 'SgkARuqzZGc', 'D3ElH0RSezk', 'UJGV4POfz2k'];
+            const randomIndex = Math.floor(Math.random() * featuredVideoIds.length);
+            return featuredVideoIds[randomIndex];
+        }
+
+        // Función para inicializar el video principal con un video aleatorio
+        async function initializeRandomMainVideo() {
+            const randomVideoId = getRandomVideo();
+            
+            // Obtener el título real del video
+            const title = await getYouTubeVideoTitle(randomVideoId);
+            
+            // Actualizar el video principal
+            const mainVideoArea = document.getElementById('mainVideoArea');
+            const mainVideoThumb = document.getElementById('mainVideoThumb');
+            const mainVideoTitle = document.getElementById('mainVideoTitle');
+            const mainVideoDescription = document.getElementById('mainVideoDescription');
+            const youtubeChannelEmbed = document.getElementById('youtubeChannelEmbed');
+            
+            if (mainVideoArea) {
+                mainVideoArea.onclick = () => playYouTubeVideo(randomVideoId, title);
+            }
+            if (mainVideoThumb) {
+                mainVideoThumb.src = `https://img.youtube.com/vi/${randomVideoId}/maxresdefault.jpg`;
+                mainVideoThumb.alt = title;
+                mainVideoThumb.onerror = function() {
+                    this.src = `https://img.youtube.com/vi/${randomVideoId}/hqdefault.jpg`;
+                };
+            }
+            if (mainVideoTitle) {
+                mainVideoTitle.textContent = title;
+            }
+            if (mainVideoDescription) {
+                mainVideoDescription.textContent = 'Contenido institucional de la Institución Educativa Héctor Abad Gómez.';
+            }
+            // Actualizar también el iframe embebido
+            if (youtubeChannelEmbed) {
+                youtubeChannelEmbed.src = `https://www.youtube.com/embed/${randomVideoId}?rel=0&showinfo=0`;
+            }
+        }
+
+        // Cargar videos del canal de YouTube al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar video principal aleatorio
+            initializeRandomMainVideo();
+            // Mostrar videos destacados inmediatamente
+            displayFeaturedVideos();
+            // Intentar cargar más videos del RSS feed
+            loadYouTubeVideos();
         });
     </script>
 </body>

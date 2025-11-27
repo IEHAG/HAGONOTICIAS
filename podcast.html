@@ -308,6 +308,107 @@
             font-size: 1.2rem;
         }
 
+        /* 📻 CONTENEDOR DE RADIO */
+        .radio-container {
+            background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+            margin: 2rem;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .radio-btn {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            color: white;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+            overflow: hidden;
+        }
+
+        .radio-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+        }
+
+        .radio-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .radio-btn.playing {
+            background: linear-gradient(135deg, #f7931e, #ff6b35);
+            animation: pulse 2s infinite;
+        }
+
+        .radio-btn.playing .radio-pulse {
+            display: block;
+        }
+
+        .radio-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            top: 0;
+            left: 0;
+            display: none;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+            }
+            50% {
+                box-shadow: 0 5px 30px rgba(255, 107, 53, 0.8);
+            }
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .radio-btn i {
+            font-size: 1.5rem;
+        }
+
+        .radio-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .radio-info i {
+            margin-right: 0.5rem;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
         /* 📱 RESPONSIVE */
         @media (max-width: 768px) {
             .player-container { margin: 1rem; }
@@ -319,6 +420,8 @@
             .search-box { width: 100%; }
             .volume-controls { flex-direction: column; gap: 0.5rem; }
             .volume-slider-container { width: 80%; }
+            .radio-container { margin: 1rem; padding: 1.5rem; }
+            .radio-btn { padding: 1.2rem 2rem; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -331,6 +434,18 @@
         <div class="logo">🎧 HAGO  Radio</div>
         <div class="subtitle">Voces Institucionales - I.E.Héctor Abad Gómez</div>
     </header>
+
+    <!-- 📻 BOTÓN DE RADIO EN VIVO -->
+    <div class="radio-container">
+        <button class="radio-btn" id="radioBtn" onclick="toggleRadio()">
+            <i class="fas fa-radio" id="radioIcon"></i>
+            <span id="radioText">Escuchar Radio en Vivo</span>
+            <div class="radio-pulse" id="radioPulse"></div>
+        </button>
+        <div class="radio-info" id="radioInfo" style="display: none;">
+            <p><i class="fas fa-broadcast-tower"></i> Transmitiendo en vivo</p>
+        </div>
+    </div>
 
     <!-- 🎧 REPRODUCTOR PRINCIPAL -->
     <div class="player-container">
@@ -437,6 +552,11 @@
                 description: "Tomado del Manual de Convivencia Héctor Abad Gómez"
             }
         ];
+
+        // 📻 CONFIGURACIÓN DE RADIO
+        const RADIO_STREAM_URL = 'https://stream-175.zeno.fm/u981180n21zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ1OTgxMTgwbjIxenV2IiwiaG9zdCI6InN0cmVhbS0xNzUuemVub2ZtIiwicnR0bCI6NSwianRpIjoiWUZNVVBvRTdUaE9PX2hwZDR5ejdaQSIsImlhdCI6MTc2NDIwNzg3OCwiZXhwIjoxNzY0MjA3OTM4fQ.N1MZc9ZH9Hry-z_pRNYy1yIo-zSo-0WlDGmXusPL8m0';
+        let radioPlayer = null;
+        let isRadioPlaying = false;
 
         // 🔧 FUNCIONES DEL REPRODUCTOR
         let currentTrack = 0;
@@ -602,7 +722,7 @@
 
         // 🔊 FUNCIONES DE CONTROL DE VOLUMEN
         function toggleMute() {
-            if (!audioPlayer) return;
+            if (!audioPlayer && !radioPlayer) return;
             
             const volumeIcon = document.getElementById('volumeIcon');
             const volumeSlider = document.getElementById('volumeSlider');
@@ -633,14 +753,99 @@
             }
         }
 
+
+        // 📻 FUNCIONES DE RADIO
+        function toggleRadio() {
+            const radioBtn = document.getElementById('radioBtn');
+            const radioIcon = document.getElementById('radioIcon');
+            const radioText = document.getElementById('radioText');
+            const radioInfo = document.getElementById('radioInfo');
+            
+            if (!radioPlayer) {
+                // Crear reproductor de radio
+                radioPlayer = new Audio(RADIO_STREAM_URL);
+                radioPlayer.crossOrigin = 'anonymous';
+                radioPlayer.volume = document.getElementById('volumeSlider').value;
+                
+                radioPlayer.addEventListener('error', function(e) {
+                    console.error('Error al cargar la radio:', e);
+                    alert('No se pudo conectar a la radio. Por favor, intenta más tarde.');
+                    isRadioPlaying = false;
+                    updateRadioButton();
+                });
+                
+                radioPlayer.addEventListener('loadstart', function() {
+                    radioText.textContent = 'Conectando...';
+                });
+                
+                radioPlayer.addEventListener('canplay', function() {
+                    radioText.textContent = 'Radio en Vivo';
+                });
+            }
+            
+            // Detener el podcast si está reproduciéndose
+            if (audioPlayer && isPlaying) {
+                audioPlayer.pause();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+            }
+            
+            isRadioPlaying = !isRadioPlaying;
+            
+            if (isRadioPlaying) {
+                radioPlayer.play().then(() => {
+                    radioBtn.classList.add('playing');
+                    radioIcon.className = 'fas fa-stop';
+                    radioText.textContent = 'Detener Radio';
+                    radioInfo.style.display = 'block';
+                }).catch(e => {
+                    console.error('Error al reproducir radio:', e);
+                    alert('No se pudo reproducir la radio. Verifica tu conexión a internet.');
+                    isRadioPlaying = false;
+                    updateRadioButton();
+                });
+            } else {
+                radioPlayer.pause();
+                radioBtn.classList.remove('playing');
+                radioIcon.className = 'fas fa-radio';
+                radioText.textContent = 'Escuchar Radio en Vivo';
+                radioInfo.style.display = 'none';
+            }
+        }
+
+        function updateRadioButton() {
+            const radioBtn = document.getElementById('radioBtn');
+            const radioIcon = document.getElementById('radioIcon');
+            const radioText = document.getElementById('radioText');
+            const radioInfo = document.getElementById('radioInfo');
+            
+            if (isRadioPlaying) {
+                radioBtn.classList.add('playing');
+                radioIcon.className = 'fas fa-stop';
+                radioText.textContent = 'Detener Radio';
+                radioInfo.style.display = 'block';
+            } else {
+                radioBtn.classList.remove('playing');
+                radioIcon.className = 'fas fa-radio';
+                radioText.textContent = 'Escuchar Radio en Vivo';
+                radioInfo.style.display = 'none';
+            }
+        }
+
+        // Sincronizar volumen de radio con el control de volumen
         function setupVolumeControl() {
             const volumeSlider = document.getElementById('volumeSlider');
             
             volumeSlider.addEventListener('input', function() {
-                if (!audioPlayer) return;
-                
                 const volume = parseFloat(this.value);
-                audioPlayer.volume = volume;
+                
+                if (audioPlayer) {
+                    audioPlayer.volume = volume;
+                }
+                
+                if (radioPlayer) {
+                    radioPlayer.volume = volume;
+                }
                 
                 // Actualizar icono según el nivel de volumen
                 updateVolumeIcon(volume);

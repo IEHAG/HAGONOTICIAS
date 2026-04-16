@@ -392,26 +392,45 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
+    <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row align-items-center">
+                <div class="col-md-4 mb-3 mb-md-0 text-center text-md-start">
                     <h5>HAGO Noticias</h5>
-                    <p>Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</p>
+                    <p class="mb-0">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="social-links">
-                        <a href="#" class="social-icon me-3">
-                            <i class="fab fa-facebook fa-2x"></i>
+                
+                <div class="col-md-4 mb-3 mb-md-0 text-center">
+                    <div class="stats-container d-flex justify-content-center gap-4">
+                        <div class="stat-item">
+                            <i class="fas fa-eye text-primary mb-1" style="font-size: 1.4rem;"></i>
+                            <h4 class="mb-0 fw-bold counter-animate" id="totalViewsCounter">0</h4>
+                            <small class="text-white-50">Visitas</small>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-download text-success mb-1" style="font-size: 1.4rem;"></i>
+                            <h4 class="mb-0 fw-bold counter-animate" id="totalDownloadsCounter">0</h4>
+                            <small class="text-white-50">Descargas</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 text-center text-md-end">
+                    <div class="social-links mb-2">
+                        <a href="https://www.facebook.com/?checkpoint_src=1501092823525282" target="_blank" class="social-icon me-3">
+                            <i class="fab fa-facebook fa-lg"></i>
                         </a>
-                        <a href="#" class="social-icon me-3">
-                            <i class="fab fa-youtube fa-2x"></i>
+                        <a href="https://www.tiktok.com/@ie_hectorabadgomez?is_from_webapp=1&sender_device=pc" target="_blank" class="social-icon me-3">
+                            <i class="fab fa-tiktok fa-lg"></i>
                         </a>
-                        <a href="#" class="social-icon">
-                            <i class="fab fa-instagram fa-2x"></i>
+                        <a href="https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad" target="_blank" class="social-icon me-3">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                        <a href="https://www.instagram.com/hectorabadgomez_ie/" target="_blank" class="social-icon">
+                            <i class="fab fa-instagram fa-lg"></i>
                         </a>
                     </div>
-                    <p class="mt-3">&copy; 2025 HAGO Noticias. Todos los derechos reservados.</p>
+                    <p class="mb-0 small text-white-50">&copy; 2026 HAGO Noticias. Todos los derechos reservados.</p>
                 </div>
             </div>
         </div>
@@ -498,6 +517,40 @@
             // Optimize touch interactions
             document.addEventListener('touchstart', function() {}, {passive: true});
             document.addEventListener('touchmove', function() {}, {passive: true});
+
+            // Calculate and animate total stats from EDICIONES
+            if (typeof EDICIONES !== 'undefined') {
+                const totalViews = EDICIONES.reduce((acc, curr) => acc + (curr.views || 0), 0);
+                const totalDownloads = EDICIONES.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
+
+                const animateCounter = (id, target) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    let current = 0;
+                    const increment = target / 50; // Animate over 50 frames
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.innerText = target.toLocaleString();
+                            clearInterval(timer);
+                        } else {
+                            el.innerText = Math.ceil(current).toLocaleString();
+                        }
+                    }, 30);
+                };
+
+                // Observers for animating counters when visible
+                const statsObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        animateCounter('totalViewsCounter', totalViews);
+                        animateCounter('totalDownloadsCounter', totalDownloads);
+                        statsObserver.disconnect();
+                    }
+                }, { threshold: 0.5 });
+                
+                const statsContainer = document.querySelector('.stats-container');
+                if (statsContainer) statsObserver.observe(statsContainer);
+            }
         });
     </script>
 </body>

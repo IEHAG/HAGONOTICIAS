@@ -250,10 +250,10 @@ function initializeKeyboardNavigation() {
 function initializeErrorHandling() {
     // Global error handler for images
     document.addEventListener('error', function(e) {
-        if (e.target.tagName === 'IMG') {
+        if (e.target.tagName === 'IMG' && !e.target.src.includes('default-thumbnail.png')) {
             e.target.src = 'img/default-thumbnail.png';
             e.target.alt = 'Imagen no disponible';
-            console.warn('Image failed to load:', e.target.src);
+            console.warn('Image failed to load, falling back to default:', e.target.src);
         }
     }, true);
     

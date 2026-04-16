@@ -449,7 +449,6 @@
     <script src="js/enhanced-pdf-viewer.js"></script>
     <script src="js/modern-edition-viewer.js"></script>
     <script src="js/enhanced-interactions.js"></script>
-    <script src="js/interactions.js"></script>
 
     <script>
         // Hide loading screen when page is loaded
@@ -460,59 +459,9 @@
             }, 1000);
         });
 
-        // Initialize animations and interactions
+        // Initialize animations and interactions handled by enhanced-interactions.js
         document.addEventListener('DOMContentLoaded', function() {
-            // Intersection Observer for reveal animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                    }
-                });
-            }, observerOptions);
-
-            // Observe elements with class 'reveal'
-            document.querySelectorAll('.reveal').forEach(el => {
-                observer.observe(el);
-            });
-
-            // Smooth scrolling for internal links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Simple parallax effect
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const parallaxElements = document.querySelectorAll('.parallax-element');
-                
-                parallaxElements.forEach(element => {
-                    const speed = element.dataset.speed || 0.5;
-                    const yPos = -(scrolled * speed);
-                    element.style.transform = `translateY(${yPos}px)`;
-                });
-            });
-
-            // Error handling for images
-            document.addEventListener('error', function(e) {
-                if (e.target.tagName === 'IMG') {
-                    e.target.src = 'img/default-thumbnail.png';
-                }
-            }, true);
+            // Global basic image error handling placeholder is in enhanced-interactions.js
 
             // Optimize touch interactions
             document.addEventListener('touchstart', function() {}, {passive: true});

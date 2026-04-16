@@ -379,6 +379,11 @@ class MobilePDFViewer {
     }
     
     async open(pdfUrl, title = 'PDF') {
+        if (pdfUrl.includes('drive.google.com/file') || pdfUrl.includes('drive.google.com/open')) {
+            window.open(pdfUrl, '_blank');
+            return;
+        }
+
         this.viewer.classList.add('active');
         document.body.style.overflow = 'hidden';
         
@@ -574,7 +579,6 @@ window.mobilePdfViewer = new MobilePDFViewer();
             });
         }
     });
-});
 
 // Exportar para uso global
 window.MobilePDFViewer = MobilePDFViewer;

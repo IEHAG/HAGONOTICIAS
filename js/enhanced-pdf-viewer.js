@@ -343,6 +343,11 @@ class EnhancedPDFViewer {
     }
     
     async open(pdfUrl, title = 'Documento PDF') {
+        if (pdfUrl.includes('drive.google.com/file') || pdfUrl.includes('drive.google.com/open')) {
+            window.open(pdfUrl, '_blank');
+            return;
+        }
+
         try {
             this.showLoading(true);
             this.modal.style.display = 'block';

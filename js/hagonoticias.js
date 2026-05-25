@@ -15,7 +15,8 @@ let scale = 1.5;
 const bookList = document.getElementById('bookList');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
-const modal = new bootstrap.Modal(document.getElementById('pdfModal'));
+const pdfModalElement = document.getElementById('pdfModal');
+const modal = pdfModalElement ? new bootstrap.Modal(pdfModalElement) : null;
 const canvas = document.getElementById('pdfViewer');
 const ctx = canvas.getContext('2d');
 
@@ -218,6 +219,7 @@ function updateNavigationButtons() {
 }
 
 async function openPdfViewer(pdfUrl) {
+    if (!modal) return;
     modal.show();
     scale = 1.5;
     
@@ -271,18 +273,21 @@ document.addEventListener('keydown', (event) => {
         } else if (event.key === 'ArrowRight') {
             showNextPage();
         } else if (event.key === 'Escape') {
-            modal.hide();
+            if (modal) modal.hide();
         }
     }
 });
 
 // Limpiar al cerrar modal
-document.getElementById('pdfModal').addEventListener('hidden.bs.modal', function () {
-    pdfDoc = null;
-    pageNum = 1;
-    scale = 1.5;
-    document.getElementById('pdfContainer').innerHTML = '';
-});
+const modalCleanup = document.getElementById('pdfModal');
+if (modalCleanup) {
+    modalCleanup.addEventListener('hidden.bs.modal', function () {
+        pdfDoc = null;
+        pageNum = 1;
+        scale = 1.5;
+        document.getElementById('pdfContainer').innerHTML = '';
+    });
+}
 
 // Smooth scrolling para navegación
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -84,23 +84,23 @@ class ModernEditionViewer {
     }
     
     generateFilterOptions() {
-        // Obtener todas las categorías únicas y ordenarlas
         const categories = [...new Set(this.books.map(book => book.category))];
         categories.sort((a, b) => {
-            // Extraer el número de la categoría (#1, #2, etc.)
             const numA = parseInt(a.replace('#', '')) || 0;
             const numB = parseInt(b.replace('#', '')) || 0;
             return numA - numB;
         });
-        
-        // Generar las opciones del select
-        let optionsHTML = '<option value="">Todas las ediciones</option>';
+        return categories;
+    }
+    
+    generateCategoryChips() {
+        const categories = this.generateFilterOptions();
+        let chipsHTML = `<button class="modern-chip modern-chip-active" data-category="all">Todas</button>`;
         categories.forEach(category => {
             const editionNum = category.replace('#', '');
-            optionsHTML += `<option value="${category}">Edición #${editionNum}</option>`;
+            chipsHTML += `<button class="modern-chip" data-category="${category}">Ed. ${editionNum}</button>`;
         });
-        
-        return optionsHTML;
+        return chipsHTML;
     }
     
     createModernInterface() {
@@ -114,19 +114,17 @@ class ModernEditionViewer {
             edicionesSection.appendChild(container);
         }
         
-        // Hide existing interface
         const existingElements = container.querySelectorAll('.row, #bookList, .mobile-search-container, .mobile-cards-grid');
         existingElements.forEach(el => el.style.display = 'none');
         
-        // Create modern interface
         const modernInterface = document.createElement('div');
         modernInterface.className = 'modern-edition-viewer';
         modernInterface.innerHTML = `
             <div class="modern-viewer-container">
                 <div class="modern-viewer-header">
-                    <h2 class="modern-viewer-title">Ediciones HAGO Noticias</h2>
+                    <h2 class="modern-viewer-title">Biblioteca de <span>Ediciones</span></h2>
                     <p class="modern-viewer-subtitle">
-                        Descubre nuestras publicaciones institucionales con contenido de calidad
+                        Explora nuestras publicaciones institucionales
                     </p>
                 </div>
                 
@@ -143,28 +141,26 @@ class ModernEditionViewer {
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
-                        
-                        <select class="modern-filter-select" id="modernFilterSelect">
-                            ${this.generateFilterOptions()}
-                        </select>
+                        <button class="modern-filter-toggle" id="modernFilterToggle" title="Filtrar por edición">
+                            <i class="fas fa-sliders-h"></i>
+                        </button>
                     </div>
                     
-                    <div class="modern-filter-tags" id="modernFilterTags"></div>
+                    <div class="modern-filter-chips" id="modernFilterChips">
+                        ${this.generateCategoryChips()}
+                    </div>
                 </div>
                 
                 <div class="text-center">
                     <span class="modern-results-counter" id="modernResultsCounter">
-                        ${this.filteredBooks.length} ediciones disponibles
+                        ${this.filteredBooks.length} ediciones en la biblioteca
                     </span>
                 </div>
                 
-                <div class="modern-editions-grid" id="modernEditionsGrid">
-                    <!-- Cards will be generated here -->
-                </div>
+                <div class="modern-editions-grid" id="modernEditionsGrid"></div>
             </div>
         `;
         
-        // Insert after title
         const title = container.querySelector('h2');
         if (title) {
             title.style.display = 'none';
@@ -178,10 +174,24 @@ class ModernEditionViewer {
     }
     
     bindEvents() {
-        // Search functionality
         const searchInput = document.getElementById('modernSearchInput');
         const searchClear = document.getElementById('modernSearchClear');
-        const filterSelect = document.getElementById('modernFilterSelect');
+        const filterToggle = document.getElementById('modernFilterToggle');
+        const filterChips = document.getElementById('modernFilterChips');
+        
+        if (filterToggle && filterChips) {
+            const chips = filterChips.querySelectorAll('.modern-chip');
+            if (chips.length <= 1) {
+                filterToggle.style.display = 'none';
+            }
+            
+            filterToggle.addEventListener('click', () => {
+                filterChips.classList.toggle('modern-filter-chips-visible');
+                filterToggle.classList.toggle('active');
+                const isVisible = filterChips.classList.contains('modern-filter-chips-visible');
+                filterToggle.querySelector('i').className = isVisible ? 'fas fa-times' : 'fas fa-sliders-h';
+            });
+        }
         
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
@@ -190,7 +200,6 @@ class ModernEditionViewer {
                 this.debounceFilter();
             });
             
-            // Enhanced mobile keyboard handling
             searchInput.addEventListener('focus', () => {
                 if (this.isMobile) {
                     setTimeout(() => {
@@ -210,19 +219,22 @@ class ModernEditionViewer {
             });
         }
         
-        if (filterSelect) {
-            filterSelect.addEventListener('change', (e) => {
-                const value = e.target.value;
-                if (value && !this.activeFilters.has(value)) {
-                    this.activeFilters.add(value);
-                    this.updateFilterTags();
-                    this.filterBooks();
+        const allChips = document.querySelectorAll('.modern-chip');
+        allChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const category = chip.dataset.category;
+                if (category === 'all') {
+                    this.activeFilters.clear();
+                } else if (this.activeFilters.has(category)) {
+                    this.activeFilters.delete(category);
+                } else {
+                    this.activeFilters.add(category);
                 }
-                e.target.value = '';
+                this.updateChips();
+                this.filterBooks();
             });
-        }
+        });
         
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey || e.metaKey) {
                 switch (e.key) {
@@ -236,9 +248,20 @@ class ModernEditionViewer {
                         break;
                 }
             }
-            
             if (e.key === 'Escape' && document.activeElement === searchInput) {
                 searchInput.blur();
+            }
+        });
+    }
+    
+    updateChips() {
+        const chips = document.querySelectorAll('.modern-chip');
+        chips.forEach(chip => {
+            const category = chip.dataset.category;
+            if (category === 'all') {
+                chip.classList.toggle('modern-chip-active', this.activeFilters.size === 0);
+            } else {
+                chip.classList.toggle('modern-chip-active', this.activeFilters.has(category));
             }
         });
     }
@@ -296,30 +319,6 @@ class ModernEditionViewer {
     }
     
     updateFilterTags() {
-        const tagsContainer = document.getElementById('modernFilterTags');
-        if (!tagsContainer) return;
-        
-        tagsContainer.innerHTML = '';
-        
-        this.activeFilters.forEach(filter => {
-            const tag = document.createElement('div');
-            tag.className = 'modern-filter-tag';
-            tag.innerHTML = `
-                <span>Edición ${filter.replace('#', '')}</span>
-                <button class="modern-filter-tag-remove" data-filter="${filter}">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            const removeBtn = tag.querySelector('.modern-filter-tag-remove');
-            removeBtn.addEventListener('click', () => {
-                this.activeFilters.delete(filter);
-                this.updateFilterTags();
-                this.filterBooks();
-            });
-            
-            tagsContainer.appendChild(tag);
-        });
     }
     
     normalizeText(text) {
@@ -337,8 +336,9 @@ class ModernEditionViewer {
             const matchesSearch = normalizedSearch === '' || 
                 this.normalizeText(book.title).includes(normalizedSearch) ||
                 this.normalizeText(book.description).includes(normalizedSearch) ||
-                this.normalizeText(book.year).includes(normalizedSearch) ||
-                book.tags.some(tag => this.normalizeText(tag).includes(normalizedSearch));
+                this.normalizeText(book.author || '').includes(normalizedSearch) ||
+                this.normalizeText(book.year || '').includes(normalizedSearch) ||
+                (book.tags || []).some(tag => this.normalizeText(tag).includes(normalizedSearch));
             
             const matchesCategory = this.activeFilters.size === 0 || 
                 this.activeFilters.has(book.category);
@@ -355,12 +355,9 @@ class ModernEditionViewer {
         if (counter) {
             const count = this.filteredBooks.length;
             const total = this.books.length;
-            
-            if (count === total) {
-                counter.textContent = `${count} ediciones disponibles`;
-            } else {
-                counter.textContent = `${count} de ${total} ediciones encontradas`;
-            }
+            counter.textContent = count === total 
+                ? `${count} ediciones en la biblioteca`
+                : `${count} de ${total} ediciones`;
         }
     }
     
@@ -387,10 +384,14 @@ class ModernEditionViewer {
     createCard(book, index) {
         const card = document.createElement('div');
         card.className = 'modern-edition-card';
-        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.animationDelay = `${index * 0.05}s`;
         
         const isComingSoon = book.comingSoon;
         const isFeatured = book.featured;
+        const editionNum = book.category || '';
+        const editionLabel = editionNum.replace('#', 'Ed. ');
+        const authorText = book.author || book.title || 'HAGO Noticias';
+        const yearLabel = book.year || '';
         
         card.innerHTML = `
             <div class="modern-card-image-container">
@@ -400,53 +401,54 @@ class ModernEditionViewer {
                      loading="lazy"
                      onerror="this.src='img/default-thumbnail.png'">
                 
-                <div class="modern-card-overlay">
-                    ${isComingSoon ? `
-                        <div class="modern-card-overlay-content">
-                            <div style="color: rgba(255,255,255,0.9); font-style: italic; text-align: center;">
-                                <i class="fas fa-clock" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                <div style="font-size: 1.1rem;">Próximamente</div>
-                            </div>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <div class="modern-card-badge ${isFeatured ? 'featured' : ''}">${book.category}</div>
-                <div class="modern-card-year">
-                    <i class="fas fa-calendar me-1"></i>${book.year}
-                </div>
-                
-                ${!isComingSoon ? `
-                    <div class="modern-card-side-buttons">
-                        <button class="modern-card-button modern-card-button-primary view-pdf-modern modern-card-button-left" 
-                                data-pdf="${book.pdfUrl}" 
-                                data-title="${book.title}">
-                            <i class="fas fa-eye"></i>
-                            <span>Ver PDF</span>
-                        </button>
-                        <a href="${book.pdfUrl}" 
-                           download 
-                           class="modern-card-button modern-card-button-secondary modern-card-button-right"
-                           title="Descargar PDF">
-                            <i class="fas fa-download"></i>
-                            <span>Descargar</span>
-                        </a>
+                ${isComingSoon ? `
+                    <div class="modern-card-coming-soon">
+                        <i class="fas fa-clock"></i>
+                        <span>Próximamente</span>
                     </div>
-                ` : `
-                    <div class="coming-soon-badge"><i class="fas fa-clock"></i> Próximamente</div>
-                `}
+                ` : ''}
+                
+                <div class="modern-card-badge ${isFeatured ? 'featured' : ''}">${editionLabel}</div>
             </div>
             
             <div class="modern-card-content">
-                <h3 class="modern-card-title">${book.title}</h3>
-                <p class="modern-card-description">${book.description}</p>
+                <div class="modern-card-author">${authorText}</div>
+                <div>
+                    <span class="modern-card-category">${editionLabel}</span>
+                    <span class="modern-card-year">${yearLabel}</span>
+                </div>
             </div>
+            
+            ${!isComingSoon ? `
+                <div class="modern-card-actions-bar">
+                    <button class="modern-card-btn-sm modern-card-btn-primary view-pdf-modern" data-pdf="${book.pdfUrl}">
+                        <i class="fas fa-eye"></i> Ver
+                    </button>
+                    <a href="${book.pdfUrl}" download class="modern-card-btn-sm modern-card-btn-secondary" onclick="event.stopPropagation()">
+                        <i class="fas fa-download"></i> Descargar
+                    </a>
+                </div>
+            ` : `
+                <div class="modern-card-actions-bar">
+                    <span class="coming-soon-label"><i class="fas fa-clock"></i> Próximamente</span>
+                </div>
+            `}
         `;
         
-        // Bind events para el botón de ver PDF
+        // Click en tarjeta abre visor PDF
+        if (!isComingSoon) {
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('a') && !e.target.closest('button')) {
+                    this.handleViewPDF(book.pdfUrl, book.title);
+                }
+            });
+        }
+        
+        // Evento para botón Ver PDF
         const viewBtn = card.querySelector('.view-pdf-modern');
         if (viewBtn && !isComingSoon) {
             viewBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.handleViewPDF(book.pdfUrl, book.title, e.currentTarget);
             });
         }
@@ -458,13 +460,13 @@ class ModernEditionViewer {
         const cards = document.querySelectorAll('.modern-edition-card');
         cards.forEach((card, index) => {
             card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
+            card.style.transform = 'translateY(12px)';
             
             setTimeout(() => {
-                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, index * 100);
+            }, index * 30);
         });
     }
     
@@ -498,10 +500,10 @@ class ModernEditionViewer {
             }, 2000);
         }
         
-        // Use existing PDF viewer
-        if (window.mobilePdfViewer) {
+        // Use enhanced PDF viewer when available
+        if (window.enhancedPdfViewer) {
             const fullPdfUrl = new URL(pdfUrl, window.location.href).href;
-            window.mobilePdfViewer.open(fullPdfUrl, title);
+            window.enhancedPdfViewer.open(fullPdfUrl, title);
         } else {
             // Fallback - open in new tab
             window.open(pdfUrl, '_blank');
@@ -518,7 +520,7 @@ class ModernEditionViewer {
         }
         
         this.toggleClearButton();
-        this.updateFilterTags();
+        this.updateChips();
         this.filterBooks();
     }
     
@@ -556,124 +558,20 @@ class ModernEditionViewer {
     }
 }
 
-// Additional CSS for coming soon and featured badges
-const additionalStyles = `
-<style>
-.coming-soon-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
-    color: #000;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    z-index: 3;
-    box-shadow: 0 2px 10px rgba(255, 193, 7, 0.4);
-}
-
-.modern-card-badge.featured {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-}
-
-.modern-card-badge.featured::after {
-    content: ' ⭐';
-}
-
-.modern-card-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.modern-card-button:disabled:hover {
-    transform: none !important;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3) !important;
-}
-
-/* Enhanced mobile responsiveness */
-@media (max-width: 480px) {
-    .modern-card-overlay-content h4 {
-        font-size: 1.2rem;
-    }
-    
-    .modern-card-overlay-content p {
-        font-size: 0.9rem;
-    }
-    
-    .modern-card-overlay-content .modern-card-button {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-    }
-}
-
-/* Tablet optimizations */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .modern-editions-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1.5rem;
-    }
-    
-    .modern-search-container {
-        justify-content: space-between;
-    }
-    
-    .modern-search-group {
-        flex: 1;
-        max-width: 60%;
-    }
-    
-    .modern-filter-select {
-        max-width: 35%;
-    }
-}
-
-/* Desktop enhancements */
-@media (min-width: 1025px) {
-    .modern-editions-grid {
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
-        gap: 2rem;
-    }
-    
-    .modern-edition-card:hover {
-        transform: translateY(-15px) scale(1.03);
-    }
-    
-    .modern-search-group {
-        max-width: 500px;
-    }
-}
-
-/* Ultra-wide screens */
-@media (min-width: 1400px) {
-    .modern-editions-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-}
-</style>
-`;
-
 // Initialize when DOM is ready
 let modernViewer;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Add additional styles
-    document.head.insertAdjacentHTML('beforeend', additionalStyles);
-    
-    // Wait for other scripts to load
     setTimeout(() => {
         modernViewer = new ModernEditionViewer();
         window.modernViewer = modernViewer;
         
-        // Hide old interfaces
         const oldInterfaces = document.querySelectorAll('.mobile-search-container, .mobile-cards-grid, #bookList');
         oldInterfaces.forEach(el => {
             if (el) el.style.display = 'none';
         });
         
-    }, 1000);
+    }, 300);
 });
 
 // Export for use in other modules

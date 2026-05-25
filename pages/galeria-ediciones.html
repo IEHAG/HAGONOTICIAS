@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galería de Ediciones · HAGO Noticias</title>
+
+  <!-- TailwindCSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #041B2D;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.25); border-radius: 3px; }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .glass-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(79,195,247,0.2);
+    }
+
+    /* Purple glow button */
+    .btn-view {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      box-shadow: 0 4px 14px rgba(124,58,237,0.25);
+    }
+    .btn-view:hover {
+      box-shadow: 0 6px 24px rgba(124,58,237,0.45);
+      transform: translateY(-1px);
+    }
+
+    /* Green glow button */
+    .btn-download {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 4px 14px rgba(5,150,105,0.25);
+    }
+    .btn-download:hover {
+      box-shadow: 0 6px 24px rgba(5,150,105,0.45);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <!-- React, ReactDOM, Babel, Framer Motion via CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.js"></script>
+
+  <!-- Datos de ediciones (extraídos de ediciones-data.js) -->
+  <script>
+    const EDICIONES = [
+      { id:1, numero:1, titulo:"Edición #1", autor:"Día de la democracia, Madres, Maestro, Talentos Abadistas", categoria:"#1", anio:2024, descripcion:"Primera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1djewK_gQm5d9-bQzXA1W-xYLEuctmjfX&sz=w320-h240", pdfUrl:"pdf/EDICION1.pdf", tags:["democracia","madres","maestro","talentos"], featured:true, comingSoon:false },
+      { id:2, numero:2, titulo:"Edición #2", autor:"Día de la Antioqueñidad", categoria:"#2", anio:2024, descripcion:"Segunda edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1AkZ9JBY8Hgavcj3KJVtzWd5gsScmft_b&sz=w320-h240", pdfUrl:"pdf/EDICION2.pdf", tags:["antioqueñidad","cultura","tradición"], featured:false, comingSoon:false },
+      { id:3, numero:3, titulo:"Edición #3", autor:"Semana Abadista - Foro - Museo Escolar", categoria:"#3", anio:2024, descripcion:"Tercera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1xWfZ7J-7k1fFps5UG9Dkz3k8S2yaW_Hu&sz=w320-h240", pdfUrl:"pdf/EDICION3.pdf", tags:["semana abadista","foro","museo"], featured:false, comingSoon:false },
+      { id:4, numero:4, titulo:"Edición #4", autor:"La institución de la Inclusión, Gobierno Escolar 2025", categoria:"#4", anio:2025, descripcion:"Cuarta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1D818JI97Qk-jfqmCktdSXF-84XfyJ1OD&sz=w320-h240", pdfUrl:"pdf/EDICION4.pdf", tags:["inclusión","gobierno escolar"], featured:true, comingSoon:false },
+      { id:5, numero:5, titulo:"Edición #5", autor:"Celebramos el corazón que educa", categoria:"#5", anio:2025, descripcion:"Quinta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=15emMmadoHN3SOx-U9xOn8oUw38u0v1vu&sz=w320-h240", pdfUrl:"pdf/EDICION5.pdf", tags:["corazón que educa","profes","murales"], featured:true, comingSoon:false },
+      { id:6, numero:6, titulo:"Edición #6", autor:"La Institución de la Inclusión, Gobierno Escolar 2026", categoria:"#6", anio:2026, descripcion:"Sexta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1ZyDq2gXX7bEUZqxpNzQA6EnNyXFJX-hS&sz=w320-h240", pdfUrl:"pdf/EDICION6.pdf", tags:["inclusión","gobierno escolar 2026","mujeres"], featured:true, comingSoon:false },
+      { id:7, numero:7, titulo:"Edición #7", autor:"Nueva Edición", categoria:"#7", anio:2026, descripcion:"Séptima edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
+      { id:8, numero:8, titulo:"Edición #8", autor:"Nueva Edición", categoria:"#8", anio:2026, descripcion:"Octava edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
+      { id:9, numero:9, titulo:"Edición #9", autor:"Nueva Edición", categoria:"#9", anio:2026, descripcion:"Novena edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
+      { id:10, numero:10, titulo:"Edición #10", autor:"Nueva Edición", categoria:"#10", anio:2026, descripcion:"Décima edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true }
+    ];
+  </script>
+
+  <!-- Componente React -->
+  <script type="text/babel">
+    const { useState, useRef, useEffect, useMemo, useCallback } = React;
+    const { motion, AnimatePresence } = window.FramerMotion;
+
+    // ──────────── Iconos inline ────────────
+    const Icon = ({ name, className }) => {
+      const icons = {
+        calendar: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+        eye: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z',
+        download: 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+        search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+        clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+        'sliders': 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4',
+        x: 'M6 18L18 6M6 6l12 12'
+      };
+      return /*#__PURE__*/React.createElement('svg', {
+        className,
+        fill: 'none',
+        stroke: 'currentColor',
+        viewBox: '0 0 24 24',
+        strokeWidth: 1.8,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round'
+      }, /*#__PURE__*/React.createElement('path', { d: icons[name] }));
+    };
+
+    // ──────────── Card ────────────
+    const EditionCard = ({ edition, index, onView, onDownload }) => {
+      const isComing = edition.comingSoon;
+
+      return /*#__PURE__*/React.createElement(motion.div, {
+        initial: { opacity: 0, y: 40 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.5, delay: index * 0.08, ease: [0.4, 0, 0.2, 1] },
+        className: 'glass-card rounded-xl overflow-hidden group',
+        whileHover: { y: -6, transition: { duration: 0.3 } }
+      },
+        /* ── Imagen ── */
+        /*#__PURE__*/React.createElement('div', {
+          className: 'relative overflow-hidden aspect-[2/3] bg-gradient-to-br from-[#0a1628] to-[#0f1f3a]'
+        },
+          /*#__PURE__*/React.createElement(motion.img, {
+            src: edition.thumbnail,
+            alt: edition.titulo,
+            loading: 'lazy',
+            className: 'w-full h-full object-contain',
+            whileHover: { scale: 1.06, filter: 'brightness(1.1)' },
+            transition: { duration: 0.4 },
+            onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+          }),
+
+          /* Badge edición */
+          /*#__PURE__*/React.createElement('span', {
+            className: `absolute top-2 left-2 px-1.5 py-0.5 rounded text-[10px] font-semibold backdrop-blur border z-10 ${
+              edition.featured
+                ? 'bg-[#4fc3f7]/20 text-[#4fc3f7] border-[#4fc3f7]/30'
+                : 'bg-black/60 text-white/80 border-white/10'
+            }`
+          }, `Ed. ${edition.numero}`),
+
+          /* Coming soon */
+          isComing && /*#__PURE__*/React.createElement('div', {
+            className: 'absolute inset-0 bg-black/60 flex items-center justify-center z-10 flex-col gap-1'
+          },
+            /*#__PURE__*/React.createElement(Icon, { name: 'clock', className: 'w-5 h-5 text-amber-400/60' }),
+            /*#__PURE__*/React.createElement('span', { className: 'text-[10px] uppercase tracking-wider text-white/30 font-medium' }, 'Próximamente')
+          )
+        ),
+
+        /* ── Información ── */
+        /*#__PURE__*/React.createElement('div', { className: 'p-3 pb-1' },
+          /* Título */
+          /*#__PURE__*/React.createElement('h3', { className: 'text-sm font-bold text-white mb-0.5' },
+            edition.titulo
+          ),
+
+          /* Año con ícono */
+          /*#__PURE__*/React.createElement('div', { className: 'flex items-center gap-1 text-[11px] text-white/35 mb-1' },
+            /*#__PURE__*/React.createElement(Icon, { name: 'calendar', className: 'w-3 h-3' }),
+            /*#__PURE__*/React.createElement('span', null, edition.anio)
+          ),
+
+          /* Descripción */
+          /*#__PURE__*/React.createElement('p', { className: 'text-[11px] text-white/40 leading-relaxed line-clamp-2' },
+            edition.descripcion
+          )
+        ),
+
+        /* ── Botones ── */
+        /*#__PURE__*/React.createElement('div', { className: 'p-3 pt-1 flex gap-2' },
+          isComing
+            ? /*#__PURE__*/React.createElement('span', { className: 'flex-1 text-center text-[10px] text-white/20 py-1.5' },
+                'Próximamente'
+              )
+            : /*#__PURE__*/React.createElement(React.Fragment, null,
+                /*#__PURE__*/React.createElement(motion.button, {
+                  onClick: () => onView(edition),
+                  className: 'flex-1 btn-view text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200',
+                  whileHover: { scale: 1.03 },
+                  whileTap: { scale: 0.97 }
+                },
+                  /*#__PURE__*/React.createElement(Icon, { name: 'eye', className: 'w-3.5 h-3.5' }),
+                  'Ver PDF'
+                ),
+                /*#__PURE__*/React.createElement(motion.a, {
+                  href: edition.pdfUrl,
+                  download: true,
+                  className: 'flex-1 btn-download text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200',
+                  whileHover: { scale: 1.03 },
+                  whileTap: { scale: 0.97 }
+                },
+                  /*#__PURE__*/React.createElement(Icon, { name: 'download', className: 'w-3.5 h-3.5' }),
+                  'Descargar'
+                )
+              )
+        )
+      );
+    };
+
+    // ──────────── SearchBar ────────────
+    const SearchBar = ({ search, onSearchChange, onClear, visible, onToggleFilters, filters, onFilterToggle }) => {
+      const chips = useMemo(() => {
+        const cats = [...new Set(EDICIONES.map(e => e.categoria))];
+        cats.sort((a,b) => parseInt(a.replace('#','')) - parseInt(b.replace('#','')));
+        return cats;
+      }, []);
+
+      return /*#__PURE__*/React.createElement('div', { className: 'mb-5' },
+        /* Barra de búsqueda */
+        /*#__PURE__*/React.createElement('div', { className: 'flex items-center gap-2 justify-center' },
+          /*#__PURE__*/React.createElement('div', { className: 'relative w-full max-w-[280px]' },
+            /*#__PURE__*/React.createElement(Icon, { name: 'search', className: 'absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20' }),
+            /*#__PURE__*/React.createElement('input', {
+              type: 'text',
+              value: search,
+              onChange: (e) => onSearchChange(e.target.value),
+              placeholder: 'Buscar ediciones...',
+              className: 'w-full py-1.5 pl-8 pr-7 text-xs bg-white/5 border border-white/10 rounded-lg text-white/80 placeholder-white/25 focus:outline-none focus:border-[#4fc3f7]/50 focus:bg-white/10 focus:shadow-[0_0_0_2px_rgba(79,195,247,0.1)] transition-all'
+            }),
+            search && /*#__PURE__*/React.createElement('button', {
+              onClick: onClear,
+              className: 'absolute right-2 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors'
+            },
+              /*#__PURE__*/React.createElement(Icon, { name: 'x', className: 'w-3 h-3' })
+            )
+          ),
+          /* Filtro toggle */
+          /*#__PURE__*/React.createElement(motion.button, {
+            onClick: onToggleFilters,
+            className: `p-1.5 rounded-lg border transition-all ${
+              visible ? 'bg-[#4fc3f7]/15 border-[#4fc3f7]/30 text-[#4fc3f7]' : 'bg-white/5 border-white/10 text-white/30 hover:text-white/60'
+            }`,
+            whileTap: { scale: 0.9 }
+          },
+            /*#__PURE__*/React.createElement(Icon, { name: visible ? 'x' : 'sliders', className: 'w-3.5 h-3.5' })
+          )
+        ),
+
+        /* Chips de filtro */
+        /*#__PURE__*/React.createElement(AnimatePresence, null,
+          visible && /*#__PURE__*/React.createElement(motion.div, {
+            initial: { height: 0, opacity: 0 },
+            animate: { height: 'auto', opacity: 1 },
+            exit: { height: 0, opacity: 0 },
+            transition: { duration: 0.3 },
+            className: 'overflow-hidden'
+          },
+            /*#__PURE__*/React.createElement('div', { className: 'flex flex-wrap gap-1.5 justify-center mt-3' },
+              /*#__PURE__*/React.createElement('button', {
+                onClick: () => onFilterToggle('all'),
+                className: `px-2.5 py-1 rounded text-[10px] font-medium transition-all ${
+                  filters.size === 0
+                    ? 'bg-[#4fc3f7]/15 text-[#4fc3f7] border border-[#4fc3f7]/30'
+                    : 'bg-white/5 text-white/35 border border-white/10 hover:text-white/60'
+                }`
+              }, 'Todas'),
+              chips.map(cat => {
+                const active = filters.has(cat);
+                return /*#__PURE__*/React.createElement('button', {
+                  key: cat,
+                  onClick: () => onFilterToggle(cat),
+                  className: `px-2.5 py-1 rounded text-[10px] font-medium transition-all ${
+                    active
+                      ? 'bg-[#4fc3f7]/15 text-[#4fc3f7] border border-[#4fc3f7]/30'
+                      : 'bg-white/5 text-white/35 border border-white/10 hover:text-white/60'
+                  }`
+                }, `Ed. ${cat.replace('#','')}`);
+              })
+            )
+          )
+        )
+      );
+    };
+
+    // ──────────── App ────────────
+    const App = () => {
+      const [search, setSearch] = useState('');
+      const [filters, setFilters] = useState(new Set());
+      const [filterVisible, setFilterVisible] = useState(false);
+
+      const filtered = useMemo(() => {
+        return EDICIONES.filter(ed => {
+          const q = search.toLowerCase().trim();
+          const matchSearch = !q || 
+            ed.titulo.toLowerCase().includes(q) ||
+            ed.autor.toLowerCase().includes(q) ||
+            ed.descripcion.toLowerCase().includes(q) ||
+            String(ed.anio).includes(q) ||
+            ed.tags.some(t => t.toLowerCase().includes(q));
+          const matchFilter = filters.size === 0 || filters.has(ed.categoria);
+          return matchSearch && matchFilter;
+        });
+      }, [search, filters]);
+
+      const handleView = useCallback((ed) => {
+        if (window.enhancedPdfViewer) {
+          window.enhancedPdfViewer.open(ed.pdfUrl, ed.titulo);
+        } else {
+          window.open(ed.pdfUrl, '_blank');
+        }
+      }, []);
+
+      const toggleFilter = useCallback((cat) => {
+        setFilters(prev => {
+          const next = new Set(prev);
+          if (cat === 'all') { return new Set(); }
+          if (next.has(cat)) { next.delete(cat); } else { next.add(cat); }
+          return next;
+        });
+      }, []);
+
+      return /*#__PURE__*/React.createElement('div', {
+        className: 'min-h-screen',
+        style: { background: 'linear-gradient(135deg, #041B2D 0%, #071e33 50%, #041B2D 100%)' }
+      },
+        /* Header */
+        /*#__PURE__*/React.createElement('div', { className: 'text-center pt-8 pb-2 px-4' },
+          /*#__PURE__*/React.createElement(motion.h1, {
+            initial: { opacity: 0, y: -20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.6 },
+            className: 'text-xl font-bold text-white mb-1'
+          },
+            'Biblioteca de ', /*#__PURE__*/React.createElement('span', { className: 'text-[#4fc3f7]' }, 'Ediciones')
+          ),
+          /*#__PURE__*/React.createElement(motion.p, {
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: { duration: 0.6, delay: 0.15 },
+            className: 'text-xs text-white/35'
+          },
+            'Publicaciones institucionales HAGO Noticias'
+          )
+        ),
+
+        /* Separador */
+        /*#__PURE__*/React.createElement('div', { className: 'max-w-lg mx-auto px-4 pb-3' },
+          /*#__PURE__*/React.createElement('hr', { className: 'border-white/5' })
+        ),
+
+        /* Search */
+        /*#__PURE__*/React.createElement('div', { className: 'max-w-full mx-auto px-4' },
+          /*#__PURE__*/React.createElement(SearchBar, {
+            search, filters, filterVisible,
+            onSearchChange: setSearch,
+            onClear: () => setSearch(''),
+            onToggleFilters: () => setFilterVisible(v => !v),
+            onFilterToggle: toggleFilter
+          })
+        ),
+
+        /* Contador */
+        /*#__PURE__*/React.createElement('div', { className: 'text-center mb-4' },
+          /*#__PURE__*/React.createElement('span', { className: 'text-[11px] text-white/25' },
+            `${filtered.length} ediciones`
+          )
+        ),
+
+        /* Grid */
+        /*#__PURE__*/React.createElement('div', { className: 'max-w-full mx-auto px-4 pb-12' },
+          filtered.length === 0
+            ? /*#__PURE__*/React.createElement('div', { className: 'text-center py-16 text-white/30' },
+                /*#__PURE__*/React.createElement(Icon, { name: 'search', className: 'w-10 h-10 mx-auto mb-3 text-white/10' }),
+                /*#__PURE__*/React.createElement('p', { className: 'text-sm font-medium text-white/40 mb-1' }, 'Sin resultados'),
+                /*#__PURE__*/React.createElement('p', { className: 'text-xs' }, 'Intenta con otros términos')
+              )
+            : /*#__PURE__*/React.createElement('div', {
+                className: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3'
+              },
+                filtered.map((ed, i) => /*#__PURE__*/React.createElement(EditionCard, {
+                  key: ed.id,
+                  edition: ed,
+                  index: i,
+                  onView: handleView,
+                  onDownload: () => {}
+                }))
+              )
+        )
+      );
+    };
+
+    // ──────────── Render ────────────
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

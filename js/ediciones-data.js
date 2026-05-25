@@ -140,7 +140,7 @@ const EDICIONES = [
         featured: false,
         views: 0,
         downloads: 0,
-        comingSoon: false
+        comingSoon: true
     },
     {
         id: 8,
@@ -159,7 +159,7 @@ const EDICIONES = [
         featured: false,
         views: 0,
         downloads: 0,
-        comingSoon: false
+        comingSoon: true
     },
     {
         id: 9,
@@ -178,7 +178,7 @@ const EDICIONES = [
         featured: false,
         views: 0,
         downloads: 0,
-        comingSoon: false
+        comingSoon: true
     },
     {
         id: 10,
@@ -197,7 +197,7 @@ const EDICIONES = [
         featured: false,
         views: 0,
         downloads: 0,
-        comingSoon: false
+        comingSoon: true
     }
 ];
 
@@ -223,8 +223,10 @@ function getEdicionesAsModernBooks() {
         id: ed.id,
         title: ed.titulo.replace('# ', '#'),
         description: `Temas: ${ed.autor}`,
+        author: ed.autor,
         category: ed.categoria,
         year: `Año ${ed.anio}`,
+        yearNum: ed.anio,
         thumbnail: ed.thumbnailLarge || ed.thumbnail,
         pdfUrl: ed.pdfUrl,
         tags: ed.tags || [],

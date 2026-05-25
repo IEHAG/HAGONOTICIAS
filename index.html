@@ -1,508 +1,914 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez">
-    <meta name="keywords" content="HAGO Noticias, Institución Educativa, Héctor Abad Gómez, noticias, educación">
-    <title>HAGO Noticias - Portal de Noticias Institucional</title>
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/animate.min.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/hero-styles.css">
-    <link rel="stylesheet" href="css/hagonoticias.css">
-    <link rel="stylesheet" href="css/enhanced-pdf-viewer.css">
-    <link rel="stylesheet" href="css/responsive-fixes.css">
-    <link rel="stylesheet" href="css/mobile-responsive.css">
-    <link rel="stylesheet" href="css/theme-system.css">
-    <link rel="stylesheet" href="css/improved-responsive.css">
-    <link rel="stylesheet" href="css/modern-edition-viewer.css">
-    <link rel="stylesheet" href="css/modern-navbar.css">
-    <link rel="stylesheet" href="css/editions-grid.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#041B2D" />
+  <meta name="description" content="Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez" />
+  <meta name="keywords" content="HAGO Noticias, Institución Educativa, Héctor Abad Gómez, noticias, educación" />
+  <title>HAGO Noticias — Portal de Ediciones Premium</title>
 
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- TailwindCSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            hago: { bg: '#041B2D', accent: '#4fc3f7', purple: '#7c3aed', green: '#059669' }
+          }
+        }
+      }
+    }
+  </script>
 
-    <style>
-        /* Critical CSS for above-the-fold content */
-        .admin-btn {
-            position: fixed;
-            bottom: 1px;
-            right: 1px;
-            z-index: 1000;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border: none;
-            border-radius: 80%;
-            width: 40px;
-            height: 40px;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-        .admin-btn:hover {
-            transform: translateY(-3px) scale(1.1);
-            box-shadow: 0 15px 35px rgba(0, 123, 255, 0.4);
-            color: white;
-            text-decoration: none;
-        }
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #041B2D;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.35); }
 
-        .admin-btn:active {
-            transform: translateY(-1px) scale(1.05);
-        }
+    /* ── Loading ── */
+    .loading-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #041B2D;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    .loading-screen.hidden { opacity: 0; visibility: hidden; }
+    .loading-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(79,195,247,0.1);
+      border-top: 3px solid #4fc3f7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Mobile admin button positioning */
-        @media (max-width: 668px) {
-            .admin-btn {
-                bottom: 15px;
-                right: 15px;
-                width: 50px;
-                height: 50px;
-                font-size: 5rem;
-            }
-        }
+    /* ── Admin ── */
+    .admin-btn {
+      position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+      background: linear-gradient(135deg, rgba(124,58,237,0.8), rgba(109,40,217,0.9));
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 14px; width: 42px; height: 42px;
+      color: white; font-size: 1.1rem;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+    }
+    .admin-btn:hover {
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 8px 30px rgba(124,58,237,0.5);
+      color: white;
+    }
 
-        /* Loading screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
+    /* ── Glass card ── */
+    .glass-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .glass-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(79,195,247,0.2);
+    }
 
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+    /* ── Buttons ── */
+    .btn-view {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      box-shadow: 0 4px 14px rgba(124,58,237,0.25);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .btn-view:hover {
+      box-shadow: 0 6px 24px rgba(124,58,237,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-download {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 4px 14px rgba(5,150,105,0.25);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .btn-download:hover {
+      box-shadow: 0 6px 24px rgba(5,150,105,0.5);
+      transform: translateY(-1px);
+    }
 
-        .loading-content {
-            text-align: center;
-            color: white;
-        }
+    /* ── Entrance animations ── */
+    .fade-in-up {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in-up.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .fade-in-left {
+      opacity: 0; transform: translateX(-40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in-left.visible {
+      opacity: 1; transform: translateX(0);
+    }
+    .fade-in-right {
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in-right.visible {
+      opacity: 1; transform: translateX(0);
+    }
 
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
+    /* ── Card lift hover ── */
+    .card-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-5px);
+    }
+    .img-zoom {
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+    .card-lift:hover .img-zoom {
+      transform: scale(1.07);
+      filter: brightness(1.12);
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    /* ── Featured image hover ── */
+    .featured-img-wrap {
+      transition: transform 0.4s ease;
+    }
+    .featured-img-wrap:hover {
+      transform: scale(1.02);
+    }
 
-        /* Ensure smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
+    /* ── Multimedia card hover ── */
+    .multimedia-card {
+      transition: transform 0.3s ease;
+    }
+    .multimedia-card:hover {
+      transform: translateY(-4px);
+    }
 
-        /* Optimize font loading */
-        body {
-            font-display: swap;
-        }
+    /* ── Card entrance animation ── */
+    .card-enter {
+      animation: cardFadeIn 0.5s ease both;
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        /* Social Media Effects */
-        .social-icon {
-            transition: all 0.3s ease;
-        }
+    /* ── Chevron bounce ── */
+    .chevron-bounce {
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
 
-        .social-icon:hover {
-            transform: translateY(-5px) scale(1.1);
-            color: #007bff !important;
-            text-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
-        }
-        
-        .social-icon:hover .fa-facebook {
-            color: #1877f2 !important;
-        }
-        
-        .social-icon:hover .fa-youtube {
-            color: #ff0000 !important;
-        }
-        
-        .social-icon:hover .fa-instagram {
-            color: #e4405f !important;
-        }
+    /* ── Pulse dot ── */
+    .pulse-dot {
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
 
-        /* Multimedia Sections */
-        .multimedia-section {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 4rem 0;
-            margin: 2rem 0;
-        }
+    /* ── Filter panel collapse ── */
+    .filter-panel {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+    }
+    .filter-panel.open {
+      max-height: 200px;
+      opacity: 1;
+    }
 
-        .multimedia-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 1rem 0;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
+    /* ── Mobile menu collapse ── */
+    .mobile-menu {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.35s ease;
+    }
+    .mobile-menu.open {
+      max-height: 300px;
+      opacity: 1;
+    }
 
-        .multimedia-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 123, 255, 0.3);
-        }
+    /* ── Header ── */
+    .magazine-header {
+      transition: background 0.3s, box-shadow 0.3s;
+    }
 
-        .multimedia-icon {
-            font-size: 3rem;
-            color: #007bff;
-            margin-bottom: 1rem;
-        }
+    /* ── Counter ── */
+    .counter-value {
+      transition: all 0.3s;
+    }
 
-        .multimedia-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: white;
-        }
+    /* ── Smooth scroll offset ── */
+    section[id] { scroll-margin-top: 80px; }
 
-        .multimedia-description {
-            color: #b3b3b3;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
+    /* ── Hero grid bg ── */
+    .hero-grid {
+      background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
 
-        .multimedia-btn {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .multimedia-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-            color: white;
-            text-decoration: none;
-        }
-    </style>
+    /* ── Banner crossfade ── */
+    .banner-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+    .banner-img.active {
+      opacity: 1;
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <h3>Cargando HAGO Noticias...</h3>
-            <p>Preparando la mejor experiencia para ti.</p>
-        </div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="text-center">
+      <div class="loading-spinner"></div>
+      <p class="text-white/40 text-xs font-medium tracking-wider uppercase">Cargando HAGO Noticias</p>
     </div>
+  </div>
 
-    <!-- Botón de Administrador -->
-    <a href="admin/login-supabase.html" class="admin-btn" title="Panel de Administración">
-        <i class="fas fa-user-shield"></i>
-    </a>
+  <!-- Admin Button -->
+  <a href="admin/login-supabase.html" class="admin-btn" title="Panel de Administración">
+    <i class="fas fa-user-shield"></i>
+  </a>
 
-    <!-- Header -->
-    <header id="main-header">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top modern-navbar">
-            <div class="container">
-                <!-- Mobile Menu Toggle -->
-                <button class="navbar-toggler modern-navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="modern-toggler-line"></span>
-                    <span class="modern-toggler-line"></span>
-                    <span class="modern-toggler-line"></span>
-                </button>
+  <!-- React Root -->
+  <div id="root"></div>
 
-                
+  <!-- ==================== SCRIPTS ==================== -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-                <!-- Brand -->
-                <a class="navbar-brand modern-navbar-brand" href="#home">
-                    <img src="img/LOGOHAGONOTICIAS.png" alt="HAGO Noticias" height="40" class="brand-logo">
-                </a>
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#home">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#ediciones">Ediciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#multimedia">Campus Media</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://hagonoticias.wixsite.com/inicio" target="_blank">Ediciones Anteriores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="https://www.iehectorabadgomez.edu.co"
-                                target="_blank">Regresar</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    
+  <!-- Datos de ediciones -->
+  <script src="js/ediciones-data.js"></script>
+  <!-- Visor PDF mejorado -->
+  <script src="js/enhanced-pdf-viewer.js"></script>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-section parallax-element" data-speed="0.1">
-        <!-- Fondo con imágenes rotativas -->
-        <div class="hero-background">
-            <div class="background-image active"></div>
-            <div class="background-image"></div>
-            <div class="background-image"></div>
-        </div>
+  <!-- Componentes React -->
+  <script type="text/babel">
+    const { useState, useRef, useEffect, useMemo, useCallback } = React;
+    const ED = window.EDICIONES || [];
 
-        <!-- Partículas flotantes -->
-        <div class="floating-elements">
-            <div class="floating-particle"></div>
-            <div class="floating-particle"></div>
-            <div class="floating-particle"></div>
-            <div class="floating-particle"></div>
-            <div class="floating-particle"></div>
-        </div>
+    // ───── UseInView hook ─────
+    function useInView(options) {
+      const ref = useRef(null);
+      const [inView, setInView] = useState(false);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            obs.unobserve(el);
+          }
+        }, { threshold: options?.threshold ?? 0.1, ...options });
+        obs.observe(el);
+        return () => obs.disconnect();
+      }, []);
+      return [ref, inView];
+    }
 
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="hero-content text-white reveal animate-fadeInLeft">
-                        <div class="logo-container">
-                            <img src="img/LOGOHAGONOTICIAS.png" alt="HAGO Noticias" class="img-fluid hover-scale">
-                        </div>
-                        <h1 class="display-4 fw-bold mb-4 text-gradient typewriter-text">Portal de Noticias Institucional</h1>
-                        <p class="lead mb-4 reveal delay-200">Descubre las últimas noticias y eventos de la Institución Educativa Héctor Abad Gómez</p>
-                        <div class="d-flex gap-3 flex-wrap reveal delay-300">
-                            <a href="#ediciones" class="btn btn-primary-custom btn-animated hover-lift">
-                                <i class="fas fa-newspaper me-2"></i>Ver Ediciones
-                            </a>
-                            <a href="video/LogoRevealExplosinpic.mp4" class="btn btn-outline-light btn-animated hover-glow" target="_blank">
-                                <i class="fas fa-play me-2"></i>Ver Video
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="text-center reveal animate-fadeInRight delay-400">
-                        <div class="hero-video-container">
-                            <video autoplay muted loop class="hero-video" playsinline>
-                                <source src="video/LogoRevealExplosinpic.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    // ───── Icon SVG ─────
+    const Icon = ({ name, className }) => {
+      const map = {
+        calendar: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+        eye: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z',
+        download: 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+        search: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+        clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+        sliders: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4',
+        x: 'M6 18L18 6M6 6l12 12',
+        chevronDown: 'M19 9l-7 7-7-7',
+        play: 'M5 3l14 9-14 9V3z',
+        headphone: 'M9 18V5l12-2v13M9 18c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-2c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z',
+        newWindow: 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
+      };
+      return React.createElement('svg', {
+        className, fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24',
+        strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round'
+      }, React.createElement('path', { d: map[name] }));
+    };
 
-        <!-- Indicadores de fondo -->
-        <div class="background-indicators">
-            <div class="indicator active" data-bg="0"></div>
-            <div class="indicator" data-bg="1"></div>
-            <div class="indicator" data-bg="2"></div>
-        </div>
-    </section>
+    // ───── MAGAZINE HEADER ─────
+    const MagazineHeader = () => {
+      const [menuOpen, setMenuOpen] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
 
-    <!-- Ediciones Section -->
-    <!-- Las ediciones se cargan dinámicamente desde ediciones-data.js mediante modern-edition-viewer.js -->
-    <section id="ediciones" class="py-5 bg-dark">
-        <div class="container">
-            <h2 class="section-title display-5 fw-bold text-white text-center mb-5 reveal animate-fadeInUp">
-                <span class="text-primary">Ediciones</span>
-            </h2>
-            <!-- El contenido de las ediciones se genera automáticamente por modern-edition-viewer.js -->
-        </div>
-    </section>
+      useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 40);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
 
-    
+      const navLinks = [
+        { label: 'Inicio', href: '#home' },
+        { label: 'Ediciones', href: '#ediciones' },
+        { label: 'Campus Media', href: '#multimedia' },
+        { label: 'Ediciones Anteriores', href: 'https://hagonoticias.wixsite.com/inicio', external: true },
+        { label: 'Regresar', href: 'https://www.iehectorabadgomez.edu.co', external: true },
+      ];
 
-    <!-- Multimedia Section -->
-    <section id="multimedia" class="multimedia-section">
-        <div class="container">
-            <h2 class="section-title display-5 fw-bold text-white text-center mb-5 reveal animate-fadeInUp">
-                <span class="text-primary">Contenido Multimedia</span>
-            </h2>
-            
-            <div class="row">
-                <!-- Videos Section -->
-                <div class="col-lg-6 col-md-12 mb-4">
-                    <div class="multimedia-card reveal animate-fadeInLeft">
-                        <div class="text-center">
-                            <div class="multimedia-icon">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <h3 class="multimedia-title">🎬 HAGO Videos</h3>
-                            <p class="multimedia-description">
-                                Descubre nuestro contenido audiovisual estudiantil. Videos de eventos, proyectos, 
-                graduaciones y la vida diaria en nuestra institución educativa.
-                            </p>
-                            <a href="videos.html" class="multimedia-btn">
-                                <i class="fas fa-play"></i>
-                                Ver Videos
-                            </a>
-                        </div>
-                    </div>
-                </div>
+      return React.createElement('header', {
+        className: `magazine-header fixed top-0 left-0 right-0 z-50 ${
+          scrolled ? 'bg-[#041B2D]/95 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.3)]' : 'bg-transparent'
+        }`
+      },
+        React.createElement('div', { className: 'max-w-full mx-auto px-4' },
+          React.createElement('div', { className: 'flex items-center justify-between h-14 md:h-16' },
+            React.createElement('a', { href: '#home', className: 'flex items-center gap-2 no-underline' },
+              React.createElement('img', {
+                src: 'img/LOGOHAGONOTICIAS.png',
+                alt: 'HAGO Noticias',
+                className: 'h-7 md:h-9 w-auto brightness-110'
+              })
+            ),
+            React.createElement('nav', { className: 'hidden md:flex items-center gap-1' },
+              navLinks.map(link =>
+                React.createElement('a', {
+                  key: link.label, href: link.href,
+                  target: link.external ? '_blank' : undefined,
+                  className: 'px-3 py-1.5 text-xs font-medium text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5 no-underline'
+                }, link.label)
+              )
+            ),
+            React.createElement('button', {
+              onClick: () => setMenuOpen(o => !o),
+              className: 'md:hidden p-2 text-white/50 hover:text-white'
+            },
+              React.createElement('div', { className: 'w-5 flex flex-col gap-1' },
+                React.createElement('span', { className: `block h-[1.5px] bg-current transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[3.5px]' : ''}` }),
+                React.createElement('span', { className: `block h-[1.5px] bg-current transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}` }),
+                React.createElement('span', { className: `block h-[1.5px] bg-current transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[3.5px]' : ''}` })
+              )
+            )
+          ),
+          React.createElement('div', { className: `mobile-menu md:hidden ${menuOpen ? 'open' : ''}` },
+            React.createElement('nav', { className: 'py-3 flex flex-col gap-1 border-t border-white/5' },
+              navLinks.map(link =>
+                React.createElement('a', {
+                  key: link.label, href: link.href,
+                  target: link.external ? '_blank' : undefined,
+                  onClick: () => setMenuOpen(false),
+                  className: 'px-3 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors no-underline'
+                }, link.label)
+              )
+            )
+          )
+        )
+      );
+    };
 
-                <!-- Podcast Section -->
-                <div class="col-lg-6 col-md-12 mb-4">
-                    <div class="multimedia-card reveal animate-fadeInRight">
-                        <div class="text-center">
-                            <div class="multimedia-icon">
-                                <i class="fas fa-podcast"></i>
-                            </div>
-                            <h3 class="multimedia-title">🎧 HAGO  Radio</h3>
-                            <p class="multimedia-description">
-                                Escucha nuestros podcasts estudiantiles. Conversaciones, entrevistas, consejos 
-                                de estudio y experiencias reales de la comunidad educativa.
-                            </p>
-                            <a href="podcast.html" class="multimedia-btn">
-                                <i class="fas fa-headphones"></i>
-                                Escuchar Podcast
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    // ───── FEATURED EDITION ─────
+    const FeaturedEdition = () => {
+      const featured = useMemo(() => ED.filter(e => e.featured).sort((a,b) => b.numero - a.numero)[0] || ED[ED.length-1], []);
+      const [leftRef, leftIn] = useInView({ threshold: 0.1 });
+      const [rightRef, rightIn] = useInView({ threshold: 0.1 });
+      const [bgIdx, setBgIdx] = useState(0);
+      const bgImgs = ['img/fondo1.jpg', 'img/fondo2.jpg', 'img/fondo3.jpg'];
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-auto">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4 mb-3 mb-md-0 text-center text-md-start">
-                    <h5>HAGO Noticias</h5>
-                    <p class="mb-0">Portal oficial de noticias de la Institución Educativa Héctor Abad Gómez</p>
-                </div>
-                
-                <div class="col-md-4 mb-3 mb-md-0 text-center">
-                    <div class="stats-container d-flex justify-content-center gap-4">
-                        <div class="stat-item">
-                            <i class="fas fa-eye text-primary mb-1" style="font-size: 1.4rem;"></i>
-                            <h4 class="mb-0 fw-bold counter-animate" id="totalViewsCounter">0</h4>
-                            <small class="text-white-50">Visitas</small>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-download text-success mb-1" style="font-size: 1.4rem;"></i>
-                            <h4 class="mb-0 fw-bold counter-animate" id="totalDownloadsCounter">0</h4>
-                            <small class="text-white-50">Descargas</small>
-                        </div>
-                    </div>
-                </div>
+      useEffect(() => {
+        const timer = setInterval(() => setBgIdx(i => (i + 1) % bgImgs.length), 5000);
+        return () => clearInterval(timer);
+      }, []);
 
-                <div class="col-md-4 text-center text-md-end">
-                    <div class="social-links mb-2">
-                        <a href="https://www.facebook.com/?checkpoint_src=1501092823525282" target="_blank" class="social-icon me-3">
-                            <i class="fab fa-facebook fa-lg"></i>
-                        </a>
-                        <a href="https://www.tiktok.com/@ie_hectorabadgomez?is_from_webapp=1&sender_device=pc" target="_blank" class="social-icon me-3">
-                            <i class="fab fa-tiktok fa-lg"></i>
-                        </a>
-                        <a href="https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad" target="_blank" class="social-icon me-3">
-                            <i class="fab fa-youtube fa-lg"></i>
-                        </a>
-                        <a href="https://www.instagram.com/hectorabadgomez_ie/" target="_blank" class="social-icon">
-                            <i class="fab fa-instagram fa-lg"></i>
-                        </a>
-                    </div>
-                    <p class="mb-0 small text-white-50">&copy; 2026 HAGO Noticias. Todos los derechos reservados.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+      if (!featured) return null;
 
-    <!-- JavaScript Files -->
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/hero-background.js"></script>
-    <script src="js/ediciones-data.js"></script>
-    <script src="js/theme-system.js"></script>
-    <script src="js/modern-navbar.js"></script>
-    <script src="js/enhanced-pdf-viewer.js"></script>
-    <script src="js/modern-edition-viewer.js"></script>
-    <script src="js/enhanced-interactions.js"></script>
+      const handleView = () => {
+        if (!featured.comingSoon) {
+          if (window.enhancedPdfViewer) {
+            window.enhancedPdfViewer.open(featured.pdfUrl, featured.titulo);
+          } else { window.open(featured.pdfUrl, '_blank'); }
+        }
+      };
 
-    <script>
-        // Hide loading screen when page is loaded
-        window.addEventListener('load', function() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-            }, 1000);
+      return React.createElement('section', {
+        id: 'home',
+        className: 'relative min-h-screen flex items-center pt-14 md:pt-16 overflow-hidden'
+      },
+        /* Banner images crossfade */
+        bgImgs.map((src, i) => React.createElement('img', {
+          key: i, src,
+          className: `banner-img ${i === bgIdx ? 'active' : ''}`,
+          alt: ''
+        })),
+        /* Gradient overlay */
+        React.createElement('div', {
+          className: 'absolute inset-0 pointer-events-none',
+          style: {
+            background: 'radial-gradient(ellipse at 30% 50%, rgba(4,27,45,0.7) 0%, rgba(4,27,45,0.95) 50%, #041B2D 100%)'
+          }
+        }),
+        React.createElement('div', {
+          className: 'absolute inset-0 opacity-[0.015] pointer-events-none hero-grid'
+        }),
+        React.createElement('div', { className: 'relative max-w-full mx-auto px-4 w-full' },
+          React.createElement('div', { className: 'flex flex-col lg:flex-row items-center gap-8 lg:gap-16 py-12' },
+
+            /* Left */
+            React.createElement('div', {
+              ref: leftRef,
+              className: `flex-1 text-center lg:text-left fade-in-left ${leftIn ? 'visible' : ''}`
+            },
+              React.createElement('div', { className: 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#4fc3f7]/10 border border-[#4fc3f7]/20 mb-4' },
+                React.createElement('span', { className: 'w-1.5 h-1.5 rounded-full bg-[#4fc3f7] pulse-dot' }),
+                React.createElement('span', { className: 'text-[10px] font-semibold text-[#4fc3f7] tracking-wider uppercase' }, 'Edición destacada')
+              ),
+              React.createElement('h1', { className: 'text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-3' },
+                'HAGO ', React.createElement('span', { className: 'text-[#4fc3f7]' }, 'Noticias')
+              ),
+              React.createElement('p', { className: 'text-xs md:text-sm text-white/30 font-medium tracking-widest uppercase mb-6' },
+                'Periódico Escolar Institucional'
+              ),
+              React.createElement('div', { className: 'glass-card rounded-xl p-4 md:p-5 max-w-md mx-auto lg:mx-0 text-left' },
+                React.createElement('div', { className: 'text-[10px] font-semibold text-[#4fc3f7] uppercase tracking-wider mb-1' },
+                  `Ed. ${featured.numero} · ${featured.anio}`
+                ),
+                React.createElement('p', { className: 'text-sm font-medium text-white/80 mb-3 line-clamp-2' }, featured.autor),
+                React.createElement('div', { className: 'flex gap-2' },
+                  featured.comingSoon
+                    ? React.createElement('span', { className: 'text-xs text-white/30 py-1.5' }, 'Próximamente')
+                    : React.createElement(React.Fragment, null,
+                        React.createElement('button', {
+                          onClick: handleView,
+                          className: 'btn-view text-white text-[11px] font-semibold py-1.5 px-4 rounded-lg flex items-center gap-1.5'
+                        },
+                          React.createElement(Icon, { name: 'eye', className: 'w-3.5 h-3.5' }),
+                          'Leer Edición'
+                        ),
+                        React.createElement('a', {
+                          href: featured.pdfUrl, download: true,
+                          className: 'btn-download text-white text-[11px] font-semibold py-1.5 px-4 rounded-lg flex items-center gap-1.5 no-underline'
+                        },
+                          React.createElement(Icon, { name: 'download', className: 'w-3.5 h-3.5' }),
+                          'Descargar PDF'
+                        )
+                      )
+                )
+              )
+            ),
+
+            /* Right: image */
+            React.createElement('div', {
+              ref: rightRef,
+              className: `flex-shrink-0 fade-in-right ${rightIn ? 'visible' : ''}`
+            },
+              React.createElement('div', { className: 'featured-img-wrap relative' },
+                React.createElement('div', {
+                  className: 'absolute -inset-8 rounded-full blur-3xl pointer-events-none',
+                  style: { background: 'radial-gradient(circle, rgba(79,195,247,0.1), transparent)' }
+                }),
+                React.createElement('div', {
+                  className: 'relative w-56 md:w-72 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl shadow-[#4fc3f7]/10 border border-white/10'
+                },
+                  React.createElement('img', {
+                    src: featured.thumbnail,
+                    alt: featured.titulo,
+                    className: 'w-full h-full object-contain bg-gradient-to-br from-[#0a1628] to-[#0f1f3a]',
+                    onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+                  }),
+                  React.createElement('span', {
+                    className: 'absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-bold backdrop-blur-md bg-black/50 text-[#4fc3f7] border border-[#4fc3f7]/30'
+                  }, `Ed. ${featured.numero}`),
+                  React.createElement('div', { className: 'absolute -bottom-8 left-1/2 -translate-x-1/2 text-white/20 chevron-bounce' },
+                    React.createElement(Icon, { name: 'chevronDown', className: 'w-5 h-5' })
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    };
+
+    // ───── EDITION CARD ─────
+    const EditionCard = ({ edition, index, onView }) => {
+      const isComing = edition.comingSoon;
+      const isFeatured = edition.featured;
+      const delay = index * 60;
+
+      return React.createElement('div', {
+        className: `glass-card rounded-xl overflow-hidden card-lift ${isFeatured ? 'ring-1 ring-[#4fc3f7]/15' : ''}`,
+        style: { animationDelay: `${delay}ms` }
+      },
+        React.createElement('div', {
+          className: 'relative overflow-hidden aspect-[2/3] bg-gradient-to-br from-[#0a1628] to-[#0f1f3a]'
+        },
+          React.createElement('img', {
+            src: edition.thumbnail,
+            alt: edition.titulo,
+            loading: 'lazy',
+            className: 'w-full h-full object-contain img-zoom',
+            onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+          }),
+          React.createElement('span', {
+            className: `absolute top-2 left-2 px-1.5 py-0.5 rounded text-[9px] font-bold backdrop-blur border z-10 ${
+              isFeatured
+                ? 'bg-[#4fc3f7]/20 text-[#4fc3f7] border-[#4fc3f7]/30'
+                : 'bg-black/50 text-white/70 border-white/10'
+            }`
+          }, `Ed. ${edition.numero}`),
+          isComing && React.createElement('div', {
+            className: 'absolute inset-0 bg-black/60 flex items-center justify-center z-10 flex-col gap-1'
+          },
+            React.createElement(Icon, { name: 'clock', className: 'w-5 h-5 text-amber-400/50' }),
+            React.createElement('span', { className: 'text-[9px] uppercase tracking-widest text-white/25 font-medium' }, 'Próximamente')
+          )
+        ),
+        React.createElement('div', { className: 'p-2.5 pb-1' },
+          React.createElement('h3', { className: 'text-xs font-bold text-white mb-0.5' }, edition.titulo),
+          React.createElement('div', { className: 'flex items-center gap-1 text-[10px] text-white/30 mb-1' },
+            React.createElement(Icon, { name: 'calendar', className: 'w-2.5 h-2.5' }),
+            React.createElement('span', null, edition.anio)
+          ),
+          React.createElement('p', { className: 'text-[10px] text-white/35 leading-relaxed line-clamp-2' }, edition.descripcion)
+        ),
+        React.createElement('div', { className: 'p-2.5 pt-1 flex gap-1.5' },
+          isComing
+            ? React.createElement('span', { className: 'flex-1 text-center text-[9px] text-white/20 py-1.5' }, 'Próximamente')
+            : React.createElement(React.Fragment, null,
+                React.createElement('button', {
+                  onClick: () => onView(edition),
+                  className: 'flex-1 btn-view text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1'
+                },
+                  React.createElement(Icon, { name: 'eye', className: 'w-3 h-3' }),
+                  'Ver PDF'
+                ),
+                React.createElement('a', {
+                  href: edition.pdfUrl, download: true,
+                  className: 'flex-1 btn-download text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1 no-underline'
+                },
+                  React.createElement(Icon, { name: 'download', className: 'w-3 h-3' }),
+                  'Descargar'
+                )
+              )
+        )
+      );
+    };
+
+    // ───── SEARCH BAR ─────
+    const SearchBar = ({ search, onSearchChange, onClear, visible, onToggleFilters, activeCat, onFilterToggle }) => {
+      const chips = useMemo(() => {
+        const cats = [...new Set(ED.map(e => e.categoria))];
+        cats.sort((a,b) => parseInt(a.replace('#','')) - parseInt(b.replace('#','')));
+        return cats;
+      }, []);
+
+      return React.createElement('div', { className: 'mb-5' },
+        React.createElement('div', { className: 'flex items-center gap-2 justify-center' },
+          React.createElement('div', { className: 'relative w-full max-w-[280px]' },
+            React.createElement(Icon, { name: 'search', className: 'absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20' }),
+            React.createElement('input', {
+              type: 'text', value: search,
+              onChange: (e) => onSearchChange(e.target.value),
+              placeholder: 'Buscar ediciones...',
+              className: 'w-full py-1.5 pl-8 pr-7 text-xs bg-white/5 border border-white/10 rounded-lg text-white/80 placeholder-white/25 focus:outline-none focus:border-[#4fc3f7]/50 focus:bg-white/10 focus:shadow-[0_0_0_2px rgba(79,195,247,0.1)] transition-all'
+            }),
+            search && React.createElement('button', {
+              onClick: onClear,
+              className: 'absolute right-2 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors'
+            },
+              React.createElement(Icon, { name: 'x', className: 'w-3 h-3' })
+            )
+          ),
+          React.createElement('button', {
+            onClick: onToggleFilters,
+            className: `p-1.5 rounded-lg border transition-all ${
+              visible ? 'bg-[#4fc3f7]/15 border-[#4fc3f7]/30 text-[#4fc3f7]' : 'bg-white/5 border-white/10 text-white/30 hover:text-white/60'
+            }`
+          },
+            React.createElement(Icon, { name: visible ? 'x' : 'sliders', className: 'w-3.5 h-3.5' })
+          )
+        ),
+        React.createElement('div', { className: `filter-panel ${visible ? 'open' : ''}` },
+          React.createElement('div', { className: 'flex flex-wrap gap-1.5 justify-center pt-3' },
+            React.createElement('button', {
+              onClick: () => onFilterToggle('all'),
+              className: `px-2.5 py-1 rounded text-[10px] font-medium transition-all ${
+                !activeCat
+                  ? 'bg-[#4fc3f7]/15 text-[#4fc3f7] border border-[#4fc3f7]/30'
+                  : 'bg-white/5 text-white/35 border border-white/10 hover:text-white/60'
+              }`
+            }, 'Todas'),
+            chips.map(cat => {
+              const active = activeCat === cat;
+              return React.createElement('button', {
+                key: cat, onClick: () => onFilterToggle(cat),
+                className: `px-2.5 py-1 rounded text-[10px] font-medium transition-all ${
+                  active
+                    ? 'bg-[#4fc3f7]/15 text-[#4fc3f7] border border-[#4fc3f7]/30'
+                    : 'bg-white/5 text-white/35 border border-white/10 hover:text-white/60'
+                }`
+              }, `Ed. ${cat.replace('#','')}`);
+            })
+          )
+        )
+      );
+    };
+
+    // ───── EDITIONS GALLERY ─────
+    const EditionGallery = () => {
+      const [search, setSearch] = useState('');
+      const [activeCat, setActiveCat] = useState(null);
+      const [filterVisible, setFilterVisible] = useState(false);
+      const [headerRef, headerIn] = useInView({ threshold: 0.2 });
+
+      const filtered = useMemo(() => {
+        return ED.filter(ed => {
+          const q = search.toLowerCase().trim();
+          const matchSearch = !q ||
+            ed.titulo.toLowerCase().includes(q) ||
+            ed.autor.toLowerCase().includes(q) ||
+            ed.descripcion.toLowerCase().includes(q) ||
+            String(ed.anio).includes(q) ||
+            (ed.tags || []).some(t => t.toLowerCase().includes(q));
+          const matchFilter = !activeCat || activeCat === ed.categoria;
+          return matchSearch && matchFilter;
         });
+      }, [search, activeCat]);
 
-        // Initialize animations and interactions handled by enhanced-interactions.js
-        document.addEventListener('DOMContentLoaded', function() {
-            // Global basic image error handling placeholder is in enhanced-interactions.js
+      const handleView = useCallback((ed) => {
+        if (!ed.comingSoon) {
+          if (window.enhancedPdfViewer) {
+            window.enhancedPdfViewer.open(ed.pdfUrl, ed.titulo);
+          } else { window.open(ed.pdfUrl, '_blank'); }
+        }
+      }, []);
 
-            // Optimize touch interactions
-            document.addEventListener('touchstart', function() {}, {passive: true});
-            document.addEventListener('touchmove', function() {}, {passive: true});
+      const toggleFilter = useCallback((cat) => {
+        if (cat === 'all') { setActiveCat(null); return; }
+        setActiveCat(prev => prev === cat ? null : cat);
+      }, []);
 
-            // Calculate and animate total stats from EDICIONES
-            if (typeof EDICIONES !== 'undefined') {
-                const totalViews = EDICIONES.reduce((acc, curr) => acc + (curr.views || 0), 0);
-                const totalDownloads = EDICIONES.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
+      return React.createElement('section', {
+        id: 'ediciones',
+        className: 'py-12 md:py-16 relative'
+      },
+        React.createElement('div', {
+          className: 'absolute inset-0 pointer-events-none',
+          style: { background: 'radial-gradient(ellipse at 50% 0%, rgba(79,195,247,0.04) 0%, transparent 50%)' }
+        }),
+        React.createElement('div', { className: 'max-w-full mx-auto px-4 relative' },
+          React.createElement('div', {
+            ref: headerRef,
+            className: `text-center mb-6 fade-in-up ${headerIn ? 'visible' : ''}`
+          },
+            React.createElement('h2', { className: 'text-lg md:text-xl font-black text-white mb-1 tracking-tight' },
+              'Todas las ', React.createElement('span', { className: 'text-[#4fc3f7]' }, 'Ediciones')
+            ),
+            React.createElement('p', { className: 'text-xs text-white/30 max-w-md mx-auto' },
+              'Explora nuestra colección completa de publicaciones institucionales'
+            )
+          ),
+          React.createElement(SearchBar, {
+            search, activeCat, filterVisible,
+            onSearchChange: setSearch,
+            onClear: () => setSearch(''),
+            onToggleFilters: () => setFilterVisible(v => !v),
+            onFilterToggle: toggleFilter
+          }),
+          React.createElement('div', { className: 'text-center mb-4' },
+            React.createElement('span', { className: 'text-[11px] text-white/25' }, `${filtered.length} ediciones`)
+          ),
+          filtered.length === 0
+            ? React.createElement('div', { className: 'text-center py-16 text-white/30' },
+                React.createElement(Icon, { name: 'search', className: 'w-10 h-10 mx-auto mb-3 text-white/10' }),
+                React.createElement('p', { className: 'text-sm font-medium text-white/40 mb-1' }, 'Sin resultados'),
+                React.createElement('p', { className: 'text-xs' }, 'Intenta con otros términos de búsqueda')
+              )
+            : React.createElement('div', {
+                className: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3'
+              },
+                filtered.map((ed, i) => React.createElement('div', {
+                  key: ed.id,
+                  className: 'card-enter',
+                  style: { animationDelay: `${i * 60}ms` }
+                },
+                  React.createElement(EditionCard, { edition: ed, index: i, onView: handleView })
+                ))
+              )
+        )
+      );
+    };
 
-                const animateCounter = (id, target) => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    let current = 0;
-                    const increment = target / 50; // Animate over 50 frames
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            el.innerText = target.toLocaleString();
-                            clearInterval(timer);
-                        } else {
-                            el.innerText = Math.ceil(current).toLocaleString();
-                        }
-                    }, 30);
-                };
+    // ───── MULTIMEDIA SECTION ─────
+    const MultimediaSection = () => {
+      const [headerRef, headerIn] = useInView({ threshold: 0.2 });
+      const [card1Ref, card1In] = useInView({ threshold: 0.1 });
+      const [card2Ref, card2In] = useInView({ threshold: 0.1 });
 
-                // Observers for animating counters when visible
-                const statsObserver = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting) {
-                        animateCounter('totalViewsCounter', totalViews);
-                        animateCounter('totalDownloadsCounter', totalDownloads);
-                        statsObserver.disconnect();
-                    }
-                }, { threshold: 0.5 });
-                
-                const statsContainer = document.querySelector('.stats-container');
-                if (statsContainer) statsObserver.observe(statsContainer);
-            }
-        });
-    </script>
+      const items = [
+        { title: 'HAGO Videos', desc: 'Contenido audiovisual estudiantil: eventos, proyectos, graduaciones y la vida diaria en nuestra institución.', href: 'videos.html', icon: 'play', btnCls: 'from-[#7c3aed] to-[#6d28d9]' },
+        { title: 'HAGO Radio', desc: 'Podcasts estudiantiles: conversaciones, entrevistas, consejos de estudio y experiencias de la comunidad.', href: 'podcast.html', icon: 'headphone', btnCls: 'from-[#059669] to-[#047857]' }
+      ];
+
+      return React.createElement('section', {
+        id: 'multimedia',
+        className: 'py-12 md:py-16 relative'
+      },
+        React.createElement('div', {
+          className: 'absolute inset-0 pointer-events-none',
+          style: { background: 'radial-gradient(ellipse at 50% 100%, rgba(79,195,247,0.03) 0%, transparent 50%)' }
+        }),
+        React.createElement('div', { className: 'max-w-5xl mx-auto px-4 relative' },
+          React.createElement('div', {
+            ref: headerRef,
+            className: `text-center mb-8 fade-in-up ${headerIn ? 'visible' : ''}`
+          },
+            React.createElement('h2', { className: 'text-lg md:text-xl font-black text-white mb-1 tracking-tight' },
+              'Campus ', React.createElement('span', { className: 'text-[#4fc3f7]' }, 'Media')
+            ),
+            React.createElement('p', { className: 'text-xs text-white/30' }, 'Explora nuestro contenido multimedia')
+          ),
+          React.createElement('div', { className: 'grid md:grid-cols-2 gap-4' },
+            items.map((item, i) => {
+              const [ref, inView] = i === 0 ? [card1Ref, card1In] : [card2Ref, card2In];
+              return React.createElement('div', {
+                key: item.title,
+                ref,
+                className: `multimedia-card fade-in-up ${inView ? 'visible' : ''}`
+              },
+                React.createElement('a', {
+                  href: item.href,
+                  className: 'block glass-card rounded-xl p-5 md:p-6 group no-underline'
+                },
+                  React.createElement('div', { className: 'flex items-start gap-4' },
+                    React.createElement('div', {
+                      className: 'flex-shrink-0 w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-all'
+                    },
+                      React.createElement(Icon, { name: item.icon, className: 'w-5 h-5 text-white' })
+                    ),
+                    React.createElement('div', { className: 'flex-1 min-w-0' },
+                      React.createElement('h3', { className: 'text-sm font-bold text-white mb-1 group-hover:text-[#4fc3f7] transition-colors' }, item.title),
+                      React.createElement('p', { className: 'text-[11px] text-white/40 leading-relaxed mb-3' }, item.desc),
+                      React.createElement('span', {
+                        className: `inline-flex items-center gap-1.5 text-[10px] font-semibold px-3 py-1.5 rounded-lg bg-gradient-to-r ${item.btnCls} text-white shadow-lg transition-shadow duration-200 hover:shadow-xl`
+                      },
+                        'Explorar',
+                        React.createElement(Icon, { name: 'newWindow', className: 'w-3 h-3' })
+                      )
+                    )
+                  )
+                )
+              );
+            })
+          )
+        )
+      );
+    };
+
+    // ───── FOOTER ─────
+    const MagazineFooter = () => {
+      const [views, setViews] = useState(0);
+      const [downloads, setDownloads] = useState(0);
+      const [counted, setCounted] = useState(false);
+      const [footerRef, footerIn] = useInView({ threshold: 0.3 });
+
+      useEffect(() => {
+        if (counted || !ED.length || !footerIn) return;
+        const totalViews = ED.reduce((acc, e) => acc + (e.views || 0), 0);
+        const totalDownloads = ED.reduce((acc, e) => acc + (e.downloads || 0), 0);
+        setCounted(true);
+
+        let v = 0, d = 0;
+        const stepV = Math.ceil(totalViews / 40);
+        const stepD = Math.ceil(totalDownloads / 40);
+        const timer = setInterval(() => {
+          v = Math.min(v + stepV, totalViews);
+          d = Math.min(d + stepD, totalDownloads);
+          setViews(v);
+          setDownloads(d);
+          if (v >= totalViews && d >= totalDownloads) clearInterval(timer);
+        }, 30);
+      }, [footerIn]);
+
+      const socialLinks = [
+        { icon: 'fab fa-facebook', url: 'https://www.facebook.com/?checkpoint_src=1501092823525282' },
+        { icon: 'fab fa-tiktok', url: 'https://www.tiktok.com/@ie_hectorabadgomez' },
+        { icon: 'fab fa-youtube', url: 'https://www.youtube.com/@Instituci%C3%B3nEducativaH%C3%A9ctorAbad' },
+        { icon: 'fab fa-instagram', url: 'https://www.instagram.com/hectorabadgomez_ie/' },
+      ];
+
+      return React.createElement('footer', {
+        className: 'relative mt-8 border-t border-white/5'
+      },
+        React.createElement('div', {
+          className: 'absolute inset-0 pointer-events-none',
+          style: { background: 'linear-gradient(180deg, transparent, rgba(79,195,247,0.02))' }
+        }),
+        React.createElement('div', {
+          ref: footerRef,
+          className: 'max-w-full mx-auto px-4 py-8 relative'
+        },
+          React.createElement('div', { className: 'glass-card rounded-xl p-4 mb-6' },
+            React.createElement('div', { className: 'flex items-center justify-center gap-8 md:gap-12' },
+              React.createElement('div', { className: 'text-center' },
+                React.createElement('div', { className: 'flex items-center gap-2 justify-center mb-0.5' },
+                  React.createElement(Icon, { name: 'eye', className: 'w-4 h-4 text-[#4fc3f7]' }),
+                  React.createElement('span', { className: 'text-lg font-black text-white' }, views.toLocaleString())
+                ),
+                React.createElement('span', { className: 'text-[10px] text-white/30 uppercase tracking-wider' }, 'Visitas')
+              ),
+              React.createElement('div', { className: 'w-px h-8 bg-white/10' }),
+              React.createElement('div', { className: 'text-center' },
+                React.createElement('div', { className: 'flex items-center gap-2 justify-center mb-0.5' },
+                  React.createElement(Icon, { name: 'download', className: 'w-4 h-4 text-[#059669]' }),
+                  React.createElement('span', { className: 'text-lg font-black text-white' }, downloads.toLocaleString())
+                ),
+                React.createElement('span', { className: 'text-[10px] text-white/30 uppercase tracking-wider' }, 'Descargas')
+              )
+            )
+          ),
+          React.createElement('div', { className: 'flex flex-col items-center gap-4' },
+            React.createElement('div', { className: 'flex items-center justify-center gap-4' },
+              socialLinks.map(s =>
+                React.createElement('a', {
+                  key: s.icon, href: s.url, target: '_blank',
+                  className: 'w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all no-underline hover:scale-110'
+                },
+                  React.createElement('i', { className: `${s.icon} text-sm` })
+                )
+              )
+            ),
+            React.createElement('p', { className: 'text-[10px] text-white/20 text-center' },
+              `© ${new Date().getFullYear()} HAGO Noticias · Institución Educativa Héctor Abad Gómez`
+            )
+          )
+        )
+      );
+    };
+
+    // ───── APP ─────
+    const App = () => {
+      const [ready, setReady] = useState(false);
+
+      useEffect(() => {
+        const timer = setTimeout(() => setReady(true), 800);
+        return () => clearTimeout(timer);
+      }, []);
+
+      useEffect(() => {
+        if (ready) {
+          const el = document.getElementById('loadingScreen');
+          if (el) {
+            el.classList.add('hidden');
+            setTimeout(() => el.remove(), 600);
+          }
+        }
+      }, [ready]);
+
+      return React.createElement('div', { className: 'min-h-screen', style: { background: '#041B2D' } },
+        React.createElement(MagazineHeader),
+        React.createElement('main', null,
+          React.createElement(FeaturedEdition),
+          React.createElement('div', { className: 'border-t border-white/5 mx-4' }),
+          React.createElement(EditionGallery),
+          React.createElement('div', { className: 'border-t border-white/5 mx-4' }),
+          React.createElement(MultimediaSection)
+        ),
+        React.createElement(MagazineFooter)
+      );
+    };
+
+    // ──── RENDER ────
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
 </body>
-
 </html>
-

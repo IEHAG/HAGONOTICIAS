@@ -634,21 +634,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Event listeners para formulario
-edicionForm.addEventListener('submit', enviarFormulario);
-cancelBtn.addEventListener('click', limpiarFormulario);
-refreshBtn.addEventListener('click', cargarEdiciones);
-logoutBtn.addEventListener('click', cerrarSesion);
-
-// Event listeners para archivos
-if (pdfFileInput) {
-    pdfFileInput.addEventListener('change', () => manejarCambioArchivo(pdfFileInput));
-}
-
-if (thumbnailFileInput) {
-    thumbnailFileInput.addEventListener('change', () => manejarCambioArchivo(thumbnailFileInput));
-}
-
 // Hacer funciones globales para uso en HTML
 window.editarEdicion = editarEdicion;
 window.confirmarEliminar = confirmarEliminar;

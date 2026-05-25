@@ -14,9 +14,18 @@ class ModernNavbar {
     init() {
         this.setupEventListeners();
         this.setupScrollEffect();
-        this.initializeTheme();
+        this.syncWithThemeSystem();
         this.setupKeyboardNavigation();
         this.setupTouchGestures();
+    }
+    
+    syncWithThemeSystem() {
+        // Delegar manejo de tema al ThemeSystem si existe
+        if (window.themeSystem) {
+            this.currentTheme = window.themeSystem.getCurrentTheme();
+        } else {
+            this.initializeTheme();
+        }
     }
     
     setupEventListeners() {
@@ -175,17 +184,21 @@ class ModernNavbar {
     }
     
     toggleTheme() {
-        this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', this.currentTheme);
-        localStorage.setItem('theme', this.currentTheme);
-        this.updateThemeIcon();
+        if (window.themeSystem) {
+            window.themeSystem.toggleTheme();
+            this.currentTheme = window.themeSystem.getCurrentTheme();
+            this.updateThemeIcon();
+        } else {
+            this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', this.currentTheme);
+            localStorage.setItem('theme', this.currentTheme);
+            this.updateThemeIcon();
+            
+            window.dispatchEvent(new CustomEvent('themeChanged', {
+                detail: { theme: this.currentTheme }
+            }));
+        }
         
-        // Dispatch theme change event
-        window.dispatchEvent(new CustomEvent('themeChanged', {
-            detail: { theme: this.currentTheme }
-        }));
-        
-        // Add visual feedback
         this.themeToggle?.classList.add('theme-changing');
         setTimeout(() => {
             this.themeToggle?.classList.remove('theme-changing');

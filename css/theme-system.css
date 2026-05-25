@@ -120,19 +120,19 @@
 */
 .theme-toggle {
   position: fixed;
-  top: 1rem;
-  left: 1rem; /* Cambiado de right a left para alinear a la izquierda */
+  bottom: 20px;
+  right: 20px;
   z-index: var(--z-fixed);
   background: var(--bg-primary);
   border: 2px solid var(--border-color);
   border-radius: var(--radius-full);
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   display: flex;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px var(--shadow-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transition: all var(--transition-theme);
   backdrop-filter: blur(10px);
   color: var(--text-primary);

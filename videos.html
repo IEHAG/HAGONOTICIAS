@@ -1411,6 +1411,9 @@
 
         // Cargar videos del canal de YouTube al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            // Combinar videos locales con el array global
+            videos = [...localVideos];
+            
             // Inicializar video principal aleatorio
             initializeRandomMainVideo();
             // Mostrar videos destacados inmediatamente

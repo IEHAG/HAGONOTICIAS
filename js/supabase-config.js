@@ -32,6 +32,7 @@ function inicializarSistema() {
         
         // Crear instancia del manager de ediciones
         edicionesManager = new EdicionesManager(supabase);
+        window.edicionesManager = edicionesManager;
         
         console.log('Sistema de Supabase inicializado correctamente');
         return true;
@@ -233,7 +234,7 @@ class EdicionesManager {
 
 // Hacer funciones y variables disponibles globalmente
 window.supabase = window.supabase || null;
-window.edicionesManager = edicionesManager;
+window.edicionesManager = null;
 window.validarConfiguracion = validarConfiguracion;
 window.inicializarSistema = inicializarSistema;
 

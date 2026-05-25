@@ -273,13 +273,14 @@ function initializeErrorHandling() {
 function initializePerformanceMonitoring() {
     // Monitor page load performance
     window.addEventListener('load', function() {
-        if ('performance' in window) {
-            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-            console.log(`Page loaded in ${loadTime}ms`);
-            
-            // Log performance metrics
-            if (loadTime > 3000) {
-                console.warn('Page load time is slow:', loadTime + 'ms');
+        if ('performance' in window && 'getEntriesByType' in performance) {
+            const perfEntries = performance.getEntriesByType('navigation');
+            if (perfEntries.length > 0) {
+                const loadTime = perfEntries[0].loadEventEnd - perfEntries[0].startTime;
+                console.log(`Page loaded in ${loadTime}ms`);
+                if (loadTime > 3000) {
+                    console.warn('Page load time is slow:', loadTime + 'ms');
+                }
             }
         }
     });

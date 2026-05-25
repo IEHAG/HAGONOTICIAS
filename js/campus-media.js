@@ -59,7 +59,7 @@ podcasts: {
 };
 
 // FUNCIONES PRINCIPALES
-function showSection(sectionId) {
+function showSection(sectionId, element) {
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
     });
@@ -70,7 +70,9 @@ function showSection(sectionId) {
         tab.classList.remove('active');
     });
     
-    event.currentTarget.classList.add('active');
+    if (element) {
+        element.classList.add('active');
+    }
 }
 
 function playContent(type, id) {

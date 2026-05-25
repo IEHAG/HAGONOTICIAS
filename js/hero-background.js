@@ -23,8 +23,10 @@ class HeroBackgroundManager {
         
         // Pausar en hover
         const heroSection = document.querySelector('.hero-section');
-        heroSection.addEventListener('mouseenter', () => this.pauseAutoRotation());
-        heroSection.addEventListener('mouseleave', () => this.startAutoRotation());
+        if (heroSection) {
+            heroSection.addEventListener('mouseenter', () => this.pauseAutoRotation());
+            heroSection.addEventListener('mouseleave', () => this.startAutoRotation());
+        }
     }
     
     goToBackground(index) {

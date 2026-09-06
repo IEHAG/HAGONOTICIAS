@@ -128,11 +128,13 @@ function handleSuccessfulLogin() {
     
     // Mostrar mensaje de éxito
     showSuccess('¡Acceso concedido! Redirigiendo...');
-    
+
     // Animación de salida
-    const loginCard = document.querySelector('.login-card');
-    loginCard.style.transform = 'scale(0.9)';
-    loginCard.style.opacity = '0';
+    const loginCard = document.querySelector('.login-card') || document.querySelector('.login-container');
+    if (loginCard) {
+        loginCard.style.transform = 'scale(0.9)';
+        loginCard.style.opacity = '0';
+    }
     
     // Redireccionar al dashboard
     setTimeout(() => {
@@ -149,13 +151,15 @@ function handleFailedLogin() {
     } else {
         const remainingAttempts = maxAttempts - loginAttempts;
         showError(`Usuario o contraseña incorrectos. Te quedan ${remainingAttempts} intentos.`);
-        
+
         // Animación de error
-        const loginCard = document.querySelector('.login-card');
-        loginCard.style.animation = 'shake 0.5s ease-in-out';
-        setTimeout(() => {
-            loginCard.style.animation = '';
-        }, 500);
+        const loginCard = document.querySelector('.login-card') || document.querySelector('.login-container');
+        if (loginCard) {
+            loginCard.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                loginCard.style.animation = '';
+            }, 500);
+        }
     }
 }
 

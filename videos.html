@@ -570,7 +570,7 @@
     <div class="player-section" id="mainContent">
         <div class="main-player">
             <div class="video-area" id="mainVideoArea" onclick="playYouTubeVideo('UJGV4POfz2k', 'Video Institucional - HAGO Noticias')">
-                <img src="https://img.youtube.com/vi/UJGV4POfz2k/maxresdefault.jpg" alt="Video Institucional" class="video-thumb" id="mainVideoThumb" onerror="this.src='https://img.youtube.com/vi/UJGV4POfz2k/hqdefault.jpg'">
+                <img src="https://img.youtube.com/vi/UJGV4POfz2k/maxresdefault.jpg" alt="Video Institucional" class="video-thumb" id="mainVideoThumb" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/UJGV4POfz2k/hqdefault.jpg'">
                 <div class="play-icon">
                     <i class="fas fa-play"></i>
                 </div>
@@ -785,7 +785,7 @@
                         <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" 
                              alt="${video.title}" 
                              class="thumbnail-img"
-                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                             onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
                         <div class="card-play-icon">
                             <i class="fas fa-circle-play"></i>
                         </div>
@@ -824,7 +824,7 @@
                         <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" 
                              alt="${item.title}" 
                              class="thumbnail-img"
-                             onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+                             onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
                         <div class="card-play-icon">
                             <i class="fas fa-circle-play"></i>
                         </div>
@@ -904,7 +904,7 @@
                     <div class="suggestion-thumb">
                         <img src="https://img.youtube.com/vi/${video.id}/mqdefault.jpg" 
                              alt="${video.title}"
-                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                             onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
                     </div>
                     <div class="suggestion-info">
                         <div class="suggestion-title">${video.title}</div>
@@ -932,7 +932,7 @@
                         <div class="suggestion-thumb">
                             <img src="https://img.youtube.com/vi/${videoId}/mqdefault.jpg" 
                                  alt="${item.title}"
-                                 onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+                                 onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
                         </div>
                         <div class="suggestion-info">
                             <div class="suggestion-title">${item.title}</div>
@@ -959,6 +959,7 @@
                 mainVideoThumb.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                 mainVideoThumb.alt = title;
                 mainVideoThumb.onerror = function() {
+                    this.onerror = null;
                     this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                 };
             }
@@ -1075,7 +1076,7 @@
                         <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" 
                              alt="${video.title}" 
                              class="thumbnail-img"
-                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                             onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
                         <div class="card-play-icon">
                             <i class="fas fa-circle-play"></i>
                         </div>
@@ -1436,6 +1437,7 @@
                 mainVideoThumb.src = `https://img.youtube.com/vi/${randomVideoId}/maxresdefault.jpg`;
                 mainVideoThumb.alt = title;
                 mainVideoThumb.onerror = function() {
+                    this.onerror = null;
                     this.src = `https://img.youtube.com/vi/${randomVideoId}/hqdefault.jpg`;
                 };
             }

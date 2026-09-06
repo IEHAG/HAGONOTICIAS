@@ -489,7 +489,7 @@
                     src: featured.thumbnail,
                     alt: featured.titulo,
                     className: 'w-full h-full object-contain bg-gradient-to-br from-[#0a1628] to-[#0f1f3a]',
-                    onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+                    onError: (e) => { e.target.onerror = null; e.target.src = 'img/default-thumbnail.png'; }
                   }),
                   React.createElement('span', {
                     className: 'absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-bold backdrop-blur-md bg-black/50 text-[#4fc3f7] border border-[#4fc3f7]/30'
@@ -523,7 +523,7 @@
             alt: edition.titulo,
             loading: 'lazy',
             className: 'w-full h-full object-contain img-zoom',
-            onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+            onError: (e) => { e.target.onerror = null; e.target.src = 'img/default-thumbnail.png'; }
           }),
           React.createElement('span', {
             className: `absolute top-2 left-2 px-1.5 py-0.5 rounded text-[9px] font-bold backdrop-blur border z-10 ${

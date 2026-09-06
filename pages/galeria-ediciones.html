@@ -142,7 +142,7 @@
             className: 'w-full h-full object-contain',
             whileHover: { scale: 1.06, filter: 'brightness(1.1)' },
             transition: { duration: 0.4 },
-            onError: (e) => { e.target.src = 'https://via.placeholder.com/320x480/0a1628/4fc3f7?text=HAGO'; }
+            onError: (e) => { e.target.onerror = null; e.target.src = '../img/default-thumbnail.png'; }
           }),
 
           /* Badge edición */

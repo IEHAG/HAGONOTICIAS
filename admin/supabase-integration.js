@@ -1,18 +1,37 @@
 // Script adicional para integración con Supabase
 // Este archivo proporciona funciones auxiliares para la integración con Supabase
 
+function getIntegrationClient() {
+    if (typeof window.getSupabaseClient === 'function') {
+        const c = window.getSupabaseClient();
+        if (c) return c;
+    }
+    return window.supabaseClient || null;
+}
+
+function notifyLocal(mensaje, tipo) {
+    if (typeof window.mostrarAlerta === 'function') {
+        window.mostrarAlerta(mensaje, tipo);
+    } else if (typeof mostrarAlerta === 'function') {
+        mostrarAlerta(mensaje, tipo);
+    } else {
+        console.log(`[${tipo}] ${mensaje}`);
+    }
+}
+
 // Función para verificar el estado de la conexión con Supabase
 async function verificarConexionSupabase() {
     try {
-        if (!supabase) {
+        const client = getIntegrationClient();
+        if (!client) {
             console.error('Supabase no está inicializado');
             return false;
         }
 
         // Intentar hacer una consulta simple para verificar la conexión
-        const { data, error } = await supabase
+        const { data, error } = await client
             .from('ediciones')
-            .select('count', { count: 'exact', head: true });
+            .select('*', { count: 'exact', head: true });
 
         if (error) {
             console.error('Error al conectar con Supabase:', error);
@@ -35,7 +54,7 @@ async function sincronizarDatos() {
             return false;
         }
 
-        mostrarAlerta('Sincronizando datos con Supabase...', 'info');
+        notifyLocal('Sincronizando datos con Supabase...', 'info');
 
         // Obtener ediciones de Supabase
         const edicionesSupabase = await edicionesManager.obtenerEdiciones();
@@ -43,16 +62,16 @@ async function sincronizarDatos() {
         if (edicionesSupabase.length > 0) {
             // Actualizar datos locales si es necesario
             console.log(`Se encontraron ${edicionesSupabase.length} ediciones en Supabase`);
-            mostrarAlerta('Datos sincronizados correctamente', 'success');
+            notifyLocal('Datos sincronizados correctamente', 'success');
             return true;
         } else {
             console.log('No se encontraron ediciones en Supabase');
-            mostrarAlerta('No hay datos para sincronizar', 'info');
+            notifyLocal('No hay datos para sincronizar', 'info');
             return true;
         }
     } catch (error) {
         console.error('Error en sincronizarDatos:', error);
-        mostrarAlerta('Error al sincronizar datos', 'danger');
+        notifyLocal('Error al sincronizar datos', 'danger');
         return false;
     }
 }
@@ -60,14 +79,21 @@ async function sincronizarDatos() {
 // Función para migrar datos locales a Supabase (si es necesario)
 async function migrarDatosLocales() {
     try {
-        if (!edicionesManager || !pdfData) {
+        const datosLocales = (typeof pdfData !== 'undefined' && Array.isArray(pdfData))
+            ? pdfData
+            : (Array.isArray(window.EDICIONES) ? window.EDICIONES.map(e => ({
+                title: e.titulo, author: e.autor, category: e.categoria,
+                year: e.anio, pdfUrl: e.pdfUrl, thumbnail: e.thumbnail,
+                uploadDate: e.uploadDate, id: e.id
+            })) : null);
+        if (!edicionesManager || !datosLocales) {
             console.error('Datos locales o EdicionesManager no disponibles');
             return false;
         }
 
-        mostrarAlerta('Iniciando migración de datos locales...', 'info');
+        notifyLocal('Iniciando migración de datos locales...', 'info');
 
-        for (const pdf of pdfData) {
+        for (const pdf of datosLocales) {
             const edicionData = {
                 titulo: pdf.title,
                 autor: pdf.author,
@@ -94,13 +120,13 @@ async function migrarDatosLocales() {
         return true;
     } catch (error) {
         console.error('Error en migrarDatosLocales:', error);
-        mostrarAlerta('Error durante la migración', 'danger');
+        notifyLocal('Error durante la migración', 'danger');
         return false;
     }
 }
 
-// Función para crear backup de datos
-async function crearBackup() {
+// Función para crear backup de datos (nombre propio para no colisionar con otros dashboards)
+async function crearBackupSupabase() {
     try {
         if (!edicionesManager) {
             console.error('EdicionesManager no está inicializado');
@@ -134,7 +160,7 @@ async function crearBackup() {
         return true;
     } catch (error) {
         console.error('Error en crearBackup:', error);
-        mostrarAlerta('Error al crear backup', 'danger');
+        notifyLocal('Error al crear backup', 'danger');
         return false;
     }
 }
@@ -229,7 +255,11 @@ async function validarIntegridadDatos() {
 window.verificarConexionSupabase = verificarConexionSupabase;
 window.sincronizarDatos = sincronizarDatos;
 window.migrarDatosLocales = migrarDatosLocales;
-window.crearBackup = crearBackup;
+window.crearBackupSupabase = crearBackupSupabase;
+// Alias de compatibilidad (solo si no existe otro crearBackup)
+if (typeof window.crearBackup !== 'function') {
+    window.crearBackup = crearBackupSupabase;
+}
 window.restaurarBackup = restaurarBackup;
 window.validarIntegridadDatos = validarIntegridadDatos;
 
@@ -245,11 +275,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (exportBtn) {
-        exportBtn.addEventListener('click', crearBackup);
+        exportBtn.addEventListener('click', crearBackupSupabase);
     }
 
     if (backupBtn) {
-        backupBtn.addEventListener('click', crearBackup);
+        backupBtn.addEventListener('click', crearBackupSupabase);
     }
 });
 

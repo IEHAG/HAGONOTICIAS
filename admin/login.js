@@ -28,7 +28,9 @@ function setupLoginForm() {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
     const loginButton = document.getElementById('loginButton');
-    
+
+    if (!loginForm || !usernameInput || !passwordInput) return;
+
     // Evento de envío del formulario
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -50,24 +52,27 @@ function setupLoginForm() {
 }
 
 function setupPasswordToggle() {
-    const toggleButton = document.getElementById('togglePassword');
+    // Soporta tanto id="togglePassword" como .password-toggle (login.html)
+    const toggleButton = document.getElementById('togglePassword') || document.querySelector('.password-toggle');
     const passwordInput = document.getElementById('password');
-    
+
     if (toggleButton && passwordInput) {
         toggleButton.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            
+
             const icon = this.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
+            if (icon) {
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            }
         });
     }
 }
 
 function setupAnimations() {
-    // Animación de entrada del formulario
-    const loginCard = document.querySelector('.login-card');
+    // Animación de entrada del formulario (.login-card o .login-container según la página)
+    const loginCard = document.querySelector('.login-card') || document.querySelector('.login-container');
     if (loginCard) {
         loginCard.style.opacity = '0';
         loginCard.style.transform = 'translateY(50px)';
@@ -84,8 +89,11 @@ function setupAnimations() {
 }
 
 function handleLogin() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+    if (!usernameEl || !passwordEl) return;
+    const username = usernameEl.value.trim();
+    const password = passwordEl.value;
     const loginButton = document.getElementById('loginButton');
     
     // Validación básica
@@ -95,8 +103,8 @@ function handleLogin() {
     }
     
     // Mostrar estado de carga
-    showLoadingState(loginButton);
-    
+    if (loginButton) showLoadingState(loginButton);
+
     // Simular delay de autenticación
     setTimeout(() => {
         if (validateCredentials(username, password)) {
@@ -104,7 +112,7 @@ function handleLogin() {
         } else {
             handleFailedLogin();
         }
-        hideLoadingState(loginButton);
+        if (loginButton) hideLoadingState(loginButton);
     }, 1500);
 }
 

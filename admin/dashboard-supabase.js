@@ -37,8 +37,16 @@ function mostrarAlerta(mensaje, tipo = 'info', duracion = 5000) {
         setTimeout(() => {
             const alertElement = document.getElementById(alertId);
             if (alertElement) {
-                const alert = new bootstrap.Alert(alertElement);
-                alert.close();
+                try {
+                    if (window.bootstrap && window.bootstrap.Alert) {
+                        const alert = new bootstrap.Alert(alertElement);
+                        alert.close();
+                    } else {
+                        alertElement.remove();
+                    }
+                } catch (e) {
+                    alertElement.remove();
+                }
             }
         }, duracion);
     }
@@ -56,6 +64,7 @@ function getIconForType(tipo) {
 
 // Función para actualizar el estado de conexión
 function actualizarEstadoConexion(conectado, mensaje = '') {
+    if (!connectionStatus) return;
     if (conectado) {
         connectionStatus.innerHTML = `
             <span class="badge bg-success">
@@ -73,14 +82,24 @@ function actualizarEstadoConexion(conectado, mensaje = '') {
     }
 }
 
+// Cliente Supabase: usa el cliente inicializado (no el SDK en bruto)
+function getClient() {
+    if (typeof window.getSupabaseClient === 'function') {
+        const c = window.getSupabaseClient();
+        if (c) return c;
+    }
+    return window.supabaseClient || null;
+}
+
 // Función para verificar autenticación
 async function verificarAutenticacion() {
     try {
-        if (!supabase) {
+        const client = getClient();
+        if (!client) {
             throw new Error('Supabase no está inicializado');
         }
 
-        const { data: { user }, error } = await supabase.auth.getUser();
+        const { data: { user }, error } = await client.auth.getUser();
         
         if (error) {
             console.error('Error al verificar autenticación:', error);
@@ -105,13 +124,18 @@ async function verificarAutenticacion() {
 }
 
 function redirigirALogin() {
-    window.location.href = 'login.html';
+    window.location.href = 'login-supabase.html';
 }
 
 // Función para cerrar sesión
 async function cerrarSesion() {
     try {
-        const { error } = await supabase.auth.signOut();
+        const client = getClient();
+        if (!client) {
+            redirigirALogin();
+            return;
+        }
+        const { error } = await client.auth.signOut();
         if (error) {
             console.error('Error al cerrar sesión:', error);
             mostrarAlerta('Error al cerrar sesión', 'danger');
@@ -432,7 +456,7 @@ function crearFilaEdicion(edicion) {
                 <button class="btn btn-warning" onclick="editarEdicion('${edicion.id}')" title="Editar">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-danger" onclick="confirmarEliminar('${edicion.id}', '${edicion.titulo}')" title="Eliminar">
+                <button class="btn btn-danger" onclick="confirmarEliminarPorId('${edicion.id}')" title="Eliminar" data-titulo="${String(edicion.titulo || '').replace(/"/g, '&quot;')}">
                     <i class="fas fa-trash"></i>
                 </button>
                 <a href="${edicion.pdf_url}" target="_blank" class="btn btn-info" title="Ver PDF">
@@ -476,10 +500,12 @@ async function editarEdicion(id) {
         pdfFileInput.removeAttribute('required');
         
         submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Edición';
-        document.querySelector('.card-header h5').innerHTML = '<i class="fas fa-edit me-2"></i>Editar Edición';
+        const formHeader = document.querySelector('#edicionFormCard .card-header h5, .card-header h5');
+        if (formHeader) formHeader.innerHTML = '<i class="fas fa-edit me-2"></i>Editar Edición';
 
         // Scroll al formulario
-        document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+        const formCard = document.getElementById('edicionFormCard') || document.querySelector('.card');
+        if (formCard) formCard.scrollIntoView({ behavior: 'smooth' });
 
     } catch (error) {
         console.error('Error al cargar edición para editar:', error);
@@ -487,16 +513,24 @@ async function editarEdicion(id) {
     }
 }
 
-// Función para confirmar eliminación
+// Función para confirmar eliminación (titulo se lee del data-atributo: sin inyección por comillas)
 function confirmarEliminar(id, titulo) {
-    confirmMessage.textContent = `¿Estás seguro de que deseas eliminar la edición "${titulo}"?`;
-    
+    const safeTitulo = (titulo || '').replace(/[<>&"]/g, '');
+    confirmMessage.textContent = `¿Estás seguro de que deseas eliminar la edición "${safeTitulo}"?`;
+
     confirmAction.onclick = () => {
         eliminarEdicion(id);
         confirmModal.hide();
     };
-    
+
     confirmModal.show();
+}
+
+// Compatibilidad con botones que solo pasan el id (titulo en data-titulo)
+function confirmarEliminarPorId(id) {
+    const btn = document.querySelector(`button[data-titulo][onclick*="${id}"]`);
+    const titulo = btn ? (btn.getAttribute('data-titulo') || '') : '';
+    confirmarEliminar(id, titulo);
 }
 
 // Función para eliminar edición
@@ -637,4 +671,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Hacer funciones globales para uso en HTML
 window.editarEdicion = editarEdicion;
 window.confirmarEliminar = confirmarEliminar;
+window.confirmarEliminarPorId = confirmarEliminarPorId;
 

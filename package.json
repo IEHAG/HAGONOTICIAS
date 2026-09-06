@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/IEHAG/HAGONOTICIAS2#readme",
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/cli": "^4.1.11",
     "tailwindcss": "^4.1.11"
   }

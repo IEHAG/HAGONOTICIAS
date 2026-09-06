@@ -258,8 +258,14 @@
     <!-- Scripts -->
     <script src="../js/jquery-3.4.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+    <script src="auth-config.js"></script>
     <script src="../js/supabase-config.js"></script>
     <script>
+        if (!window.HAGO_SUPABASE_URL || !window.HAGO_SUPABASE_ANON_KEY ||
+            window.HAGO_SUPABASE_URL === 'TU_SUPABASE_URL_AQUI' ||
+            window.HAGO_SUPABASE_ANON_KEY === 'TU_SUPABASE_ANON_KEY_AQUI') {
+            window.location.replace('login.html');
+        }
         // Variables globales
         const alertContainer = document.getElementById('alertContainer');
         const connectionStatus = document.getElementById('connectionStatus');

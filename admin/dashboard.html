@@ -274,8 +274,10 @@
 </head>
 <body>
     <!-- Verificación de autenticación -->
+    <script src="auth-config.js"></script>
     <script>
-        if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+        const sessionActive = window.HAGO_ADMIN_SESSION ? window.HAGO_ADMIN_SESSION.isActive() : sessionStorage.getItem('adminLoggedIn') === 'true';
+        if (!sessionActive) {
             window.location.href = 'login.html';
         }
     </script>

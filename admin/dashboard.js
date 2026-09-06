@@ -1,8 +1,49 @@
 // Datos de PDFs - Importado desde ediciones-data.js
 // NOTA: Asegúrate de cargar ediciones-data.js antes de este archivo
-let pdfData = (typeof getEdicionesAsPdfData === 'function') 
-    ? getEdicionesAsPdfData() 
-    : [];
+const ADMIN_EDICIONES_STORAGE_KEY = 'hago_admin_ediciones';
+
+function getStoredPdfData() {
+    const fallback = (typeof getEdicionesAsPdfData === 'function') ? getEdicionesAsPdfData() : [];
+
+    try {
+        const raw = localStorage.getItem(ADMIN_EDICIONES_STORAGE_KEY);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (error) {
+        console.warn('No se pudo leer el almacenamiento local de ediciones:', error);
+    }
+
+    return fallback;
+}
+
+let pdfData = getStoredPdfData();
+
+function persistPdfData() {
+    localStorage.setItem(ADMIN_EDICIONES_STORAGE_KEY, JSON.stringify(pdfData));
+
+    if (Array.isArray(window.EDICIONES)) {
+        window.EDICIONES = pdfData.map((item, index) => ({
+            id: Number(item.id || index + 1),
+            numero: Number(item.numero || item.id || index + 1),
+            titulo: item.title || item.titulo || 'Edición sin título',
+            autor: item.author || item.autor || 'Sin autor',
+            categoria: item.category || item.categoria || `#${index + 1}`,
+            anio: Number(item.year || item.anio || new Date().getFullYear()),
+            descripcion: item.description || item.descripcion || 'Edición publicada',
+            thumbnail: item.thumbnail || 'img/default-thumbnail.png',
+            thumbnailLarge: item.thumbnailLarge || item.thumbnail || 'img/default-thumbnail.png',
+            pdfUrl: item.pdfUrl || '',
+            uploadDate: item.uploadDate || new Date().toISOString().split('T')[0],
+            size: item.size || 'Sin tamaño',
+            tags: item.tags || [],
+            featured: Boolean(item.featured),
+            views: Number(item.views || 0),
+            downloads: Number(item.downloads || 0),
+            comingSoon: Boolean(item.comingSoon || !item.pdfUrl)
+        }));
+    }
+}
 
 // Variables globales
 let currentSection = 'dashboard';
@@ -16,16 +57,29 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
 });
 
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function initializeDashboard() {
     // Mostrar fecha de último acceso
-    const loginTime = sessionStorage.getItem('loginTime');
+    const loginTime = Number(sessionStorage.getItem('loginTime') || 0);
     if (loginTime) {
-        const date = new Date(parseInt(loginTime));
-        document.getElementById('lastLogin').textContent = date.toLocaleString('es-ES');
+        const date = new Date(loginTime);
+        const lastLogin = document.getElementById('lastLogin');
+        const lastLoginMobile = document.getElementById('lastLoginMobile');
+        if (lastLogin) lastLogin.textContent = date.toLocaleString('es-ES');
+        if (lastLoginMobile) lastLoginMobile.textContent = date.toLocaleString('es-ES');
     }
     
     // Configurar navegación
     setupNavigation();
+    persistPdfData();
 }
 
 function setupNavigation() {
@@ -150,11 +204,13 @@ function updateExistingPdf(id, title, year, topics, thumbnail, file) {
         pdfData[pdfIndex].year = parseInt(year);
         pdfData[pdfIndex].author = topics;
         pdfData[pdfIndex].thumbnail = thumbnail || pdfData[pdfIndex].thumbnail;
+        pdfData[pdfIndex].description = topics;
         
         // Si hay un nuevo archivo, actualizar la URL
         if (file) {
             pdfData[pdfIndex].pdfUrl = `../pdf/${file.name}`;
             pdfData[pdfIndex].size = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            pdfData[pdfIndex].comingSoon = false;
         }
         
         // Resetear estado de edición
@@ -176,7 +232,7 @@ function updateExistingPdf(id, title, year, topics, thumbnail, file) {
             uploadTitle.innerHTML = '<i class="fas fa-cloud-upload-alt me-2"></i>Subir Nueva Edición';
         }
         
-        // Actualizar estadísticas y lista
+        persistPdfData();
         updateStats();
         loadFilesList();
         
@@ -209,19 +265,25 @@ function simulateUpload(title, year, topics, thumbnail, file) {
             clearInterval(interval);
             
             // Agregar nuevo PDF a los datos
+            const nextId = pdfData.reduce((max, item) => Math.max(max, Number(item.id || 0)), 0) + 1;
             const newPdf = {
-                id: pdfData.length + 1,
+                id: nextId,
                 title: title,
                 author: topics,
-                category: `#${pdfData.length + 1}`,
+                category: `#${nextId}`,
                 year: parseInt(year),
                 thumbnail: thumbnail || '../img/default-thumbnail.png',
-                pdfUrl: `../pdf/${file.name}`,
+                pdfUrl: file ? `../pdf/${file.name}` : '#',
                 uploadDate: new Date().toISOString().split('T')[0],
-                size: (file.size / 1024 / 1024).toFixed(2) + ' MB'
+                size: file ? (file.size / 1024 / 1024).toFixed(2) + ' MB' : 'Sin archivo',
+                description: topics,
+                comingSoon: !file,
+                views: 0,
+                downloads: 0
             };
             
             pdfData.push(newPdf);
+            persistPdfData();
             
             // Resetear formulario
             document.getElementById('uploadForm').reset();
@@ -279,6 +341,8 @@ function cancelEdit() {
 function loadFilesList() {
     const filesList = document.getElementById('filesList');
     
+    if (!filesList) return;
+
     if (pdfData.length === 0) {
         filesList.innerHTML = `
             <div class="text-center py-5">
@@ -290,36 +354,45 @@ function loadFilesList() {
         return;
     }
     
-    filesList.innerHTML = pdfData.map(pdf => `
+    filesList.innerHTML = pdfData.map(pdf => {
+        const safeTitle = escapeHtml(pdf.title || 'Edición sin título');
+        const safeAuthor = escapeHtml(pdf.author || 'Sin autor');
+        const safeDate = escapeHtml(pdf.uploadDate || 'Sin fecha');
+        const safeSize = escapeHtml(pdf.size || 'Sin tamaño');
+        const safePdfUrl = escapeHtml(pdf.pdfUrl || '#');
+        const safeThumb = escapeHtml(pdf.thumbnail || 'img/default-thumbnail.png');
+
+        return `
         <div class="file-item">
             <div class="row align-items-center">
                 <div class="col-md-2">
-                    <img src="${pdf.thumbnail}" alt="${pdf.title}" class="img-fluid rounded" style="max-height: 80px;">
+                    <img src="${safeThumb}" alt="${safeTitle}" class="img-fluid rounded" style="max-height: 80px;">
                 </div>
                 <div class="col-md-6">
-                    <h6 class="mb-1 text-primary">${pdf.title}</h6>
-                    <p class="mb-1 text-muted small">${pdf.author}</p>
+                    <h6 class="mb-1 text-primary">${safeTitle}</h6>
+                    <p class="mb-1 text-muted small">${safeAuthor}</p>
                     <small class="text-muted">
-                        <i class="fas fa-calendar me-1"></i>${pdf.uploadDate} | 
-                        <i class="fas fa-file-pdf me-1"></i>${pdf.size}
+                        <i class="fas fa-calendar me-1"></i>${safeDate} | 
+                        <i class="fas fa-file-pdf me-1"></i>${safeSize}
                     </small>
                 </div>
                 <div class="col-md-4 text-end">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-outline-primary btn-sm" onclick="previewPdf('${pdf.pdfUrl}')">
+                        <button class="btn btn-outline-primary btn-sm" onclick="previewPdf('${safePdfUrl}')">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn btn-outline-info btn-sm" onclick="editPdf(${pdf.id})">
+                        <button class="btn btn-outline-info btn-sm" onclick="editPdf(${Number(pdf.id || 0)})">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(${pdf.id}, '${pdf.title}')">
+                        <button class="btn btn-outline-danger btn-sm" onclick='confirmDelete(${Number(pdf.id || 0)}, ${JSON.stringify(safeTitle)})'>
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function updateStats() {
@@ -327,6 +400,7 @@ function updateStats() {
 }
 
 function previewPdf(pdfUrl) {
+    if (!pdfUrl || pdfUrl === '#') return;
     window.open(pdfUrl, '_blank');
 }
 
@@ -367,7 +441,7 @@ function editPdf(id) {
 function confirmDelete(id, title) {
     fileToDelete = id;
     document.getElementById('confirmMessage').textContent = 
-        `¿Estás seguro de que deseas eliminar "${title}"? Esta acción no se puede deshacer.`;
+        `¿Estás seguro de que deseas eliminar "${String(title || 'esta edición')}"? Esta acción no se puede deshacer.`;
     
     const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
     modal.show();
@@ -382,18 +456,20 @@ function deletePdf(id) {
     const index = pdfData.findIndex(p => p.id === id);
     if (index !== -1) {
         const deletedPdf = pdfData.splice(index, 1)[0];
+        persistPdfData();
         loadFilesList();
         updateStats();
-        showNotification(`"${deletedPdf.title}" ha sido eliminado exitosamente.`, 'success');
+        showNotification(`"${escapeHtml(deletedPdf.title || 'Edición')}" ha sido eliminado exitosamente.`, 'success');
     }
 }
 
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `alert alert-${type} alert-dismissible fade show notification slide-in`;
+    const safeMessage = escapeHtml(message);
     notification.innerHTML = `
         <i class="fas fa-${getIconForType(type)} me-2"></i>
-        ${message}
+        ${safeMessage}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
     
@@ -419,22 +495,30 @@ function getIconForType(type) {
 
 function logout() {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-        sessionStorage.removeItem('adminLoggedIn');
-        sessionStorage.removeItem('loginTime');
+        if (window.HAGO_ADMIN_SESSION) {
+            window.HAGO_ADMIN_SESSION.end();
+        } else {
+            sessionStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem('loginTime');
+            sessionStorage.removeItem('adminUser');
+        }
         window.location.href = 'login.html';
     }
 }
 
 // Verificar sesión cada 5 minutos
 setInterval(() => {
-    const loginTime = sessionStorage.getItem('loginTime');
-    if (loginTime) {
-        const currentTime = new Date().getTime();
-        const sessionDuration = 2 * 60 * 60 * 1000; // 2 horas
-        
-        if (currentTime - loginTime > sessionDuration) {
-            alert('Tu sesión ha expirado. Serás redirigido al login.');
-            logout();
+    const sessionActive = window.HAGO_ADMIN_SESSION ? window.HAGO_ADMIN_SESSION.isActive() : sessionStorage.getItem('adminLoggedIn') === 'true';
+    if (!sessionActive) {
+        const loginTime = Number(sessionStorage.getItem('loginTime') || 0);
+        if (loginTime) {
+            const currentTime = Date.now();
+            const sessionDuration = 2 * 60 * 60 * 1000; // 2 horas
+            
+            if (currentTime - loginTime > sessionDuration) {
+                alert('Tu sesión ha expirado. Serás redirigido al login.');
+                logout();
+            }
         }
     }
 }, 5 * 60 * 1000);

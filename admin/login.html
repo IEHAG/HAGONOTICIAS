@@ -214,11 +214,15 @@
         </div>
         
         <div id="alertContainer"></div>
+
+        <div class="mb-3 small text-muted text-center rounded-3 px-3 py-2 bg-light border border-1">
+            <strong>Acceso de prueba:</strong> adminhag@gmail.com / CAÑOLA2027*
+        </div>
         
         <form id="loginForm">
             <div class="form-floating">
-                <input type="text" class="form-control" id="username" placeholder="Usuario" required>
-                <label for="username"><i class="fas fa-user me-2"></i>Usuario</label>
+                <input type="email" class="form-control" id="username" placeholder="Correo electrónico" autocomplete="username" required>
+                <label for="username"><i class="fas fa-user me-2"></i>Correo electrónico</label>
             </div>
             
             <div class="form-floating position-relative">
@@ -243,10 +247,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="auth-config.js"></script>
     <script src="login.js"></script>
     <script>
-        // Credenciales de administrador (en un entorno real, esto debería estar en el backend)
-        const ADMIN_CREDENTIALS = {
+        const ADMIN_CREDENTIALS = window.HAGO_ADMIN_CREDENTIALS || {
             username: 'adminhag@gmail.com',
             password: 'CAÑOLA2027*'
         };
@@ -282,10 +286,17 @@
             const password = document.getElementById('password').value;
             
             // Validar credenciales
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+            const normalizedUsername = String(username || '').trim().toLowerCase();
+            const normalizedStoredUsername = String(ADMIN_CREDENTIALS.username || '').trim().toLowerCase();
+
+            if (normalizedUsername === normalizedStoredUsername && password === ADMIN_CREDENTIALS.password) {
                 // Guardar sesión
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                sessionStorage.setItem('loginTime', new Date().getTime());
+                if (window.HAGO_ADMIN_SESSION) {
+                    window.HAGO_ADMIN_SESSION.start(username);
+                } else {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('loginTime', new Date().getTime());
+                }
                 
                 showAlert('¡Acceso concedido! Redirigiendo...', 'success');
                 
@@ -302,9 +313,11 @@
         });
         
         // Verificar si ya está logueado
-        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-            const loginTime = sessionStorage.getItem('loginTime');
-            const currentTime = new Date().getTime();
+        if (window.HAGO_ADMIN_SESSION && window.HAGO_ADMIN_SESSION.isActive()) {
+            window.location.href = 'dashboard.html';
+        } else if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            const loginTime = Number(sessionStorage.getItem('loginTime') || 0);
+            const currentTime = Date.now();
             const sessionDuration = 2 * 60 * 60 * 1000; // 2 horas
             
             if (currentTime - loginTime < sessionDuration) {

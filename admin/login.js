@@ -1,7 +1,7 @@
 // Sistema de autenticación para el panel administrativo
 
-// Credenciales válidas (en un entorno real, esto estaría en el backend)
-const validCredentials = {
+// Credenciales válidas, configurables desde la ventana para evitar hardcodear en varios archivos
+const validCredentials = window.HAGO_ADMIN_CREDENTIALS || {
     username: 'adminhag@gmail.com',
     password: 'CAÑOLA2027*'
 };
@@ -13,7 +13,7 @@ const maxAttempts = 3;
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar si ya está logueado
-    if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+    if (window.HAGO_ADMIN_SESSION && window.HAGO_ADMIN_SESSION.isActive()) {
         window.location.href = 'dashboard.html';
         return;
     }
@@ -120,14 +120,21 @@ function handleLogin() {
 }
 
 function validateCredentials(username, password) {
-    return username === validCredentials.username && password === validCredentials.password;
+    const normalizedUsername = String(username || '').trim().toLowerCase();
+    const normalizedStoredUsername = String(validCredentials.username || '').trim().toLowerCase();
+    return normalizedUsername === normalizedStoredUsername && password === validCredentials.password;
 }
 
 function handleSuccessfulLogin() {
+    const username = document.getElementById('username').value.trim();
     // Guardar estado de sesión
-    sessionStorage.setItem('adminLoggedIn', 'true');
-    sessionStorage.setItem('loginTime', new Date().getTime().toString());
-    sessionStorage.setItem('username', document.getElementById('username').value);
+    if (window.HAGO_ADMIN_SESSION) {
+        window.HAGO_ADMIN_SESSION.start(username || validCredentials.username);
+    } else {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+        sessionStorage.setItem('loginTime', new Date().getTime().toString());
+        sessionStorage.setItem('username', username || validCredentials.username);
+    }
     
     // Mostrar mensaje de éxito
     showSuccess('¡Acceso concedido! Redirigiendo...');

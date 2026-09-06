@@ -1,4 +1,4 @@
-// Modern Edition Viewer - Fully Responsive for Mobile and Desktop
+﻿// Modern Edition Viewer - Fully Responsive for Mobile and Desktop
 class ModernEditionViewer {
     constructor() {
         this.books = [];
@@ -142,7 +142,7 @@ class ModernEditionViewer {
                             </button>
                         </div>
                         <button class="modern-filter-toggle" id="modernFilterToggle" title="Filtrar por edición">
-                            <i class="fas fa-sliders-h"></i>
+                            <i class="fas fa-sliders"></i>
                         </button>
                     </div>
                     
@@ -189,7 +189,7 @@ class ModernEditionViewer {
                 filterChips.classList.toggle('modern-filter-chips-visible');
                 filterToggle.classList.toggle('active');
                 const isVisible = filterChips.classList.contains('modern-filter-chips-visible');
-                filterToggle.querySelector('i').className = isVisible ? 'fas fa-times' : 'fas fa-sliders-h';
+                filterToggle.querySelector('i').className = isVisible ? 'fas fa-times' : 'fas fa-sliders';
             });
         }
         
@@ -578,4 +578,5 @@ document.addEventListener('DOMContentLoaded', function() {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ModernEditionViewer;
 }
+
 

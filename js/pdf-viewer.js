@@ -1,4 +1,4 @@
-// Nuevo visor de PDF moderno y funcional
+﻿// Nuevo visor de PDF moderno y funcional
 class ModernPDFViewer {
     constructor() {
         this.currentPdf = null;
@@ -36,11 +36,11 @@ class ModernPDFViewer {
                             </button>
                             <div class="modern-pdf-divider"></div>
                             <button id="modernPdfZoomOut" class="modern-pdf-btn" title="Reducir zoom">
-                                <i class="fas fa-search-minus"></i>
+                                <i class="fas fa-magnifying-glass-minus"></i>
                             </button>
                             <span id="modernPdfZoomLevel" class="modern-pdf-zoom-info">120%</span>
                             <button id="modernPdfZoomIn" class="modern-pdf-btn" title="Aumentar zoom">
-                                <i class="fas fa-search-plus"></i>
+                                <i class="fas fa-magnifying-glass-plus"></i>
                             </button>
                             <div class="modern-pdf-divider"></div>
                             <button id="modernPdfFullscreen" class="modern-pdf-btn" title="Pantalla completa">
@@ -257,7 +257,7 @@ class ModernPDFViewer {
         const loading = document.getElementById('modernPdfLoading');
         loading.innerHTML = `
             <div class="modern-pdf-error">
-                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-triangle-exclamation"></i>
                 <p>${message}</p>
             </div>
         `;
@@ -273,4 +273,5 @@ const modernPdfViewer = new ModernPDFViewer();
 window.openModernPDF = function(pdfUrl) {
     modernPdfViewer.open(pdfUrl);
 };
+
 

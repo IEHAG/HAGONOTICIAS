@@ -1,4 +1,4 @@
-// Mobile PDF Viewer - Magazine Style
+﻿// Mobile PDF Viewer - Magazine Style
 class MobilePDFViewer {
     constructor() {
         this.pdfDoc = null;
@@ -62,7 +62,7 @@ class MobilePDFViewer {
                 
                 <div class="pdf-error" id="pdfError" style="display: none;">
                     <div class="pdf-error-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-triangle-exclamation"></i>
                     </div>
                     <div class="pdf-error-message">Error al cargar el PDF</div>
                     <button class="pdf-error-retry" id="pdfErrorRetry">Reintentar</button>
@@ -76,7 +76,7 @@ class MobilePDFViewer {
                         <i class="fas fa-minus"></i>
                     </button>
                     <button class="pdf-zoom-button" id="pdfZoomReset">
-                        <i class="fas fa-expand-arrows-alt"></i>
+                        <i class="fas fa-up-right-and-down-left-from-center"></i>
                     </button>
                 </div>
                 
@@ -582,4 +582,5 @@ window.mobilePdfViewer = new MobilePDFViewer();
 
 // Exportar para uso global
 window.MobilePDFViewer = MobilePDFViewer;
+
 

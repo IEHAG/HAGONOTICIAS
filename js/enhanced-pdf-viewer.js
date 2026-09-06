@@ -34,13 +34,13 @@ class EnhancedPDFViewer {
     createModal() {
         const modalHTML = `
             <div id="enhancedPdfModal" class="enhanced-pdf-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
-                <div class="enhanced-pdf-overlay" onclick="enhancedPdfViewer.close()"></div>
+                <div class="enhanced-pdf-overlay" onclick="window.enhancedPdfViewer && window.enhancedPdfViewer.close()"></div>
                 <div class="enhanced-pdf-container">
                     <!-- Header con controles -->
                     <div class="enhanced-pdf-header">
                         <div class="enhanced-pdf-title-section">
                             <h3 id="pdfTitle" class="enhanced-pdf-title">
-                                <i class="fa fa-file-pdf-o"></i>
+                                <i class="fa-solid fa-file-pdf"></i>
                                 Visor de PDF Profesional
                             </h3>
                             <div class="enhanced-pdf-subtitle">HAGO Noticias - Ediciones</div>
@@ -50,27 +50,27 @@ class EnhancedPDFViewer {
                             <!-- Navegación -->
                             <div class="enhanced-pdf-nav-group">
                                 <button id="enhancedPdfFirst" class="enhanced-pdf-btn" title="Primera página" aria-label="Primera página">
-                                    <i class="fa fa-step-backward"></i>
+                                    <i class="fa-solid fa-backward-step"></i>
                                 </button>
                                 <button id="enhancedPdfPrev" class="enhanced-pdf-btn" title="Página anterior" aria-label="Página anterior">
-                                    <i class="fa fa-chevron-left"></i>
+                                    <i class="fa-solid fa-chevron-left"></i>
                                 </button>
                                 <div class="enhanced-pdf-page-input">
                                     <input type="number" id="enhancedPdfPageInput" min="1" value="1" aria-label="Número de página">
                                     <span id="enhancedPdfPageInfo">/ 1</span>
                                 </div>
                                 <button id="enhancedPdfNext" class="enhanced-pdf-btn" title="Página siguiente" aria-label="Página siguiente">
-                                    <i class="fa fa-chevron-right"></i>
+                                    <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                                 <button id="enhancedPdfLast" class="enhanced-pdf-btn" title="Última página" aria-label="Última página">
-                                    <i class="fa fa-step-forward"></i>
+                                    <i class="fa-solid fa-forward-step"></i>
                                 </button>
                             </div>
                             
                             <!-- Zoom -->
                             <div class="enhanced-pdf-zoom-group">
                                 <button id="enhancedPdfZoomOut" class="enhanced-pdf-btn" title="Reducir zoom" aria-label="Reducir zoom">
-                                    <i class="fa fa-search-minus"></i>
+                                    <i class="fa-solid fa-magnifying-glass-minus"></i>
                                 </button>
                                 <select id="enhancedPdfZoomSelect" class="enhanced-pdf-select" aria-label="Nivel de zoom">
                                     <option value="0.5">50%</option>
@@ -83,7 +83,7 @@ class EnhancedPDFViewer {
                                     <option value="fit-page">Ajustar página</option>
                                 </select>
                                 <button id="enhancedPdfZoomIn" class="enhanced-pdf-btn" title="Aumentar zoom" aria-label="Aumentar zoom">
-                                    <i class="fa fa-search-plus"></i>
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
                                 </button>
                             </div>
                             
@@ -92,16 +92,16 @@ class EnhancedPDFViewer {
                                 <div class="enhanced-pdf-search-input">
                                     <input type="text" id="enhancedPdfSearchInput" placeholder="Buscar en el documento..." aria-label="Buscar texto">
                                     <button id="enhancedPdfSearchBtn" class="enhanced-pdf-search-btn" title="Buscar" aria-label="Buscar">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </div>
                                 <div id="enhancedPdfSearchResults" class="enhanced-pdf-search-results" style="display: none;">
                                     <button id="enhancedPdfSearchPrev" class="enhanced-pdf-btn-sm" title="Resultado anterior">
-                                        <i class="fa fa-chevron-up"></i>
+                                        <i class="fa-solid fa-chevron-up"></i>
                                     </button>
                                     <span id="enhancedPdfSearchInfo">0 / 0</span>
                                     <button id="enhancedPdfSearchNext" class="enhanced-pdf-btn-sm" title="Siguiente resultado">
-                                        <i class="fa fa-chevron-down"></i>
+                                        <i class="fa-solid fa-chevron-down"></i>
                                     </button>
                                 </div>
                             </div>
@@ -109,19 +109,19 @@ class EnhancedPDFViewer {
                             <!-- Herramientas -->
                             <div class="enhanced-pdf-tools-group">
                                 <button id="enhancedPdfThumbnails" class="enhanced-pdf-btn" title="Mostrar miniaturas" aria-label="Mostrar miniaturas">
-                                    <i class="fa fa-th-large"></i>
+                                    <i class="fa-solid fa-table-cells-large"></i>
                                 </button>
                                 <button id="enhancedPdfRotate" class="enhanced-pdf-btn" title="Rotar página" aria-label="Rotar página">
-                                    <i class="fa fa-rotate-right"></i>
+                                    <i class="fa-solid fa-arrow-rotate-right"></i>
                                 </button>
                                 <button id="enhancedPdfDownload" class="enhanced-pdf-btn" title="Descargar PDF" aria-label="Descargar PDF">
-                                    <i class="fa fa-download"></i>
+                                    <i class="fa-solid fa-download"></i>
                                 </button>
                                 <button id="enhancedPdfFullscreen" class="enhanced-pdf-btn" title="Pantalla completa" aria-label="Pantalla completa">
-                                    <i class="fa fa-expand"></i>
+                                    <i class="fa-solid fa-expand"></i>
                                 </button>
                                 <button id="enhancedPdfClose" class="enhanced-pdf-btn enhanced-pdf-close" title="Cerrar" aria-label="Cerrar">
-                                    <i class="fa fa-times"></i>
+                                    <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
                         </div>
@@ -134,7 +134,7 @@ class EnhancedPDFViewer {
                             <div class="enhanced-pdf-sidebar-header">
                                 <h4>Miniaturas</h4>
                                 <button id="enhancedPdfCloseSidebar" class="enhanced-pdf-btn-sm">
-                                    <i class="fa fa-times"></i>
+                                    <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
                             <div id="enhancedPdfThumbnailsList" class="enhanced-pdf-thumbnails-list">
@@ -159,11 +159,11 @@ class EnhancedPDFViewer {
                             
                             <div id="enhancedPdfError" class="enhanced-pdf-error" style="display: none;">
                                 <div class="enhanced-pdf-error-content">
-                                    <i class="fa fa-exclamation-triangle"></i>
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
                                     <h3>Error al cargar el PDF</h3>
                                     <p id="enhancedPdfErrorMessage">Ha ocurrido un error inesperado.</p>
                                     <button id="enhancedPdfRetry" class="enhanced-pdf-btn-primary">
-                                        <i class="fa fa-refresh"></i> Reintentar
+                                        <i class="fa-solid fa-arrows-rotate"></i> Reintentar
                                     </button>
                                 </div>
                             </div>
@@ -343,8 +343,17 @@ class EnhancedPDFViewer {
     }
     
     async open(pdfUrl, title = 'Documento PDF') {
+        if (!pdfUrl) {
+            this.showError('URL de PDF no válida.');
+            return;
+        }
         if (pdfUrl.includes('drive.google.com/file') || pdfUrl.includes('drive.google.com/open')) {
-            window.open(pdfUrl, '_blank');
+            window.open(pdfUrl, '_blank', 'noopener');
+            return;
+        }
+        if (typeof pdfjsLib === 'undefined') {
+            // Si PDF.js no cargó (offline/CDN caído), abrir en pestaña nueva
+            window.open(pdfUrl, '_blank', 'noopener');
             return;
         }
 
@@ -354,7 +363,7 @@ class EnhancedPDFViewer {
             document.body.style.overflow = 'hidden';
             
             // Actualizar título
-            document.getElementById('pdfTitle').innerHTML = `<i class="fa fa-file-pdf-o"></i> ${title}`;
+            document.getElementById('pdfTitle').innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${title}`;
             
             // Cargar el PDF
             const loadingTask = pdfjsLib.getDocument({
@@ -526,10 +535,34 @@ class EnhancedPDFViewer {
     }
     
     // Métodos de zoom
+    syncZoomSelect() {
+        const zoomSelect = document.getElementById('enhancedPdfZoomSelect');
+        if (!zoomSelect) return;
+        const current = this.scale.toFixed(1);
+        const exists = [...zoomSelect.options].some(o => o.value === current);
+        if (!exists) {
+            const opt = document.createElement('option');
+            opt.value = current;
+            opt.textContent = `${Math.round(this.scale * 100)}%`;
+            opt.dataset.dynamic = 'true';
+            zoomSelect.appendChild(opt);
+        }
+        // Eliminar opciones dinámicas viejas que ya no corresponden
+        [...zoomSelect.options].forEach(o => {
+            if (o.dataset.dynamic === 'true' && o.value !== current &&
+                !['fit-width', 'fit-page'].includes(zoomSelect.value)) {
+                o.remove();
+            }
+        });
+        if (!['fit-width', 'fit-page'].includes(zoomSelect.value)) {
+            zoomSelect.value = current;
+        }
+    }
+
     async zoomIn() {
         if (this.scale < 3.0) {
             this.scale = Math.min(this.scale * 1.2, 3.0);
-            document.getElementById('enhancedPdfZoomSelect').value = this.scale.toFixed(1);
+            this.syncZoomSelect();
             await this.renderPage();
             this.updateControls();
         }
@@ -538,7 +571,7 @@ class EnhancedPDFViewer {
     async zoomOut() {
         if (this.scale > 0.3) {
             this.scale = Math.max(this.scale * 0.8, 0.3);
-            document.getElementById('enhancedPdfZoomSelect').value = this.scale.toFixed(1);
+            this.syncZoomSelect();
             await this.renderPage();
             this.updateControls();
         }
@@ -632,9 +665,13 @@ class EnhancedPDFViewer {
     // Miniaturas
     async generateThumbnails() {
         const thumbnailsList = document.getElementById('enhancedPdfThumbnailsList');
+        if (!thumbnailsList) return;
+        const pdfAtStart = this.currentPdf;
         thumbnailsList.innerHTML = '<div class="enhanced-pdf-thumbnails-loading">Generando miniaturas...</div>';
         
         for (let i = 1; i <= this.totalPages; i++) {
+            // Si el usuario cerró el visor a mitad, cancelar
+            if (this.currentPdf !== pdfAtStart || !this.currentPdf) break;
             try {
                 const page = await this.currentPdf.getPage(i);
                 const viewport = page.getViewport({ scale: 0.2 });
@@ -728,12 +765,16 @@ class EnhancedPDFViewer {
         if (!document.fullscreenElement) {
             this.modal.requestFullscreen().then(() => {
                 this.isFullscreen = true;
-                document.getElementById('enhancedPdfFullscreen').innerHTML = '<i class="fa fa-compress"></i>';
+                document.getElementById('enhancedPdfFullscreen').innerHTML = '<i class="fa-solid fa-compress"></i>';
+            }).catch(() => {
+                // Fullscreen puede fallar en iframes sin permiso: no es crítico
             });
         } else {
             document.exitFullscreen().then(() => {
                 this.isFullscreen = false;
-                document.getElementById('enhancedPdfFullscreen').innerHTML = '<i class="fa fa-expand"></i>';
+                document.getElementById('enhancedPdfFullscreen').innerHTML = '<i class="fa-solid fa-expand"></i>';
+            }).catch(() => {
+                this.isFullscreen = false;
             });
         }
     }
@@ -751,8 +792,8 @@ class EnhancedPDFViewer {
         
         // Actualizar zoom
         const zoomSelect = document.getElementById('enhancedPdfZoomSelect');
-        if (!['fit-width', 'fit-page'].includes(zoomSelect.value)) {
-            zoomSelect.value = this.scale.toFixed(1);
+        if (zoomSelect && !['fit-width', 'fit-page'].includes(zoomSelect.value)) {
+            this.syncZoomSelect();
         }
         
         // Actualizar miniaturas
@@ -822,6 +863,9 @@ class EnhancedPDFViewer {
 
 // Inicializar el visor mejorado
 const enhancedPdfViewer = new EnhancedPDFViewer();
+
+// Exponer globalmente (index.html y otros visores usan window.enhancedPdfViewer)
+window.enhancedPdfViewer = enhancedPdfViewer;
 
 // Función global para abrir PDFs
 window.openEnhancedPDF = function(pdfUrl, title = 'Documento PDF') {

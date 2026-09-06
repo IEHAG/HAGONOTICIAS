@@ -1,4 +1,4 @@
-// Datos de las ediciones - Importado desde ediciones-data.js
+﻿// Datos de las ediciones - Importado desde ediciones-data.js
 // NOTA: Asegúrate de cargar ediciones-data.js antes de este archivo
 const books = (typeof getEdicionesAsBooks === 'function') 
     ? getEdicionesAsBooks() 
@@ -247,7 +247,7 @@ async function openPdfViewer(pdfUrl) {
         console.error('Error al cargar el PDF:', error);
         container.innerHTML = `
             <div class="text-center text-white">
-                <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                <i class="fas fa-triangle-exclamation fa-3x text-warning mb-3"></i>
                 <h4>Error al cargar el PDF</h4>
                 <p>Por favor, inténtalo de nuevo más tarde.</p>
             </div>
@@ -327,4 +327,5 @@ document.addEventListener('DOMContentLoaded', function() {
         return originalAppendChild.call(this, child);
     };
 });
+
 

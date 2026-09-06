@@ -1,4 +1,4 @@
-// DATOS DE CONTENIDO - Reemplaza con tus archivos
+﻿// DATOS DE CONTENIDO - Reemplaza con tus archivos
 const contentData = {
 videos: {
     apertura: { 
@@ -95,7 +95,7 @@ function playContent(type, id) {
                     <p class="content-description">${content.description}</p>
                     <div class="action-buttons">
                         <button class="action-btn btn-primary" onclick="window.open('${content.file}', '_blank')">
-                            <i class="fas fa-external-link-alt"></i> Abrir en Nueva Pestaña
+                            <i class="fas fa-up-right-from-square"></i> Abrir en Nueva Pestaña
                         </button>
                         <button class="action-btn btn-secondary" onclick="navigator.share({title: '${content.title}', text: '${content.description}'})">
                             <i class="fas fa-share"></i> Compartir

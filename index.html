@@ -11,15 +11,17 @@
   <!-- TailwindCSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          colors: {
-            hago: { bg: '#041B2D', accent: '#4fc3f7', purple: '#7c3aed', green: '#059669' }
+    if (window.tailwind) {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+            colors: {
+              hago: { bg: '#041B2D', accent: '#4fc3f7', purple: '#7c3aed', green: '#059669' }
+            }
           }
         }
-      }
+      };
     }
   </script>
 
@@ -271,7 +273,7 @@
   <!-- ==================== SCRIPTS ==================== -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Sin Babel: el código ya usa React.createElement (sin JSX), corre nativo -->
 
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -281,8 +283,8 @@
   <!-- Visor PDF mejorado -->
   <script src="js/enhanced-pdf-viewer.js"></script>
 
-  <!-- Componentes React -->
-  <script type="text/babel">
+  <!-- Componentes React (JS plano con React.createElement, sin JSX ni Babel) -->
+  <script>
     const { useState, useRef, useEffect, useMemo, useCallback } = React;
     const ED = window.EDICIONES || [];
 

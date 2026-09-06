@@ -1,12 +1,18 @@
 // Configuración de Supabase para HAGO Noticias
-// IMPORTANTE: Reemplaza estas credenciales con las de tu proyecto Supabase
+// IMPORTANTE: Reemplaza estas credenciales con las de tu proyecto Supabase.
+// Puedes definirlas antes de cargar este archivo con:
+//   window.HAGO_SUPABASE_URL = 'https://xxxxx.supabase.co';
+//   window.HAGO_SUPABASE_ANON_KEY = 'tu-clave-publica';
 
-// Configuración de Supabase
-const SUPABASE_URL = 'TU_SUPABASE_URL_AQUI'; // Ejemplo: 'https://xxxxx.supabase.co'
-const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI'; // Tu clave pública de Supabase
+// NOTA: no usar el nombre `supabase` para variables propias porque colisiona
+// con el SDK (window.supabase) cargado desde el CDN.
 
-// Variable global de Supabase
-let supabase = null;
+// Configuración de Supabase (permite override vía window sin editar el archivo)
+const SUPABASE_URL = window.HAGO_SUPABASE_URL || 'TU_SUPABASE_URL_AQUI'; // Ejemplo: 'https://xxxxx.supabase.co'
+const SUPABASE_ANON_KEY = window.HAGO_SUPABASE_ANON_KEY || 'TU_SUPABASE_ANON_KEY_AQUI'; // Tu clave pública de Supabase
+
+// Cliente de Supabase e instancia del manager (nombres propios, sin colisionar)
+let supabaseClient = null;
 let edicionesManager = null;
 
 // Función para validar que la configuración esté completa
@@ -27,12 +33,18 @@ function inicializarSistema() {
             return false;
         }
 
-        // Inicializar cliente de Supabase
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+            console.error('SDK de Supabase no cargado. Incluye el CDN antes de supabase-config.js');
+            return false;
+        }
+
+        // Inicializar cliente de Supabase (sin sobrescribir el SDK en window.supabase)
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // Crear instancia del manager de ediciones
-        edicionesManager = new EdicionesManager(supabase);
+        edicionesManager = new EdicionesManager(supabaseClient);
         window.edicionesManager = edicionesManager;
+        window.supabaseClient = supabaseClient;
         
         console.log('Sistema de Supabase inicializado correctamente');
         return true;
@@ -162,36 +174,16 @@ class EdicionesManager {
         try {
             console.log(`Subiendo archivo al bucket ${bucket}: ${nombreArchivo}`);
 
-            // Subir el archivo
+            // Subir el archivo (upsert:true crea o reemplaza sin llamada extra)
             const { data: uploadData, error: uploadError } = await this.supabase.storage
                 .from(bucket)
                 .upload(nombreArchivo, archivo, {
                     cacheControl: '3600',
-                    upsert: false
+                    upsert: true
                 });
 
             if (uploadError) {
                 console.error('Error al subir archivo:', uploadError);
-                // Si el archivo ya existe, intentar con upsert
-                if (uploadError.message.includes('already exists')) {
-                    const { data: upsertData, error: upsertError } = await this.supabase.storage
-                        .from(bucket)
-                        .update(nombreArchivo, archivo, {
-                            cacheControl: '3600',
-                            upsert: true
-                        });
-                    
-                    if (upsertError) {
-                        throw new Error(`Error al actualizar archivo: ${upsertError.message}`);
-                    }
-                    
-                    // Obtener URL pública
-                    const { data: urlData } = this.supabase.storage
-                        .from(bucket)
-                        .getPublicUrl(nombreArchivo);
-                    
-                    return { success: true, publicUrl: urlData.publicUrl };
-                }
                 throw new Error(`Error al subir archivo: ${uploadError.message}`);
             }
 
@@ -232,9 +224,10 @@ class EdicionesManager {
     }
 }
 
-// Hacer funciones y variables disponibles globalmente
-window.supabase = window.supabase || null;
-window.edicionesManager = null;
+// Hacer funciones y variables disponibles globalmente (sin pisar el SDK window.supabase)
+window.edicionesManager = window.edicionesManager || null;
+window.supabaseClient = window.supabaseClient || null;
 window.validarConfiguracion = validarConfiguracion;
 window.inicializarSistema = inicializarSistema;
+window.getSupabaseClient = function () { return supabaseClient; };
 

@@ -544,13 +544,13 @@
 
     <!-- CATEGORÍAS -->
     <div class="categories">
-        <button class="category-btn active">Todas</button>
-        <button class="category-btn">Noticias</button>
-        <button class="category-btn">Entrevistas</button>
-        <button class="category-btn">Eventos</button>
-        <button class="category-btn">Deportes</button>
-        <button class="category-btn">Cultura</button>
-        <button class="category-btn">Opinión</button>
+        <button class="category-btn active" data-category="Todas">Todas</button>
+        <button class="category-btn" data-category="Noticias">Noticias</button>
+        <button class="category-btn" data-category="Entrevistas">Entrevistas</button>
+        <button class="category-btn" data-category="Eventos">Eventos</button>
+        <button class="category-btn" data-category="Deportes">Deportes</button>
+        <button class="category-btn" data-category="Cultura">Cultura</button>
+        <button class="category-btn" data-category="Opinión">Opinión</button>
     </div>
 
     <!-- 🔍 SECCIÓN DE RESULTADOS DE BÚSQUEDA -->
@@ -569,7 +569,7 @@
     <!-- 🎥 REPRODUCTOR PRINCIPAL -->
     <div class="player-section" id="mainContent">
         <div class="main-player">
-            <div class="video-area" id="mainVideoArea" onclick="playYouTubeVideo('', 'Video Institucional - HAGO Noticias')">
+            <div class="video-area" id="mainVideoArea" onclick="playYouTubeVideo('UJGV4POfz2k', 'Video Institucional - HAGO Noticias')">
                 <img src="https://img.youtube.com/vi/UJGV4POfz2k/maxresdefault.jpg" alt="Video Institucional" class="video-thumb" id="mainVideoThumb" onerror="this.src='https://img.youtube.com/vi/UJGV4POfz2k/hqdefault.jpg'">
                 <div class="play-icon">
                     <i class="fas fa-play"></i>
@@ -600,7 +600,7 @@
 
     <!-- 🎬 SECCIÓN DE VIDEOS RECIENTES -->
     <div class="videos-section" id="videosSection">
-        <h2 class="section-title"><i class="fas fa-play-circle"></i> Videos del Canal de YouTube</h2>
+        <h2 class="section-title"><i class="fas fa-circle-play"></i> Videos del Canal de YouTube</h2>
         
         <!-- Canal embebido de YouTube -->
         <div style="max-width: 1200px; margin: 0 auto 3rem; background: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08);">
@@ -774,6 +774,7 @@
             featuredVideos.forEach((video) => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
+                videoCard.dataset.category = 'Todas';
                 videoCard.onclick = () => {
                     playYouTubeVideo(video.id, video.title);
                     updateMainVideo(video.id, video.title);
@@ -786,7 +787,7 @@
                              class="thumbnail-img"
                              onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
                         <div class="card-play-icon">
-                            <i class="fas fa-play-circle"></i>
+                            <i class="fas fa-circle-play"></i>
                         </div>
                     </div>
                     <div class="video-details">
@@ -815,6 +816,7 @@
                 // Crear la tarjeta de video
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
+                videoCard.dataset.category = 'Todas';
                 videoCard.onclick = () => playYouTubeVideo(videoId, item.title);
                 
                 videoCard.innerHTML = `
@@ -824,7 +826,7 @@
                              class="thumbnail-img"
                              onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
                         <div class="card-play-icon">
-                            <i class="fas fa-play-circle"></i>
+                            <i class="fas fa-circle-play"></i>
                         </div>
                     </div>
                     <div class="video-details">
@@ -968,19 +970,28 @@
             }
         }
 
+        // Cache de títulos para no repetir fetches que fallan por CORS
+        const _titleCache = {};
         // Función para obtener el título real de un video de YouTube
         async function getYouTubeVideoTitle(videoId) {
+            if (_titleCache[videoId]) return _titleCache[videoId];
+            const fallback = 'Video Institucional - HAGO Noticias';
             try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000);
                 const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-                const response = await fetch(oembedUrl);
+                const response = await fetch(oembedUrl, { signal: controller.signal });
+                clearTimeout(timeout);
                 if (response.ok) {
                     const data = await response.json();
-                    return data.title || 'Video Institucional - HAGO Noticias';
+                    _titleCache[videoId] = data.title || fallback;
+                    return _titleCache[videoId];
                 }
             } catch (error) {
-                console.log(`Error obteniendo título para video ${videoId}:`, error);
+                console.log(`No se pudo obtener título para video ${videoId} (oEmbed bloqueado por CORS). Se usa título local.`);
             }
-            return 'Video Institucional - HAGO Noticias'; // Título por defecto
+            _titleCache[videoId] = fallback;
+            return fallback;
         }
 
         // Función para obtener títulos de múltiples videos
@@ -1053,6 +1064,7 @@
             featuredVideos.forEach((video) => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
+                videoCard.dataset.category = 'Todas';
                 videoCard.onclick = () => {
                     playYouTubeVideo(video.id, video.title);
                     updateMainVideo(video.id, video.title);
@@ -1065,7 +1077,7 @@
                              class="thumbnail-img"
                              onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
                         <div class="card-play-icon">
-                            <i class="fas fa-play-circle"></i>
+                            <i class="fas fa-circle-play"></i>
                         </div>
                     </div>
                     <div class="video-details">
@@ -1111,12 +1123,13 @@
             return `Hace ${Math.floor(days / 365)} años`;
         }
 
-        // 📁 CONFIGURACIÓN DE VIDEOS (mantener algunos videos locales si existen)
+        // 📁 CONFIGURACIÓN DE VIDEOS (solo se listan archivos locales que existen;
+        // los demás usan miniaturas externas y reproductor de YouTube)
         const localVideos = [
             {
                 id: "logo",
                 title: "🎬 Logo Reveal Explosion - HAGO Noticias",
-                file: "video/LogoRevealExplosion.mp4",
+                file: "video/LogoRevealExplosinpic.mp4",
                 thumbnail: "https://placehold.co/800x450/3498db/FFFFFF?text=Logo+Reveal+Explosion",
                 duration: "0:30",
                 channel: "HAGO Noticias",
@@ -1130,7 +1143,9 @@
                 thumbnail: "https://placehold.co/300x169/2ecc71/FFFFFF?text=Entrevista",
                 duration: "15:20",
                 channel: "HAGO Noticias",
-                category: "Entrevistas"
+                category: "Entrevistas",
+                type: "local",
+                missing: true
             },
             {
                 id: "deportes",
@@ -1139,7 +1154,9 @@
                 thumbnail: "https://placehold.co/300x169/e67e22/FFFFFF?text=Deportes",
                 duration: "8:45",
                 channel: "Deportes HAGO",
-                category: "Deportes"
+                category: "Deportes",
+                type: "local",
+                missing: true
             },
             {
                 id: "festival",
@@ -1148,7 +1165,9 @@
                 thumbnail: "https://placehold.co/300x169/9b59b6/FFFFFF?text=Festival",
                 duration: "18:30",
                 channel: "Cultura HAGO",
-                category: "Eventos"
+                category: "Eventos",
+                type: "local",
+                missing: true
             },
             {
                 id: "noticia1",
@@ -1157,7 +1176,9 @@
                 thumbnail: "https://placehold.co/300x169/e74c3c/FFFFFF?text=Noticia+Principal",
                 duration: "2:15",
                 channel: "HAGO Noticias",
-                category: "Noticias"
+                category: "Noticias",
+                type: "local",
+                missing: true
             },
             {
                 id: "noticia2",
@@ -1166,7 +1187,9 @@
                 thumbnail: "https://placehold.co/300x169/3498db/FFFFFF?text=Evento+Especial",
                 duration: "5:30",
                 channel: "HAGO Noticias",
-                category: "Eventos"
+                category: "Eventos",
+                type: "local",
+                missing: true
             },
             {
                 id: "cultura",
@@ -1175,7 +1198,9 @@
                 thumbnail: "https://placehold.co/300x169/9b59b6/FFFFFF?text=Cultura",
                 duration: "6:15",
                 channel: "Cultura HAGO",
-                category: "Cultura"
+                category: "Cultura",
+                type: "local",
+                missing: true
             }
         ];
 
@@ -1186,6 +1211,10 @@
             
             // Si es un video local, usar el reproductor de video
             if (video.type === 'local' && video.file) {
+                if (video.missing) {
+                    alert('Este video aún no está disponible. Pronto se publicará.');
+                    return;
+                }
                 playLocalVideo(video);
             } else if (video.youtubeId) {
                 // Si es un video de YouTube
@@ -1202,7 +1231,7 @@
                 <div class="modal-content">
                     <button class="close-modal" onclick="closeVideoModal()">×</button>
                     <div style="padding: 0;">
-                        <video controls autoplay style="width: 100%; display: block;">
+                        <video controls autoplay style="width: 100%; display: block;" onerror="this.parentElement.innerHTML='<p style=&quot;padding:2rem;text-align:center;color:#7f8c8d;&quot;>No se pudo cargar el video. Verifica tu conexión.</p>'">
                             <source src="${video.file}" type="video/mp4">
                             Tu navegador no soporta videos HTML5.
                         </video>
@@ -1228,6 +1257,10 @@
 
         // Función para reproducir video de YouTube
         function playYouTubeVideo(videoId, title) {
+            if (!videoId) {
+                console.warn('playYouTubeVideo llamado sin videoId');
+                return;
+            }
             const modal = document.createElement('div');
             modal.className = 'video-modal';
             modal.style.display = 'flex';
@@ -1262,15 +1295,16 @@
         }
 
         function closeVideoModal() {
-            const modal = document.querySelector('.video-modal');
-            if (modal) {
+            document.querySelectorAll('.video-modal').forEach(modal => {
                 // Detener el video antes de eliminar el modal
                 const video = modal.querySelector('video');
                 if (video) {
-                    video.pause();
+                    try { video.pause(); } catch (e) {}
                 }
+                const iframe = modal.querySelector('iframe');
+                if (iframe) iframe.src = '';
                 modal.remove();
-            }
+            });
         }
 
         // 🔍 FUNCIONALIDAD DE BÚSQUEDA
@@ -1307,7 +1341,7 @@
                         <div class="video-thumbnail">
                             <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail-img">
                             <div class="card-play-icon">
-                                <i class="fas fa-play-circle"></i>
+                                <i class="fas fa-circle-play"></i>
                             </div>
                             <div class="video-duration">${video.duration}</div>
                         </div>
@@ -1355,14 +1389,22 @@
             }
         });
 
-        // Filtrar por categorías
+        // Filtrar por categorías (filtra tarjetas de YouTube + resultados de búsqueda)
         document.querySelectorAll('.category-btn').forEach(button => {
             button.addEventListener('click', function() {
                 document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
-                
-                const category = this.textContent;
-                // Aquí iría la lógica para filtrar los videos por categoría
+
+                const category = this.dataset.category || this.textContent.trim();
+                // Si hay búsqueda activa, re-ejecutar búsqueda con filtro de categoría
+                const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+                const cards = document.querySelectorAll('#videoGrid .video-card');
+                cards.forEach(card => {
+                    const cat = (card.dataset.category || 'Todas');
+                    const matchCat = (category === 'Todas' || cat === category);
+                    const matchQuery = !query || (card.textContent || '').toLowerCase().includes(query);
+                    card.style.display = (matchCat && matchQuery) ? '' : 'none';
+                });
             });
         });
 

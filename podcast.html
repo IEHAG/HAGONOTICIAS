@@ -535,7 +535,7 @@
             <div class="radio-pulse" id="radioPulse"></div>
         </button>
         <div class="radio-info" id="radioInfo" style="display: none;">
-            <p><i class="fas fa-broadcast-tower"></i> Transmitiendo en vivo</p>
+            <p><i class="fas fa-tower-broadcast"></i> Transmitiendo en vivo</p>
         </div>
     </div>
 
@@ -554,13 +554,13 @@
         <!-- 🔊 CONTROLES -->
         <div class="player-controls">
             <button class="control-btn" onclick="previousTrack()">
-                <i class="fas fa-step-backward"></i>
+                <i class="fas fa-backward-step"></i>
             </button>
             <button class="control-btn play-btn" onclick="togglePlay()">
                 <i class="fas fa-play" id="playIcon"></i>
             </button>
             <button class="control-btn" onclick="nextTrack()">
-                <i class="fas fa-step-forward"></i>
+                <i class="fas fa-forward-step"></i>
             </button>
         </div>
 
@@ -578,7 +578,7 @@
         <!-- 🔊 CONTROL DE VOLUMEN -->
         <div class="volume-controls">
             <button class="volume-btn" id="volumeBtn" onclick="toggleMute()">
-                <i class="fas fa-volume-up" id="volumeIcon"></i>
+                <i class="fas fa-volume-high" id="volumeIcon"></i>
             </button>
             <div class="volume-slider-container">
                 <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider">
@@ -688,14 +688,14 @@
                     </div>
                     <div class="track-duration">${track.duration}</div>
                     <div class="track-controls">
-                        <button class="track-btn" onclick="event.stopPropagation(); playTrack(${index})" title="Reproducir">
+                        <button class="track-btn" onclick="event.stopPropagation(); playTrack(${index}, true)" title="Reproducir">
                             <i class="fas fa-play"></i>
                             <span>Reproducir</span>
                         </button>
-                        <a href="${track.file}" 
-                           download 
-                           class="track-btn download-btn" 
-                           onclick="event.stopPropagation();" 
+                        <a href="${encodeURI(track.file)}"
+                           download
+                           class="track-btn download-btn"
+                           onclick="event.stopPropagation();"
                            title="Descargar">
                             <i class="fas fa-download"></i>
                             <span>Descargar</span>
@@ -726,40 +726,56 @@
             }
         }
 
-        function playTrack(index) {
+        function playTrack(index, autoplay) {
             currentTrack = index;
             const track = tracks[index];
-            
+            if (!track) return;
+            // autoplay por defecto true cuando hay gesto del usuario; la carga
+            // inicial llama con autoplay=false para no violar políticas del navegador
+            const shouldPlay = (typeof autoplay === 'boolean') ? autoplay : true;
+
             // Actualizar info del reproductor
             document.getElementById('currentTitle').textContent = track.title;
             document.getElementById('currentArtist').textContent = track.artist;
             document.getElementById('duration').textContent = track.duration;
-            
+
             // Actualizar estado visual de la lista
             updateTrackListUI();
-            
-            // Crear/actualizar reproductor de audio
+
+            // Crear/actualizar reproductor de audio (encodeURI por tildes y espacios)
             if (audioPlayer) {
-                audioPlayer.pause();
+                try { audioPlayer.pause(); } catch (e) {}
             }
-            
-            audioPlayer = new Audio(track.file);
-            audioPlayer.volume = document.getElementById('volumeSlider').value;
-            
+
+            audioPlayer = new Audio(encodeURI(track.file));
+            audioPlayer.volume = parseFloat(document.getElementById('volumeSlider').value) || 0;
+
             audioPlayer.addEventListener('loadedmetadata', () => {
                 document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
             });
-            
+
             audioPlayer.addEventListener('timeupdate', updateProgress);
             audioPlayer.addEventListener('ended', nextTrack);
-            
-            // Reproducir si estaba en play
-            if (isPlaying) {
-                audioPlayer.play().catch(e => {
-                    console.log('Error al reproducir audio:', e);
-                    alert('No se pudo reproducir el audio. Verifica que el archivo existe.');
-                });
+            audioPlayer.addEventListener('error', () => {
+                console.warn('No se pudo cargar el audio:', track.file);
+                document.getElementById('duration').textContent = track.duration;
+            });
+
+            // Reproducir si corresponde
+            if (shouldPlay) {
+                isPlaying = true;
                 document.getElementById('playIcon').className = 'fas fa-pause';
+                const p = audioPlayer.play();
+                if (p && typeof p.catch === 'function') {
+                    p.catch(e => {
+                        console.log('Error al reproducir audio:', e);
+                        isPlaying = false;
+                        document.getElementById('playIcon').className = 'fas fa-play';
+                    });
+                }
+            } else {
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
             }
         }
 
@@ -787,18 +803,12 @@
 
         function previousTrack() {
             currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-            playTrack(currentTrack);
-            if (isPlaying) {
-                audioPlayer.play();
-            }
+            playTrack(currentTrack, true);
         }
 
         function nextTrack() {
             currentTrack = (currentTrack + 1) % tracks.length;
-            playTrack(currentTrack);
-            if (isPlaying) {
-                audioPlayer.play();
-            }
+            playTrack(currentTrack, true);
         }
 
         function formatTime(seconds) {
@@ -909,22 +919,27 @@
 
         // 🔊 FUNCIONES DE CONTROL DE VOLUMEN
         function toggleMute() {
-            if (!audioPlayer && !radioPlayer) return;
-            
+            const activePlayer = audioPlayer || radioPlayer;
+            if (!activePlayer) return;
+
             const volumeIcon = document.getElementById('volumeIcon');
             const volumeSlider = document.getElementById('volumeSlider');
-            
+
             isMuted = !isMuted;
-            
+
             if (isMuted) {
-                savedVolume = audioPlayer.volume;
-                audioPlayer.volume = 0;
+                savedVolume = parseFloat(volumeSlider.value) || 1;
+                activePlayer.volume = 0;
+                if (audioPlayer) audioPlayer.volume = 0;
+                if (radioPlayer) radioPlayer.volume = 0;
                 volumeSlider.value = 0;
-                volumeIcon.className = 'fas fa-volume-mute';
+                volumeIcon.className = 'fas fa-volume-xmark';
             } else {
-                audioPlayer.volume = savedVolume;
-                volumeSlider.value = savedVolume;
-                updateVolumeIcon(savedVolume);
+                const restore = savedVolume || 1;
+                if (audioPlayer) audioPlayer.volume = restore;
+                if (radioPlayer) radioPlayer.volume = restore;
+                volumeSlider.value = restore;
+                updateVolumeIcon(restore);
             }
         }
 
@@ -932,11 +947,11 @@
             const volumeIcon = document.getElementById('volumeIcon');
             
             if (volume === 0) {
-                volumeIcon.className = 'fas fa-volume-mute';
+                volumeIcon.className = 'fas fa-volume-xmark';
             } else if (volume < 0.5) {
-                volumeIcon.className = 'fas fa-volume-down';
+                volumeIcon.className = 'fas fa-volume-low';
             } else {
-                volumeIcon.className = 'fas fa-volume-up';
+                volumeIcon.className = 'fas fa-volume-high';
             }
         }
 
@@ -1050,8 +1065,7 @@
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
             renderTrackList();
-            playTrack(0);
-            isPlaying = false;
+            playTrack(0, false);
             setupVolumeControl();
         });
     </script>

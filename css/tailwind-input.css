@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Tokens del tema HAGO (equivalen al tailwind.config inline que usaba el CDN) */
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-hago-bg: #041b2d;
+  --color-hago-accent: #4fc3f7;
+  --color-hago-purple: #7c3aed;
+  --color-hago-green: #059669;
+}

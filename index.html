@@ -8,22 +8,8 @@
   <meta name="keywords" content="HAGO Noticias, Institución Educativa, Héctor Abad Gómez, noticias, educación" />
   <title>HAGO Noticias — Portal de Ediciones Premium</title>
 
-  <!-- TailwindCSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    if (window.tailwind) {
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-            colors: {
-              hago: { bg: '#041B2D', accent: '#4fc3f7', purple: '#7c3aed', green: '#059669' }
-            }
-          }
-        }
-      };
-    }
-  </script>
+  <!-- TailwindCSS compilado en local (sin dependencia del CDN) -->
+  <link rel="stylesheet" href="css/tailwind.css" />
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />

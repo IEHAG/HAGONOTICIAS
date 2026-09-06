@@ -60,23 +60,33 @@ podcasts: {
 
 // FUNCIONES PRINCIPALES
 function showSection(sectionId, element) {
-    document.querySelectorAll('.section').forEach(section => {
+    const sections = document.querySelectorAll('.section');
+    if (sections.length === 0) return;
+    sections.forEach(section => {
         section.classList.remove('active');
     });
-    
-    document.getElementById(sectionId + '-section').classList.add('active');
+
+    const target = document.getElementById(sectionId + '-section');
+    if (!target) return;
+    target.classList.add('active');
 
     document.querySelectorAll('.tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    
+
     if (element) {
         element.classList.add('active');
     }
 }
 
 function playContent(type, id) {
-    const content = contentData[type][id];
+    // Acepta 'video'/'videos' y 'audio'/'podcasts' como tipo
+    const normType = (type === 'videos' || type === 'video') ? 'videos'
+        : (type === 'podcasts' || type === 'audio') ? 'podcasts' : null;
+    if (!normType || !contentData[normType]) return;
+    const content = contentData[normType][id];
+    if (!content) return;
+    const isVideo = normType === 'videos';
     
     const modal = document.createElement('div');
     modal.className = 'content-modal';
@@ -88,10 +98,10 @@ function playContent(type, id) {
                     <button class="close-btn" onclick="closeModal()">×</button>
                 </div>
                 <div class="modal-body">
-                    <${type === 'video' ? 'video' : 'audio'} class="media-player" controls autoplay>
-                        <source src="${content.file}" type="${type === 'video' ? 'video/mp4' : 'audio/mpeg'}">
+                    <${isVideo ? 'video' : 'audio'} class="media-player" controls autoplay>
+                        <source src="${content.file}" type="${isVideo ? 'video/mp4' : 'audio/mpeg'}">
                         Tu navegador no soporta este formato.
-                    </${type === 'video' ? 'video' : 'audio'}>
+                    </${isVideo ? 'video' : 'audio'}>
                     <p class="content-description">${content.description}</p>
                     <div class="action-buttons">
                         <button class="action-btn btn-primary" onclick="window.open('${content.file}', '_blank')">

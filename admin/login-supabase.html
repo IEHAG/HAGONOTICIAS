@@ -285,8 +285,16 @@
                 setTimeout(() => {
                     const alertElement = document.getElementById(alertId);
                     if (alertElement) {
-                        const alert = new bootstrap.Alert(alertElement);
-                        alert.close();
+                        try {
+                            if (window.bootstrap && window.bootstrap.Alert) {
+                                const alert = new bootstrap.Alert(alertElement);
+                                alert.close();
+                            } else {
+                                alertElement.remove();
+                            }
+                        } catch (e) {
+                            alertElement.remove();
+                        }
                     }
                 }, duracion);
             }
@@ -321,12 +329,22 @@
             }
         }
 
+        // Cliente Supabase inicializado (evita colisión con el SDK window.supabase)
+        function getLoginClient() {
+            if (typeof window.getSupabaseClient === 'function') {
+                const c = window.getSupabaseClient();
+                if (c) return c;
+            }
+            return window.supabaseClient || null;
+        }
+
         // Función para verificar si ya está autenticado
         async function verificarSesionExistente() {
             try {
-                if (!supabase) return false;
+                const client = getLoginClient();
+                if (!client) return false;
 
-                const { data: { user }, error } = await supabase.auth.getUser();
+                const { data: { user }, error } = await client.auth.getUser();
                 
                 if (error) {
                     console.error('Error al verificar sesión:', error);
@@ -367,11 +385,12 @@
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Iniciando sesión...';
 
             try {
-                if (!supabase) {
+                const client = getLoginClient();
+                if (!client) {
                     throw new Error('Supabase no está inicializado');
                 }
 
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await client.auth.signInWithPassword({
                     email: email,
                     password: password
                 });

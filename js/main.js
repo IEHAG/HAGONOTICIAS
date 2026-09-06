@@ -1,5 +1,7 @@
 (function (jQuery){
     "use strict";
+    // Si jQuery o los plugins no están cargados en la página, no hacer nada
+    if (!jQuery || !jQuery.fn) return;
     jQuery(document).ready(function(){
         function activaTav(pill){
             jQuery(pill).addClass('active show');

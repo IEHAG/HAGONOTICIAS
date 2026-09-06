@@ -266,9 +266,12 @@ window.validarIntegridadDatos = validarIntegridadDatos;
 // Inicializar funciones cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     // Agregar event listeners para botones de utilidades si existen
+    // (dashboard.html tiene duplicados renombrados con sufijo Settings)
     const refreshBtn = document.getElementById('refreshStats');
-    const exportBtn = document.getElementById('exportData');
-    const backupBtn = document.getElementById('backupData');
+    const exportBtn = document.getElementById('exportData') || document.getElementById('exportDataSettings');
+    const exportBtn2 = document.getElementById('exportDataSettings');
+    const backupBtn = document.getElementById('backupData') || document.getElementById('backupDataSettings');
+    const backupBtn2 = document.getElementById('backupDataSettings');
 
     if (refreshBtn) {
         refreshBtn.addEventListener('click', sincronizarDatos);
@@ -277,9 +280,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (exportBtn) {
         exportBtn.addEventListener('click', crearBackupSupabase);
     }
+    if (exportBtn2 && exportBtn2 !== exportBtn) {
+        exportBtn2.addEventListener('click', crearBackupSupabase);
+    }
 
     if (backupBtn) {
         backupBtn.addEventListener('click', crearBackupSupabase);
+    }
+    if (backupBtn2 && backupBtn2 !== backupBtn) {
+        backupBtn2.addEventListener('click', crearBackupSupabase);
     }
 });
 

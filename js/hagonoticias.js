@@ -11,14 +11,14 @@ let pageRendering = false;
 let pageNumPending = null;
 let scale = 1.5;
 
-// Elementos del DOM
+// Elementos del DOM (este script es legacy: si la página no tiene estos IDs, no hace nada)
 const bookList = document.getElementById('bookList');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const pdfModalElement = document.getElementById('pdfModal');
-const modal = pdfModalElement ? new bootstrap.Modal(pdfModalElement) : null;
+const modal = (pdfModalElement && window.bootstrap && window.bootstrap.Modal) ? new bootstrap.Modal(pdfModalElement) : null;
 const canvas = document.getElementById('pdfViewer');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 // Controles del visor PDF
 const prevButton = document.getElementById('prevPage');
@@ -76,7 +76,9 @@ function createBookCard(book) {
             
             setTimeout(() => {
                 // Usar el nuevo visor mejorado
-                if (typeof enhancedPdfViewer !== 'undefined') {
+                if (typeof window !== 'undefined' && window.enhancedPdfViewer) {
+                    window.enhancedPdfViewer.open(book.pdfUrl, book.title);
+                } else if (typeof enhancedPdfViewer !== 'undefined') {
                     enhancedPdfViewer.open(book.pdfUrl, book.title);
                 } else {
                     // Fallback al visor anterior
@@ -255,19 +257,19 @@ async function openPdfViewer(pdfUrl) {
     }
 }
 
-// Event Listeners
-searchInput.addEventListener('input', filterBooks);
-categoryFilter.addEventListener('change', filterBooks);
-prevButton.addEventListener('click', showPrevPage);
-nextButton.addEventListener('click', showNextPage);
-zoomInButton.addEventListener('click', zoomIn);
-zoomOutButton.addEventListener('click', zoomOut);
-fullscreenButton.addEventListener('click', toggleFullscreen);
+// Event Listeners (solo si los elementos existen en la página)
+if (searchInput) searchInput.addEventListener('input', filterBooks);
+if (categoryFilter) categoryFilter.addEventListener('change', filterBooks);
+if (prevButton) prevButton.addEventListener('click', showPrevPage);
+if (nextButton) nextButton.addEventListener('click', showNextPage);
+if (zoomInButton) zoomInButton.addEventListener('click', zoomIn);
+if (zoomOutButton) zoomOutButton.addEventListener('click', zoomOut);
+if (fullscreenButton) fullscreenButton.addEventListener('click', toggleFullscreen);
 
 // Navegación con teclado
 document.addEventListener('keydown', (event) => {
     const modalElement = document.getElementById('pdfModal');
-    if (modalElement.classList.contains('show')) {
+    if (modalElement && modalElement.classList.contains('show')) {
         if (event.key === 'ArrowLeft') {
             showPrevPage();
         } else if (event.key === 'ArrowRight') {
@@ -305,6 +307,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', function() {
+    if (!bookList) return; // Página sin galería legacy: no hacer nada
     displayBooks(books);
     
     // Animación de entrada para las tarjetas

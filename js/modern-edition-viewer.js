@@ -15,6 +15,11 @@ class ModernEditionViewer {
     }
     
     init() {
+        // Solo crear la interfaz si la página tiene el contenedor esperado;
+        // en index.html (React) este visor legacy no debe interferir.
+        if (!document.getElementById('modernEditionsGrid') && !document.getElementById('modernSearchInput') && !document.getElementById('bookList')) {
+            return;
+        }
         this.loadBooks();
         this.createModernInterface();
         this.bindEvents();
@@ -480,7 +485,7 @@ class ModernEditionViewer {
                 <p class="modern-empty-description">
                     Intenta con otros términos de búsqueda o ajusta los filtros para encontrar lo que buscas
                 </p>
-                <button class="modern-empty-action" onclick="modernViewer.clearAllFilters()">
+                <button class="modern-empty-action" onclick="window.modernViewer && window.modernViewer.clearAllFilters()">
                     <i class="fas fa-refresh me-2"></i>
                     Limpiar filtros
                 </button>

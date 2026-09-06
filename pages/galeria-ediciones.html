@@ -73,21 +73,22 @@
 
   <div id="root"></div>
 
-  <!-- React, ReactDOM, Babel, Framer Motion via CDN -->
+  <!-- React, ReactDOM, Babel via CDN (Framer Motion es opcional: hay fallback sin animación) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="../js/enhanced-pdf-viewer.js"></script>
 
   <!-- Datos de ediciones (extraídos de ediciones-data.js) -->
   <script>
     const EDICIONES = [
-      { id:1, numero:1, titulo:"Edición #1", autor:"Día de la democracia, Madres, Maestro, Talentos Abadistas", categoria:"#1", anio:2024, descripcion:"Primera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1djewK_gQm5d9-bQzXA1W-xYLEuctmjfX&sz=w320-h240", pdfUrl:"pdf/EDICION1.pdf", tags:["democracia","madres","maestro","talentos"], featured:true, comingSoon:false },
-      { id:2, numero:2, titulo:"Edición #2", autor:"Día de la Antioqueñidad", categoria:"#2", anio:2024, descripcion:"Segunda edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1AkZ9JBY8Hgavcj3KJVtzWd5gsScmft_b&sz=w320-h240", pdfUrl:"pdf/EDICION2.pdf", tags:["antioqueñidad","cultura","tradición"], featured:false, comingSoon:false },
-      { id:3, numero:3, titulo:"Edición #3", autor:"Semana Abadista - Foro - Museo Escolar", categoria:"#3", anio:2024, descripcion:"Tercera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1xWfZ7J-7k1fFps5UG9Dkz3k8S2yaW_Hu&sz=w320-h240", pdfUrl:"pdf/EDICION3.pdf", tags:["semana abadista","foro","museo"], featured:false, comingSoon:false },
-      { id:4, numero:4, titulo:"Edición #4", autor:"La institución de la Inclusión, Gobierno Escolar 2025", categoria:"#4", anio:2025, descripcion:"Cuarta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1D818JI97Qk-jfqmCktdSXF-84XfyJ1OD&sz=w320-h240", pdfUrl:"pdf/EDICION4.pdf", tags:["inclusión","gobierno escolar"], featured:true, comingSoon:false },
-      { id:5, numero:5, titulo:"Edición #5", autor:"Celebramos el corazón que educa", categoria:"#5", anio:2025, descripcion:"Quinta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=15emMmadoHN3SOx-U9xOn8oUw38u0v1vu&sz=w320-h240", pdfUrl:"pdf/EDICION5.pdf", tags:["corazón que educa","profes","murales"], featured:true, comingSoon:false },
-      { id:6, numero:6, titulo:"Edición #6", autor:"La Institución de la Inclusión, Gobierno Escolar 2026", categoria:"#6", anio:2026, descripcion:"Sexta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1ZyDq2gXX7bEUZqxpNzQA6EnNyXFJX-hS&sz=w320-h240", pdfUrl:"pdf/EDICION6.pdf", tags:["inclusión","gobierno escolar 2026","mujeres"], featured:true, comingSoon:false },
+      { id:1, numero:1, titulo:"Edición #1", autor:"Día de la democracia, Madres, Maestro, Talentos Abadistas", categoria:"#1", anio:2024, descripcion:"Primera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1djewK_gQm5d9-bQzXA1W-xYLEuctmjfX&sz=w320-h240", pdfUrl:"../pdf/EDICION1.pdf", tags:["democracia","madres","maestro","talentos"], featured:true, comingSoon:false },
+      { id:2, numero:2, titulo:"Edición #2", autor:"Día de la Antioqueñidad", categoria:"#2", anio:2024, descripcion:"Segunda edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1AkZ9JBY8Hgavcj3KJVtzWd5gsScmft_b&sz=w320-h240", pdfUrl:"../pdf/EDICION2.pdf", tags:["antioqueñidad","cultura","tradición"], featured:false, comingSoon:false },
+      { id:3, numero:3, titulo:"Edición #3", autor:"Semana Abadista - Foro - Museo Escolar", categoria:"#3", anio:2024, descripcion:"Tercera edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1xWfZ7J-7k1fFps5UG9Dkz3k8S2yaW_Hu&sz=w320-h240", pdfUrl:"../pdf/EDICION3.pdf", tags:["semana abadista","foro","museo"], featured:false, comingSoon:false },
+      { id:4, numero:4, titulo:"Edición #4", autor:"La institución de la Inclusión, Gobierno Escolar 2025", categoria:"#4", anio:2025, descripcion:"Cuarta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1D818JI97Qk-jfqmCktdSXF-84XfyJ1OD&sz=w320-h240", pdfUrl:"../pdf/EDICION4.pdf", tags:["inclusión","gobierno escolar"], featured:true, comingSoon:false },
+      { id:5, numero:5, titulo:"Edición #5", autor:"Celebramos el corazón que educa", categoria:"#5", anio:2025, descripcion:"Quinta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=15emMmadoHN3SOx-U9xOn8oUw38u0v1vu&sz=w320-h240", pdfUrl:"../pdf/EDICION5.pdf", tags:["corazón que educa","profes","murales"], featured:true, comingSoon:false },
+      { id:6, numero:6, titulo:"Edición #6", autor:"La Institución de la Inclusión, Gobierno Escolar 2026", categoria:"#6", anio:2026, descripcion:"Sexta edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1ZyDq2gXX7bEUZqxpNzQA6EnNyXFJX-hS&sz=w320-h240", pdfUrl:"../pdf/EDICION6.pdf", tags:["inclusión","gobierno escolar 2026","mujeres"], featured:true, comingSoon:false },
       { id:7, numero:7, titulo:"Edición #7", autor:"Nueva Edición", categoria:"#7", anio:2026, descripcion:"Séptima edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
       { id:8, numero:8, titulo:"Edición #8", autor:"Nueva Edición", categoria:"#8", anio:2026, descripcion:"Octava edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
       { id:9, numero:9, titulo:"Edición #9", autor:"Nueva Edición", categoria:"#9", anio:2026, descripcion:"Novena edición del periódico institucional", thumbnail:"https://drive.google.com/thumbnail?id=1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-&sz=w320-h240", pdfUrl:"https://drive.google.com/file/d/1XX2ffXU4iuamI8d-hkOK9uuJ4qjk7kG-/view", tags:["2026"], featured:false, comingSoon:true },
@@ -98,7 +99,16 @@
   <!-- Componente React -->
   <script type="text/babel">
     const { useState, useRef, useEffect, useMemo, useCallback } = React;
-    const { motion, AnimatePresence } = window.FramerMotion;
+    // Framer Motion es opcional: si el CDN no expone window.FramerMotion,
+    // usar equivalentes estáticos (div/a/button) para no romper la página.
+    const FM = window.FramerMotion || null;
+    const motion = FM && FM.motion ? FM.motion : new Proxy({}, {
+      get: (_, tag) => (props) => {
+        const { initial, animate, exit, transition, whileHover, whileTap, ...rest } = props || {};
+        return React.createElement(tag, rest);
+      }
+    });
+    const AnimatePresence = (FM && FM.AnimatePresence) || (({ children }) => React.createElement(React.Fragment, null, children));
 
     // ──────────── Iconos inline ────────────
     const Icon = ({ name, className }) => {
@@ -311,11 +321,24 @@
       }, [search, filters]);
 
       const handleView = useCallback((ed) => {
+        if (ed.comingSoon) return;
         if (window.enhancedPdfViewer) {
           window.enhancedPdfViewer.open(ed.pdfUrl, ed.titulo);
         } else {
-          window.open(ed.pdfUrl, '_blank');
+          window.open(ed.pdfUrl, '_blank', 'noopener');
         }
+      }, []);
+
+      const handleDownload = useCallback((ed) => {
+        if (ed.comingSoon) return;
+        const a = document.createElement('a');
+        a.href = ed.pdfUrl;
+        a.download = `${ed.titulo.replace(/\s+/g, '_')}.pdf`;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
       }, []);
 
       const toggleFilter = useCallback((cat) => {
@@ -390,7 +413,7 @@
                   edition: ed,
                   index: i,
                   onView: handleView,
-                  onDownload: () => {}
+                  onDownload: () => handleDownload(ed)
                 }))
               )
         )

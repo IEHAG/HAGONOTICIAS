@@ -29,22 +29,26 @@ class EnhancedDashboard {
     }
     
     calculateStats() {
-        this.stats.totalViews = this.pdfData.reduce((sum, pdf) => sum + pdf.views, 0);
-        this.stats.totalDownloads = this.pdfData.reduce((sum, pdf) => sum + pdf.downloads, 0);
+        if (!Array.isArray(this.pdfData)) this.pdfData = [];
+        this.stats.totalViews = this.pdfData.reduce((sum, pdf) => sum + (Number(pdf.views) || 0), 0);
+        this.stats.totalDownloads = this.pdfData.reduce((sum, pdf) => sum + (Number(pdf.downloads) || 0), 0);
         this.stats.totalSize = this.pdfData.reduce((sum, pdf) => {
-            const size = parseFloat(pdf.size.replace(' MB', ''));
-            return sum + size;
+            const size = parseFloat(String(pdf.size || '0').replace(' MB', ''));
+            return sum + (isNaN(size) ? 0 : size);
         }, 0);
     }
-    
+
     initializeDashboard() {
         // Mostrar fecha de último acceso
+        const lastLoginEl = document.getElementById('lastLogin');
         const loginTime = sessionStorage.getItem('loginTime');
-        if (loginTime) {
-            const date = new Date(parseInt(loginTime));
-            document.getElementById('lastLogin').textContent = date.toLocaleString('es-ES');
-        } else {
-            document.getElementById('lastLogin').textContent = new Date().toLocaleString('es-ES');
+        if (lastLoginEl) {
+            if (loginTime) {
+                const date = new Date(parseInt(loginTime));
+                lastLoginEl.textContent = date.toLocaleString('es-ES');
+            } else {
+                lastLoginEl.textContent = new Date().toLocaleString('es-ES');
+            }
         }
         
         // Configurar navegación
@@ -449,17 +453,19 @@ class EnhancedDashboard {
         // Incrementar contador de vistas
         const pdf = this.pdfData.find(p => p.pdfUrl === pdfUrl);
         if (pdf) {
-            pdf.views++;
+            pdf.views = (Number(pdf.views) || 0) + 1;
             this.updateStats();
             this.loadFilesList();
         }
-        
+
         // Abrir en el visor mejorado si está disponible
-        if (typeof enhancedPdfViewer !== 'undefined') {
+        if (typeof window !== 'undefined' && window.enhancedPdfViewer) {
+            window.enhancedPdfViewer.open(pdfUrl, title);
+        } else if (typeof enhancedPdfViewer !== 'undefined') {
             enhancedPdfViewer.open(pdfUrl, title);
         } else {
             // Fallback: abrir en nueva ventana
-            window.open(pdfUrl, '_blank');
+            window.open(pdfUrl, '_blank', 'noopener');
         }
         
         this.showNotification(`Abriendo "${title}"`, 'info');
@@ -469,7 +475,7 @@ class EnhancedDashboard {
         // Incrementar contador de descargas
         const pdf = this.pdfData.find(p => p.pdfUrl === pdfUrl);
         if (pdf) {
-            pdf.downloads++;
+            pdf.downloads = (Number(pdf.downloads) || 0) + 1;
             this.updateStats();
             this.loadFilesList();
         }

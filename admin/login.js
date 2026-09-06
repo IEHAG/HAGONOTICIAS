@@ -30,6 +30,9 @@ function setupLoginForm() {
     const loginButton = document.getElementById('loginButton');
 
     if (!loginForm || !usernameInput || !passwordInput) return;
+    // Evitar doble registro si login.html ya ató su propio listener inline
+    if (loginForm.dataset.bound === 'true') return;
+    loginForm.dataset.bound = 'true';
 
     // Evento de envío del formulario
     loginForm.addEventListener('submit', function(e) {
@@ -164,6 +167,7 @@ function handleFailedLogin() {
 }
 
 function showLoadingState(button) {
+    if (!button) return;
     const originalText = button.innerHTML;
     button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verificando...';
     button.disabled = true;
@@ -171,12 +175,15 @@ function showLoadingState(button) {
 }
 
 function hideLoadingState(button) {
-    button.innerHTML = button.dataset.originalText;
+    if (!button) return;
+    if (button.dataset.originalText) button.innerHTML = button.dataset.originalText;
     button.disabled = false;
 }
 
 function showError(message) {
-    const errorDiv = document.getElementById('errorMessage');
+    // login.js usa #errorMessage; login.html usa #alertContainer: soportar ambos
+    const errorDiv = document.getElementById('errorMessage') || document.getElementById('alertContainer');
+    if (!errorDiv) return;
     errorDiv.innerHTML = `
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
@@ -198,7 +205,8 @@ function showError(message) {
 }
 
 function showSuccess(message) {
-    const errorDiv = document.getElementById('errorMessage');
+    const errorDiv = document.getElementById('errorMessage') || document.getElementById('alertContainer');
+    if (!errorDiv) return;
     errorDiv.innerHTML = `
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>
@@ -208,7 +216,8 @@ function showSuccess(message) {
 }
 
 function clearErrors() {
-    const errorDiv = document.getElementById('errorMessage');
+    const errorDiv = document.getElementById('errorMessage') || document.getElementById('alertContainer');
+    if (!errorDiv) return;
     const alert = errorDiv.querySelector('.alert');
     if (alert) {
         alert.classList.remove('show');
@@ -221,9 +230,16 @@ function clearErrors() {
 function disableForm(duration) {
     const inputs = document.querySelectorAll('#loginForm input, #loginForm button');
     inputs.forEach(input => input.disabled = true);
-    
+
     let timeLeft = duration / 1000;
     const loginButton = document.getElementById('loginButton');
+    if (!loginButton) {
+        setTimeout(() => {
+            inputs.forEach(input => input.disabled = false);
+            loginAttempts = 0;
+        }, duration);
+        return;
+    }
     
     const countdown = setInterval(() => {
         const minutes = Math.floor(timeLeft / 60);

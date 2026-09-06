@@ -379,9 +379,12 @@ class MobilePDFViewer {
     }
     
     async open(pdfUrl, title = 'PDF') {
+        if (!pdfUrl) {
+            return Promise.resolve();
+        }
         if (pdfUrl.includes('drive.google.com/file') || pdfUrl.includes('drive.google.com/open')) {
-            window.open(pdfUrl, '_blank');
-            return;
+            window.open(pdfUrl, '_blank', 'noopener');
+            return Promise.resolve();
         }
 
         this.viewer.classList.add('active');

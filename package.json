@@ -21,6 +21,7 @@
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@tailwindcss/cli": "^4.1.11",
+    "bcryptjs": "^3.0.3",
     "tailwindcss": "^4.1.11"
   }
 }

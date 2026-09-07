@@ -1,274 +1,229 @@
-(function (jQuery){
-    "use strict";
-    // Si jQuery o los plugins no están cargados en la página, no hacer nada
-    if (!jQuery || !jQuery.fn) return;
-    jQuery(document).ready(function(){
-        function activaTav(pill){
-            jQuery(pill).addClass('active show');
-        }
+/**
+ * MAIN.JS — Portal Público
+ * HAGO Noticias — I.E. Héctor Abad Gómez
+ * Desarrollo: Ing. Víctor Cañola
+ *
+ * Funcionalidades compartidas: navegación, búsqueda,
+ * filtros, PDF viewer, utilidades.
+ */
 
-        // sticky header anmation and height 
-        function headerHeight(){
-            var height = jQuery("#main-header").height();
-            jQuery('.iq-height').css('height',height + 'px');
-        }
+// ════════════════════════════════════════════════
+//  UTILIDADES
+// ════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (!str) return '';
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
 
-        jQuery(function(){
-            var header = jQuery("#main-header"),
-            yOffset = 0,
-            triggerPoint = 80;
-            headerHeight();
-            jQuery(window).resize(headerHeight);
-            jQuery(window).on('scroll', function() {
-                yOffset = jQuery(window).scrollTop();
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
-                if(yOffset >= triggerPoint){
-                    header.addClass("menu-sticky animated slideDown");
-                } else {
-                    header.removeClass("menu-sticky animated slideDown");
-                }
+function debounce(fn, delay = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}
+
+// ════════════════════════════════════════════════
+//  NAVEGACIÓN
+// ════════════════════════════════════════════════
+function initNavigation() {
+    const toggle = document.querySelector('.mobile-toggle');
+    const menu   = document.querySelector('.mobile-menu');
+
+    if (toggle && menu) {
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('open');
+            const isOpen = menu.classList.contains('open');
+            toggle.innerHTML = `<i class="fas fa-${isOpen ? 'times' : 'bars'}"></i>`;
+            toggle.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.remove('open');
+                toggle.innerHTML = '<i class="fas fa-bars"></i>';
             });
         });
+    }
 
-        // header menu dropdown 
-        jQuery('[data-toggle=more-toggle]').on('click', function () {
-            jQuery(this).next().toggleClass('show');
-        });
-
-        jQuery(document).on('click', function(e){
-            let myTargetElement = e.target;
-            let selector, mainElement;
-            if(jQuery(myTargetElement).hasClass('search-toggle') || jQuery(myTargetElement).parent().hasClass('search-toggle') || jQuery(myTargetElement).parent().parent().hasClass('search-toggle') ){
-                if(jQuery(myTargetElement).hasClass('search-toggle')) {
-                    selector = jQuery(myTargetElement).parent();
-                    mainElement = jQuery(myTargetElement);
-                } else if (jQuery(myTargetElement).parent().hasClass('search-toggle')){
-                    selector = jQuery(myTargetElement).parent().parent();
-                    mainElement = jQuery(myTargetElement).parent();
-                }else if (jQuery(myTargetElement).parent().parent().hasClass('search-toggle')){
-                    selector = jQuery(myTargetElement).parent().parent().parent();
-                    mainElement = jQuery(myTargetElement).parent().parent();
-                }
-                if(!mainElement.hasClass('active') && jQuery('.navbar-list li').find('.active')){
-                    jQuery('.navbar-right li').removeClass('.iq-show');
-                    jQuery('.navbar-right li .search-toggle').removeClass('active');
-                }
-
-                selector.toggleClass('iq-show');
-                mainElement.toggleClass('active');
-                e.preventDefault();
-            } else if (jQuery(myTargetElement).is('search-input')){} else {
-                jQuery('.navbar-right li').removeClass('.iq-show');
-                jQuery('.navbar-right li .search-toggle').removeClass('active');
-            }
-        });
-        jQuery(document).on('click', function(event){
-            var $trigger = jQuery(".main-header .navbar");
-            if($trigger !== event.target && !$trigger.has(event.target).length){
-                jQuery(".main-header .navbar-collapse").collapse('hide');
-                jQuery('body').removeClass('nav-open');
-            }
-        });
-        jQuery('.c-toggler').on("click", function(){
-            jQuery('body').addClass('nav-open');
-        });
-
-
-        $('#home-slider').slick({
-            autoplay : false,
-            speed : 800,
-            lazyload : 'progressive',
-            arrows : true,
-            dots : false,
-            prevArrow : '<div class="slick-nav prev-arrow"><i class="fa fa-chevron-right"></i></div>',
-            nextArrow : '<div class="slick-nav next-arrow"><i class="fa fa-chevron-left"></i></div>',
-            responsive : [
-                {
-                    breakpoint : 992,
-                    settings : {
-                        dots : true,
-                        arrows : false,
-                    }
-                }
-            ]
-        }).slickAnimation();
-        $(".slick-nav").on("click touch", function (e){
-            e.preventDefault();
-
-            var arrow = $(this);
-
-            if(!arrow.hasClass('animate')){
-                arrow.addClass('animate');
-                setTimeout(() => {
-                    arrow.removeClass('animate');
-                }, 1600);
-            }
-        });
-
-        jQuery('.favorites-slider').slick({
-            dots:false,
-            arrow : true,
-            infinite : true,
-            speed : 300,
-            autoplay : false,
-            slidesToShow : 4,
-            slidesToScroll :1,
-            nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="fa fa-chevron-right"></i></a>',
-            prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="fa fa-chevron-left"></i></a>',
-            responsive : [
-                {
-                    breakpoint:1200,
-                    settings : {
-                        slidesToShow : 3,
-                        slidesToScroll : 1,
-                        infinite : true,
-                        dots : true
-                    }
-                },
-                {
-                    breakpoint:768,
-                    settings : {
-                        slidesToShow : 2,
-                        slidesToScroll : 1
-                    }
-                },
-                {
-                    breakpoint:480,
-                    settings : {
-                        slidesToShow : 1,
-                        slidesToScroll : 1
-                    }
-                },
-            ]
-        });
-
-        jQuery('#top-ten-slider').slick({
-            slidesToScroll : 1,
-            slidesToShow : 1,
-            arrows : false,
-            fade : true,
-            asNavFor : '#top-ten-slider-nav',
-            responsive : [
-                {
-                    breakpoint : 992,
-                    settings : {
-                        asNavFor : false,
-                        arrows : true ,
-                        nextArrow : '<button class="NextArrow"><i class="fa fa-angle-right"></i></button>',
-                        prevArrow : '<button class="PrevArrow"><i class="fa fa-angle-left"></i></button>',
-                    }
-                }
-            ]
-        });
-        jQuery('#top-ten-slider-nav').slick({
-            slidesToShow : 3,
-            slidesToScroll : 1,
-            asNavFor : '#top-ten-slider',
-            dots: false,
-            arrows : true,
-            infinite : true,
-            vertical : true,
-            verticalSwiping : true,
-            centerMode :false,
-            nextArrow : '<button class="NextArrow"><i class="fa fa-angle-down"></i></button>',
-            prevArrow : '<button class="PrevArrow"><i class="fa fa-angle-up"></i></button>',
-            focusOnSelect : true,
-            responsive : [
-                {
-                    breakpoint : 1200,
-                    settings : {
-                        slidesToShow : 2,
-                    }
-                },
-                {
-                    breakpoint : 600,
-                    settings : {
-                        asNavFor : false,
-                    }
-                },
-            ]
-        });
-        
-
-        jQuery("#trending-slider").slick({
-            slidesToShow : 1,
-            slidesToScroll : 1,
-            arrows : false,
-            fade : true,
-            draggable : false,
-            asNavFor : "#trending-slider-nav",
-        });
-
-        jQuery("#trending-slider-nav").slick({
-            slidesToShow : 5,
-            slidesToScroll : 1,
-            asNavFor : "#trending-slider",
-            dots : false ,
-            arrows : true ,
-            nextArrow: '<a href="#" class="slick-arrow slick-next"><i class="fa fa-chevron-right"></i></a>',
-            prevArrow: '<a href="#" class="slick-arrow slick-prev"><i class="fa fa-chevron-left"></i></a>',
-            infinite : true,
-            centerMode : true,
-            centerPadding : 0,
-            focusOnSelect : true,
-            responsive : [
-                {
-                    breakpoint : 1024,
-                    settings : {
-                        slidesToShow : 2,
-                        slidesToScroll : 1,
-                    }
-                },
-                {
-                    breakpoint : 600,
-                    settings : {
-                        slidesToShow : 1,
-                        slidesToScroll : 1,
-                    }
-                }
-            ]
-        });
-
-        jQuery('.episodes-slider1').owlCarousel({
-            loop : true,
-            margin : 20,
-            nav: true,
-            navText : ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i> "],
-            dots : false,
-            responsive : {
-                0:{
-                    items : 1
-                },
-                600: {
-                    items : 1
-                },
-                1000 : {
-                    items : 4
-                }
-            }
-        });
-
-
-        jQuery('.trending-content').each(function(){
-            var highestBox = 0;
-            jQuery('.tab-pane', this).each(function(){
-                if(jQuery(this).height() > highestBox){
-                    highestBox = jQuery(this).height();
+    // Scroll activo en nav
+    const sections = document.querySelectorAll('section[id]');
+    if (sections.length > 0) {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    const id = entry.target.id;
+                    const link = document.querySelector(`.nav-link[href="#${id}"]`);
+                    if (link) link.classList.add('active');
                 }
             });
-            jQuery('.tab-pane', this).height(highestBox);
+        }, { threshold: 0.3 });
+
+        sections.forEach(s => observer.observe(s));
+    }
+}
+
+// ════════════════════════════════════════════════
+//  BÚSQUEDA
+// ════════════════════════════════════════════════
+function initSearch(inputId, clearBtnId, callback) {
+    const input = document.getElementById(inputId);
+    const clear = document.getElementById(clearBtnId);
+    if (!input) return;
+
+    input.addEventListener('input', debounce(() => {
+        const value = input.value.trim().toLowerCase();
+        if (clear) clear.classList.toggle('visible', value.length > 0);
+        if (callback) callback(value);
+    }, 200));
+
+    if (clear) {
+        clear.addEventListener('click', () => {
+            input.value = '';
+            clear.classList.remove('visible');
+            if (callback) callback('');
+            input.focus();
         });
+    }
+}
 
-        if(jQuery('select').hasClass('season-select')){
-            jQuery('select').select2({
-                theme : 'bootstrap4',
-                allowClear : false,
-                width : 'resolve'
-            });
-        }
-        
+// ════════════════════════════════════════════════
+//  FILTROS
+// ════════════════════════════════════════════════
+function initFilters(containerSelector, callback) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
 
-
-
+    container.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const wasActive = chip.classList.contains('active');
+            container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            if (!wasActive) chip.classList.add('active');
+            const filter = wasActive ? null : chip.dataset.filter;
+            if (callback) callback(filter);
+        });
     });
-})(jQuery);
+}
+
+// ════════════════════════════════════════════════
+//  PDF VIEWER (iframe fallback)
+// ════════════════════════════════════════════════
+function openPdfViewer(url, title) {
+    if (!url) return;
+
+    // Si hay enhancedPdfViewer disponible, usarlo
+    if (window.enhancedPdfViewer && typeof window.enhancedPdfViewer.open === 'function') {
+        window.enhancedPdfViewer.open(url, title);
+        return;
+    }
+
+    // Fallback: abrir en nueva pestaña
+    window.open(url, '_blank', 'noopener');
+}
+
+function closePdfViewer() {
+    if (window.enhancedPdfViewer && typeof window.enhancedPdfViewer.close === 'function') {
+        window.enhancedPdfViewer.close();
+    }
+}
+
+// ════════════════════════════════════════════════
+//  VIDEO PLAYER
+// ════════════════════════════════════════════════
+function playYouTubeVideo(videoId, title) {
+    if (!videoId) return;
+
+    const modal = document.querySelector('.video-modal');
+    if (!modal) return;
+
+    const container = modal.querySelector('.video-container');
+    if (!container) return;
+
+    // Crear iframe
+    container.innerHTML = `
+        <iframe
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+            title="${escapeHtml(title || 'Video')}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+            style="width:100%;aspect-ratio:16/9;border:none;border-radius:8px"
+        ></iframe>
+    `;
+
+    modal.classList.add('open');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+    const modal = document.querySelector('.video-modal');
+    if (!modal) return;
+
+    const container = modal.querySelector('.video-container');
+    if (container) container.innerHTML = '';
+
+    modal.classList.remove('open');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// ════════════════════════════════════════════════
+//  INICIALIZACIÓN GLOBAL
+// ════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+
+    // Cerrar modales con Escape
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            closeVideoModal();
+            closePdfViewer();
+        }
+    });
+
+    // Cerrar modal video al hacer clic fuera
+    const videoModal = document.querySelector('.video-modal');
+    if (videoModal) {
+        videoModal.addEventListener('click', e => {
+            if (e.target === videoModal) closeVideoModal();
+        });
+    }
+
+    // Smooth scroll para enlaces internos
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+
+// ════════════════════════════════════════════════
+//  EXPORTAR FUNCIONES GLOBALES
+// ════════════════════════════════════════════════
+window.HAGO = {
+    escapeHtml,
+    formatDate,
+    debounce,
+    openPdfViewer,
+    closePdfViewer,
+    playYouTubeVideo,
+    closeVideoModal,
+    initSearch,
+    initFilters,
+};

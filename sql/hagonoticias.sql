@@ -104,12 +104,12 @@ VALUES (
 
 -- Ediciones iniciales
 INSERT INTO ediciones (titulo, autor, categoria, anio, descripcion, pdf_url, thumbnail_url, fecha_publicacion, orden_visualizacion, vistas, descargas) VALUES
-('Edición # 1', 'Día de la democracia, Madres, Maestro, Talentos Abadistas', '#1', 2024, 'Primera edición del periódico institucional', 'pdf/EDICION1.pdf', 'https://drive.google.com/thumbnail?id=1djewK_gQm5d9-bQzXA1W-xYLEuctmjfX&sz=w320-h240', '2024-01-15', 1, 450, 180),
-('Edición # 2', 'Día de la Antioqueñidad', '#2', 2024, 'Segunda edición del periódico institucional', 'pdf/EDICION2.pdf', 'https://drive.google.com/thumbnail?id=1AkZ9JBY8Hgavcj3KJVtzWd5gsScmft_b&sz=w320-h240', '2024-03-20', 2, 380, 150),
-('Edición # 3', 'Semana Abadista - Foro - Museo Escolar', '#3', 2024, 'Tercera edición del periódico institucional', 'pdf/EDICION3.pdf', 'https://drive.google.com/thumbnail?id=1xWfZ7J-7k1fFps5UG9Dkz3k8S2yaW_Hu&sz=w320-h240', '2024-06-10', 3, 520, 210),
-('Edición # 4', 'La institución de la Inclusión, Gobierno Escolar 2025', '#4', 2025, 'Cuarta edición del periódico institucional', 'pdf/EDICION4.pdf', 'https://drive.google.com/thumbnail?id=1D818JI97Qk-jfqmCktdSXF-84XfyJ1OD&sz=w320-h240', '2025-02-15', 4, 290, 120),
-('Edición # 5', 'Celebramos el corazón que educa y la dedicación que sostiene', '#5', 2025, 'Quinta edición del periódico institucional', 'pdf/EDICION5.pdf', 'https://drive.google.com/thumbnail?id=15emMmadoHN3SOx-U9xOn8oUw38u0v1vu&sz=w320-h240', '2025-06-01', 5, 310, 130),
-('Edición # 6', 'La Institución de la Inclusión, Gobierno Escolar 2026', '#6', 2026, 'Sexta edición del periódico institucional', 'pdf/EDICION6.pdf', 'https://drive.google.com/thumbnail?id=1ZyDq2gXX7bEUZqxpNzQA6EnNyXFJX-hS&sz=w320-h240', '2026-03-01', 6, 180, 75);
+('Edición # 1', 'Día de la democracia, Madres, Maestro, Talentos Abadistas', '#1', 2024, 'Primera edición del periódico institucional', 'pdf/EDICION1.pdf', 'img/thumbnails/EDICION1.jpg', '2024-01-15', 1, 450, 180),
+('Edición # 2', 'Día de la Antioqueñidad', '#2', 2024, 'Segunda edición del periódico institucional', 'pdf/EDICION2.pdf', 'img/thumbnails/EDICION2.jpg', '2024-03-20', 2, 380, 150),
+('Edición # 3', 'Semana Abadista - Foro - Museo Escolar', '#3', 2024, 'Tercera edición del periódico institucional', 'pdf/EDICION3.pdf', 'img/thumbnails/EDICION3.jpg', '2024-06-10', 3, 520, 210),
+('Edición # 4', 'La institución de la Inclusión, Gobierno Escolar 2025', '#4', 2025, 'Cuarta edición del periódico institucional', 'pdf/EDICION4.pdf', 'img/thumbnails/EDICION4.jpg', '2025-02-15', 4, 290, 120),
+('Edición # 5', 'Celebramos el corazón que educa y la dedicación que sostiene', '#5', 2025, 'Quinta edición del periódico institucional', 'pdf/EDICION5.pdf', 'img/thumbnails/EDICION5.jpg', '2025-06-01', 5, 310, 130),
+('Edición # 6', 'La Institución de la Inclusión, Gobierno Escolar 2026', '#6', 2026, 'Sexta edición del periódico institucional', 'pdf/EDICION6.pdf', 'img/thumbnails/EDICION6.jpg', '2026-03-01', 6, 180, 75);
 
 -- Configuración inicial
 INSERT INTO configuracion (clave, valor, descripcion) VALUES

@@ -146,7 +146,7 @@ class EnhancedPDFViewer {
                         <div class="enhanced-pdf-viewer-area">
                             <div id="enhancedPdfLoading" class="enhanced-pdf-loading">
                                 <div class="enhanced-pdf-spinner"></div>
-                                <p>Cargando PDF...</p>
+                                <p id="enhancedPdfLoadingText">Cargando PDF...</p>
                                 <div class="enhanced-pdf-progress">
                                     <div id="enhancedPdfProgressBar" class="enhanced-pdf-progress-bar"></div>
                                 </div>
@@ -162,9 +162,14 @@ class EnhancedPDFViewer {
                                     <i class="fa-solid fa-triangle-exclamation"></i>
                                     <h3>Error al cargar el PDF</h3>
                                     <p id="enhancedPdfErrorMessage">Ha ocurrido un error inesperado.</p>
-                                    <button id="enhancedPdfRetry" class="enhanced-pdf-btn-primary">
-                                        <i class="fa-solid fa-arrows-rotate"></i> Reintentar
-                                    </button>
+                                    <div class="enhanced-pdf-error-actions">
+                                        <button id="enhancedPdfRetry" class="enhanced-pdf-btn-primary">
+                                            <i class="fa-solid fa-arrows-rotate"></i> Reintentar
+                                        </button>
+                                        <button id="enhancedPdfOpenTab" class="enhanced-pdf-btn-secondary">
+                                            <i class="fa-solid fa-up-right-from-square"></i> Abrir en pestaña
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -231,6 +236,9 @@ class EnhancedPDFViewer {
         
         // Reintentar
         document.getElementById('enhancedPdfRetry').addEventListener('click', () => this.retry());
+        document.getElementById('enhancedPdfOpenTab').addEventListener('click', () => {
+            if (this.pdfUrl) window.open(this.pdfUrl, '_blank', 'noopener');
+        });
         
         // Navegación con teclado
         document.addEventListener('keydown', (e) => {
@@ -358,12 +366,16 @@ class EnhancedPDFViewer {
         }
 
         try {
+            // Reiniciar visor (zoom ajustado a página, progreso, miniaturas)
+            this.resetState();
+            this.pdfUrl = pdfUrl;
             this.showLoading(true);
             this.modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
             // Actualizar título
             document.getElementById('pdfTitle').innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${title}`;
+            document.getElementById('enhancedPdfLoadingText').textContent = 'Cargando PDF...';
             
             // Cargar el PDF
             const loadingTask = pdfjsLib.getDocument({
@@ -375,8 +387,9 @@ class EnhancedPDFViewer {
             // Mostrar progreso de carga
             loadingTask.onProgress = (progress) => {
                 if (progress.total > 0) {
-                    const percent = (progress.loaded / progress.total) * 100;
+                    const percent = Math.round((progress.loaded / progress.total) * 100);
                     document.getElementById('enhancedPdfProgressBar').style.width = percent + '%';
+                    document.getElementById('enhancedPdfLoadingText').textContent = `Cargando PDF... ${percent}%`;
                 }
             };
             
@@ -385,6 +398,9 @@ class EnhancedPDFViewer {
             this.currentPage = 1;
             this.pdfUrl = pdfUrl;
             
+            // Ajustar a la página por defecto para que se vea completo
+            document.getElementById('enhancedPdfZoomSelect').value = 'fit-page';
+            
             // Actualizar información del documento
             const info = await this.currentPdf.getMetadata();
             this.updateDocumentInfo(info);
@@ -392,9 +408,6 @@ class EnhancedPDFViewer {
             await this.renderPage();
             this.updateControls();
             this.showLoading(false);
-            
-            // Generar miniaturas en segundo plano
-            this.generateThumbnails();
             
         } catch (error) {
             console.error('Error al cargar PDF:', error);
@@ -438,6 +451,13 @@ class EnhancedPDFViewer {
         document.getElementById('enhancedPdfSearchResults').style.display = 'none';
         document.getElementById('enhancedPdfSidebar').style.display = 'none';
         document.getElementById('enhancedPdfError').style.display = 'none';
+        document.getElementById('enhancedPdfProgressBar').style.width = '0%';
+        document.getElementById('enhancedPdfThumbnailsList').innerHTML = '';
+        const zoomSelect = document.getElementById('enhancedPdfZoomSelect');
+        [...zoomSelect.options].forEach(o => {
+            if (o.dataset && o.dataset.dynamic === 'true') o.remove();
+        });
+        zoomSelect.value = 'fit-page';
     }
     
     async renderPage() {
@@ -466,18 +486,22 @@ class EnhancedPDFViewer {
                 viewport = page.getViewport({ scale: this.scale });
             }
             
-            this.canvas.width = viewport.width;
-            this.canvas.height = viewport.height;
+            // Renderizar a resolución del dispositivo para nitidez
+            const outputScale = window.devicePixelRatio || 1;
+            this.canvas.width = Math.floor(viewport.width * outputScale);
+            this.canvas.height = Math.floor(viewport.height * outputScale);
+            this.canvas.style.width = Math.floor(viewport.width) + 'px';
+            this.canvas.style.height = Math.floor(viewport.height) + 'px';
             
             const renderContext = {
                 canvasContext: this.context,
                 viewport: viewport
             };
+            if (outputScale !== 1) {
+                renderContext.transform = [outputScale, 0, 0, outputScale, 0, 0];
+            }
             
             await page.render(renderContext).promise;
-            
-            // Renderizar capa de texto para búsqueda
-            await this.renderTextLayer(page, viewport);
             
         } catch (error) {
             console.error('Error al renderizar página:', error);
@@ -538,9 +562,8 @@ class EnhancedPDFViewer {
     syncZoomSelect() {
         const zoomSelect = document.getElementById('enhancedPdfZoomSelect');
         if (!zoomSelect) return;
-        const current = this.scale.toFixed(1);
-        const exists = [...zoomSelect.options].some(o => o.value === current);
-        if (!exists) {
+        const current = String(parseFloat(this.scale.toFixed(2)));
+        if (![...zoomSelect.options].some(o => o.value === current)) {
             const opt = document.createElement('option');
             opt.value = current;
             opt.textContent = `${Math.round(this.scale * 100)}%`;
@@ -549,14 +572,9 @@ class EnhancedPDFViewer {
         }
         // Eliminar opciones dinámicas viejas que ya no corresponden
         [...zoomSelect.options].forEach(o => {
-            if (o.dataset.dynamic === 'true' && o.value !== current &&
-                !['fit-width', 'fit-page'].includes(zoomSelect.value)) {
-                o.remove();
-            }
+            if (o.dataset.dynamic === 'true' && o.value !== current) o.remove();
         });
-        if (!['fit-width', 'fit-page'].includes(zoomSelect.value)) {
-            zoomSelect.value = current;
-        }
+        zoomSelect.value = current;
     }
 
     async zoomIn() {
@@ -667,6 +685,7 @@ class EnhancedPDFViewer {
         const thumbnailsList = document.getElementById('enhancedPdfThumbnailsList');
         if (!thumbnailsList) return;
         const pdfAtStart = this.currentPdf;
+        this.thumbnails = [];
         thumbnailsList.innerHTML = '<div class="enhanced-pdf-thumbnails-loading">Generando miniaturas...</div>';
         
         for (let i = 1; i <= this.totalPages; i++) {

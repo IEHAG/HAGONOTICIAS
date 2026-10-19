@@ -969,7 +969,6 @@
             if (!radioPlayer) {
                 // Crear reproductor de radio
                 radioPlayer = new Audio(RADIO_STREAM_URL);
-                radioPlayer.crossOrigin = 'anonymous';
                 radioPlayer.volume = document.getElementById('volumeSlider').value;
                 
                 radioPlayer.addEventListener('error', function(e) {

@@ -93,12 +93,12 @@ switch ($method) {
         $stmt = $db->prepare('INSERT INTO ediciones (titulo, autor, categoria, anio, descripcion, pdf_url, thumbnail_url, fecha_publicacion, activo, orden_visualizacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $titulo,
-            trim($input['autor'] ?? null),
-            trim($input['categoria'] ?? null),
+            trim($input['autor'] ?? ''),
+            trim($input['categoria'] ?? ''),
             $input['anio'] ?? date('Y'),
-            trim($input['descripcion'] ?? null),
+            trim($input['descripcion'] ?? ''),
             $pdf_url,
-            trim($input['thumbnail_url'] ?? null),
+            trim($input['thumbnail_url'] ?? ''),
             $input['fecha_publicacion'] ?? date('Y-m-d'),
             $input['activo'] ?? 1,
             $input['orden_visualizacion'] ?? 0,

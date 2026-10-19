@@ -662,6 +662,8 @@
         </div>
     </div>
 
+    <!-- Utilidades compartidas (cargadas antes para no sobrescribir las funciones locales) -->
+    <script src="js/main.js"></script>
     <script>
         // 📁 CONFIGURACIÓN DEL CANAL DE YOUTUBE
         const YOUTUBE_CHANNEL_HANDLE = '@InstituciónEducativaHéctorAbad';
@@ -1353,7 +1355,7 @@
                             <div class="video-card-title">${video.title}</div>
                             <div class="video-card-meta">
                                 <span>${video.channel}</span>
-                                <span>👁️ ${video.views}</span>
+                                <span>⏱️ ${video.duration || '—'}</span>
                             </div>
                         </div>
                     `;
@@ -1469,6 +1471,5 @@
             loadYouTubeVideos();
         });
     </script>
-    <script src="js/main.js"></script>
 </body>
 </html>

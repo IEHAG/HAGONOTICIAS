@@ -91,7 +91,7 @@
 
   <!-- Datos de ediciones (extraídos de ediciones-data.js) -->
   <script>
-    const EDICIONES = [
+    let EDICIONES = [
       { id:1, numero:1, titulo:"Edición #1", autor:"Día de la democracia, Madres, Maestro, Talentos Abadistas", categoria:"#1", anio:2024, descripcion:"Primera edición del periódico institucional", thumbnail:"../img/thumbnails/EDICION1.jpg", pdfUrl:"../pdf/EDICION1.pdf", tags:["democracia","madres","maestro","talentos"], featured:true, comingSoon:false },
       { id:2, numero:2, titulo:"Edición #2", autor:"Día de la Antioqueñidad", categoria:"#2", anio:2024, descripcion:"Segunda edición del periódico institucional", thumbnail:"../img/thumbnails/EDICION2.jpg", pdfUrl:"../pdf/EDICION2.pdf", tags:["antioqueñidad","cultura","tradición"], featured:false, comingSoon:false },
       { id:3, numero:3, titulo:"Edición #3", autor:"Semana Abadista - Foro - Museo Escolar", categoria:"#3", anio:2024, descripcion:"Tercera edición del periódico institucional", thumbnail:"../img/thumbnails/EDICION3.jpg", pdfUrl:"../pdf/EDICION3.pdf", tags:["semana abadista","foro","museo"], featured:false, comingSoon:false },
@@ -108,6 +108,58 @@
   <!-- Componente React (JS plano, sin JSX ni Babel) -->
   <script>
     const { useState, useRef, useEffect, useMemo, useCallback } = React;
+
+    // ───── Carga de ediciones desde la API (con respaldo estático) ─────
+    const API_EDICIONES = '../api/ediciones.php';
+    const API_DISPONIBLE = location.protocol !== 'file:';
+
+    function fullUrl(u) {
+      if (!u) return '../img/default-thumbnail.png';
+      return /^https?:/i.test(u) ? u : '../' + u;
+    }
+
+    function mapApiEdition(row) {
+      const numero = parseInt(String(row.categoria || '').replace(/[^0-9]/g, ''), 10) || row.id;
+      const thumb = row.thumbnail_url ? fullUrl(row.thumbnail_url) : '../img/default-thumbnail.png';
+      return {
+        id: row.id,
+        numero: numero,
+        titulo: row.titulo,
+        autor: row.autor || '',
+        categoria: row.categoria || ('#' + numero),
+        anio: row.anio,
+        descripcion: row.descripcion || '',
+        thumbnail: thumb,
+        thumbnailLarge: thumb,
+        pdfUrl: fullUrl(row.pdf_url),
+        uploadDate: row.fecha_publicacion || '',
+        size: '—',
+        tags: [],
+        featured: !!Number(row.destacada),
+        views: Number(row.vistas) || 0,
+        downloads: Number(row.descargas) || 0,
+        comingSoon: !!Number(row.proximamente)
+      };
+    }
+
+    function cargarEdicionesApi() {
+      if (!API_DISPONIBLE) return Promise.resolve(false);
+      return fetch(`${API_EDICIONES}?solo_activos=1&limit=100`)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(data => {
+          const rows = data.ediciones || [];
+          if (!rows.length) return false;
+          EDICIONES = rows.map(mapApiEdition);
+          return true;
+        })
+        .catch(() => false);
+    }
+
+    function trackEdition(id, accion) {
+      if (!API_DISPONIBLE || !id) return;
+      fetch(`${API_EDICIONES}?id=${id}&action=${accion}`, { method: 'POST' }).catch(() => {});
+    }
+
     // Framer Motion es opcional: si el CDN no expone window.FramerMotion,
     // usar equivalentes estáticos (div/a/button) para no romper la página.
     const FM = window.FramerMotion || null;
@@ -222,6 +274,7 @@
                 /*#__PURE__*/React.createElement(motion.a, {
                   href: edition.pdfUrl,
                   download: true,
+                  onClick: () => trackEdition(edition.id, 'descarga'),
                   className: 'flex-1 btn-download text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 whitespace-nowrap',
                   whileHover: { scale: 1.03 },
                   whileTap: { scale: 0.97 }
@@ -331,6 +384,7 @@
 
       const handleView = useCallback((ed) => {
         if (ed.comingSoon) return;
+        trackEdition(ed.id, 'vista');
         if (window.enhancedPdfViewer) {
           window.enhancedPdfViewer.open(ed.pdfUrl, ed.titulo);
         } else {
@@ -340,6 +394,7 @@
 
       const handleDownload = useCallback((ed) => {
         if (ed.comingSoon) return;
+        trackEdition(ed.id, 'descarga');
         const a = document.createElement('a');
         a.href = ed.pdfUrl;
         a.download = `${ed.titulo.replace(/\s+/g, '_')}.pdf`;
@@ -448,8 +503,12 @@
     };
 
     // ──────────── Render ────────────
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(App));
+    function renderPortal() {
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(App));
+    }
+
+    cargarEdicionesApi().then(() => renderPortal());
   </script>
   <script src="../js/main.js"></script>
 </body>

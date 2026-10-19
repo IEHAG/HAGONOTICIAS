@@ -291,7 +291,53 @@
   <!-- Componentes React (JS plano con React.createElement, sin JSX ni Babel) -->
   <script>
     const { useState, useRef, useEffect, useMemo, useCallback } = React;
-    const ED = window.EDICIONES || [];
+    let ED = window.EDICIONES || [];
+
+    // ───── Carga de ediciones desde la API (con respaldo estático) ─────
+    const API_EDICIONES = 'api/ediciones.php';
+    const API_DISPONIBLE = location.protocol !== 'file:';
+
+    function mapApiEdition(row) {
+      const numero = parseInt(String(row.categoria || '').replace(/[^0-9]/g, ''), 10) || row.id;
+      const thumb = row.thumbnail_url || 'img/default-thumbnail.png';
+      return {
+        id: row.id,
+        numero: numero,
+        titulo: row.titulo,
+        autor: row.autor || '',
+        categoria: row.categoria || ('#' + numero),
+        anio: row.anio,
+        descripcion: row.descripcion || '',
+        thumbnail: thumb,
+        thumbnailLarge: thumb,
+        pdfUrl: row.pdf_url,
+        uploadDate: row.fecha_publicacion || '',
+        size: '—',
+        tags: [],
+        featured: !!Number(row.destacada),
+        views: Number(row.vistas) || 0,
+        downloads: Number(row.descargas) || 0,
+        comingSoon: !!Number(row.proximamente)
+      };
+    }
+
+    function cargarEdicionesApi() {
+      if (!API_DISPONIBLE) return Promise.resolve(false);
+      return fetch(`${API_EDICIONES}?solo_activos=1&limit=100`)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(data => {
+          const rows = data.ediciones || [];
+          if (!rows.length) return false;
+          ED = rows.map(mapApiEdition);
+          return true;
+        })
+        .catch(() => false);
+    }
+
+    function trackEdition(id, accion) {
+      if (!API_DISPONIBLE || !id) return;
+      fetch(`${API_EDICIONES}?id=${id}&action=${accion}`, { method: 'POST' }).catch(() => {});
+    }
 
     // ───── UseInView hook ─────
     function useInView(options) {
@@ -419,6 +465,7 @@
 
       const handleView = () => {
         if (!featured.comingSoon) {
+          trackEdition(featured.id, 'vista');
           if (window.enhancedPdfViewer) {
             window.enhancedPdfViewer.open(featured.pdfUrl, featured.titulo);
           } else { window.open(featured.pdfUrl, '_blank'); }
@@ -579,6 +626,7 @@
                 ),
                 React.createElement('a', {
                   href: edition.pdfUrl, download: true,
+                  onClick: () => trackEdition(edition.id, 'descarga'),
                   className: 'flex-1 btn-download text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1 no-underline whitespace-nowrap'
                 },
                   React.createElement(Icon, { name: 'download', className: 'w-3 h-3' }),
@@ -672,6 +720,7 @@
 
       const handleView = useCallback((ed) => {
         if (!ed.comingSoon) {
+          trackEdition(ed.id, 'vista');
           if (window.enhancedPdfViewer) {
             window.enhancedPdfViewer.open(ed.pdfUrl, ed.titulo);
           } else { window.open(ed.pdfUrl, '_blank'); }
@@ -914,8 +963,12 @@
     };
 
     // ──── RENDER ────
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(App));
+    function renderPortal() {
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(App));
+    }
+
+    cargarEdicionesApi().then(() => renderPortal());
   </script>
 
   <!-- Utilidades compartidas del portal -->

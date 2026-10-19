@@ -114,6 +114,9 @@ class EnhancedPDFViewer {
                                 <button id="enhancedPdfRotate" class="enhanced-pdf-btn" title="Rotar página" aria-label="Rotar página">
                                     <i class="fa-solid fa-arrow-rotate-right"></i>
                                 </button>
+                                <button id="enhancedPdfNewTab" class="enhanced-pdf-btn" title="Abrir en pestaña nueva" aria-label="Abrir en pestaña nueva">
+                                    <i class="fa-solid fa-up-right-from-square"></i>
+                                </button>
                                 <button id="enhancedPdfDownload" class="enhanced-pdf-btn" title="Descargar PDF" aria-label="Descargar PDF">
                                     <i class="fa-solid fa-download"></i>
                                 </button>
@@ -155,6 +158,11 @@ class EnhancedPDFViewer {
                             <div id="enhancedPdfCanvasContainer" class="enhanced-pdf-canvas-container">
                                 <canvas id="enhancedPdfCanvas" class="enhanced-pdf-canvas"></canvas>
                                 <div id="enhancedPdfTextLayer" class="enhanced-pdf-text-layer"></div>
+                            </div>
+
+                            <!-- Visor nativo del navegador (respaldo universal) -->
+                            <div id="enhancedPdfNativeWrap" class="enhanced-pdf-native-wrap" style="display: none;">
+                                <iframe id="enhancedPdfNativeFrame" title="Visor de PDF del navegador"></iframe>
                             </div>
                             
                             <div id="enhancedPdfError" class="enhanced-pdf-error" style="display: none;">
@@ -230,6 +238,9 @@ class EnhancedPDFViewer {
         document.getElementById('enhancedPdfThumbnails').addEventListener('click', () => this.toggleThumbnails());
         document.getElementById('enhancedPdfCloseSidebar').addEventListener('click', () => this.hideThumbnails());
         document.getElementById('enhancedPdfRotate').addEventListener('click', () => this.rotatePage());
+        document.getElementById('enhancedPdfNewTab').addEventListener('click', () => {
+            if (this.pdfUrl) window.open(this.pdfUrl, '_blank', 'noopener');
+        });
         document.getElementById('enhancedPdfDownload').addEventListener('click', () => this.downloadPDF());
         document.getElementById('enhancedPdfFullscreen').addEventListener('click', () => this.toggleFullscreen());
         document.getElementById('enhancedPdfClose').addEventListener('click', () => this.close());
@@ -359,23 +370,27 @@ class EnhancedPDFViewer {
             window.open(pdfUrl, '_blank', 'noopener');
             return;
         }
-        if (typeof pdfjsLib === 'undefined') {
-            // Si PDF.js no cargó (offline/CDN caído), abrir en pestaña nueva
-            window.open(pdfUrl, '_blank', 'noopener');
+
+        // Reiniciar visor (zoom ajustado a página, progreso, miniaturas)
+        this.resetState();
+        this.pdfUrl = pdfUrl;
+        this.modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+
+        // Actualizar título
+        document.getElementById('pdfTitle').innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${title}`;
+        document.getElementById('enhancedPdfLoadingText').textContent = 'Cargando PDF...';
+
+        // En file:// el fetch de PDF.js está bloqueado por el navegador,
+        // y sin PDF.js (CDN caído/offline) tampoco se puede renderizar:
+        // se usa el visor nativo del navegador para que SIEMPRE cargue.
+        if (location.protocol === 'file:' || typeof pdfjsLib === 'undefined') {
+            this.useNativeViewer(false);
             return;
         }
 
         try {
-            // Reiniciar visor (zoom ajustado a página, progreso, miniaturas)
-            this.resetState();
-            this.pdfUrl = pdfUrl;
             this.showLoading(true);
-            this.modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            
-            // Actualizar título
-            document.getElementById('pdfTitle').innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${title}`;
-            document.getElementById('enhancedPdfLoadingText').textContent = 'Cargando PDF...';
             
             // Cargar el PDF
             const loadingTask = pdfjsLib.getDocument({
@@ -411,7 +426,33 @@ class EnhancedPDFViewer {
             
         } catch (error) {
             console.error('Error al cargar PDF:', error);
-            this.showError('Error al cargar el PDF. Verifique que el archivo existe y es válido.');
+            this.useNativeViewer(true);
+        }
+    }
+    
+    useNativeViewer(withNotice) {
+        this.nativeMode = true;
+        this.currentPdf = null;
+        this.totalPages = 0;
+
+        document.getElementById('enhancedPdfLoading').style.display = 'none';
+        document.getElementById('enhancedPdfCanvasContainer').style.display = 'none';
+        document.getElementById('enhancedPdfError').style.display = 'none';
+        document.getElementById('enhancedPdfSidebar').style.display = 'none';
+
+        const wrap = document.getElementById('enhancedPdfNativeWrap');
+        const frame = document.getElementById('enhancedPdfNativeFrame');
+        const hash = this.pdfUrl.includes('#') ? '&' : '#';
+        frame.src = `${this.pdfUrl}${hash}page=1&view=FitH&toolbar=1`;
+        wrap.style.display = 'flex';
+
+        this.modal.classList.add('enhanced-pdf-native-mode');
+        document.getElementById('enhancedPdfDocInfo').textContent = 'Visor del navegador';
+        document.getElementById('enhancedPdfPageInput').value = 1;
+        document.getElementById('enhancedPdfPageInfo').textContent = '/ ?';
+
+        if (withNotice) {
+            this.showNotification('Se abrió con el visor del navegador.');
         }
     }
     
@@ -445,7 +486,15 @@ class EnhancedPDFViewer {
         this.searchResults = [];
         this.currentSearchIndex = 0;
         this.thumbnails = [];
-        
+        this.nativeMode = false;
+
+        // Restaurar vista normal (salir del modo visor nativo)
+        this.modal.classList.remove('enhanced-pdf-native-mode');
+        const nativeWrap = document.getElementById('enhancedPdfNativeWrap');
+        const nativeFrame = document.getElementById('enhancedPdfNativeFrame');
+        if (nativeWrap) nativeWrap.style.display = 'none';
+        if (nativeFrame) nativeFrame.src = 'about:blank';
+
         // Limpiar UI
         document.getElementById('enhancedPdfSearchInput').value = '';
         document.getElementById('enhancedPdfSearchResults').style.display = 'none';
@@ -469,20 +518,18 @@ class EnhancedPDFViewer {
             const page = await this.currentPdf.getPage(this.currentPage);
             let viewport = page.getViewport({ scale: this.scale });
             
-            // Ajustar escala según el modo seleccionado
+            // Ajustar escala según el modo seleccionado.
+            // Se mide sobre el área del visor (visible) porque el contenedor
+            // del canvas permanece oculto mientras se muestra el "Cargando".
             const zoomSelect = document.getElementById('enhancedPdfZoomSelect');
-            if (zoomSelect.value === 'fit-width') {
-                const container = document.getElementById('enhancedPdfCanvasContainer');
-                const containerWidth = container.clientWidth - 40; // Padding
-                this.scale = containerWidth / viewport.width;
-                viewport = page.getViewport({ scale: this.scale });
-            } else if (zoomSelect.value === 'fit-page') {
-                const container = document.getElementById('enhancedPdfCanvasContainer');
-                const containerWidth = container.clientWidth - 40;
-                const containerHeight = container.clientHeight - 40;
-                const scaleX = containerWidth / viewport.width;
-                const scaleY = containerHeight / viewport.height;
-                this.scale = Math.min(scaleX, scaleY);
+            if (zoomSelect.value === 'fit-width' || zoomSelect.value === 'fit-page') {
+                const area = document.querySelector('.enhanced-pdf-viewer-area');
+                const availW = Math.max((area ? area.clientWidth : 0) - 48, 120);
+                const availH = Math.max((area ? area.clientHeight : 0) - 48, 120);
+                const scaleX = availW / viewport.width;
+                const scaleY = availH / viewport.height;
+                this.scale = zoomSelect.value === 'fit-width' ? scaleX : Math.min(scaleX, scaleY);
+                this.scale = Math.min(Math.max(this.scale, 0.1), 5);
                 viewport = page.getViewport({ scale: this.scale });
             }
             

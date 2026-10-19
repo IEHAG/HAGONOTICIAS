@@ -40,18 +40,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-decoration: none;
         }
 
-        .logo-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        }
-
-        .logo-icon {
-            font-size: 2.2rem;
-            color: #e74c3c;
+        .logo .logo-img {
+            height: 46px;
+            width: auto;
+            display: block;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
         }
 
         .search-container {
@@ -72,27 +68,37 @@
         }
 
         .search-btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 0 4px 4px 0;
-            background: #e74c3c;
+            padding: 10px 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 0 8px 8px 0;
+            background: linear-gradient(160deg, #ef4444 0%, #dc2626 55%, #b91c1c 100%);
             color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 4px 12px rgba(220,38,38,0.35), inset 0 1px 0 rgba(255,255,255,0.22);
         }
 
         .search-btn:hover {
-            background: #c0392b;
+            filter: brightness(1.12);
+            box-shadow: 0 6px 18px rgba(220,38,38,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+            transform: translateY(-1px);
+        }
+
+        .search-btn:active {
+            transform: translateY(0) scale(0.97);
         }
 
         .back-btn {
-            background: #3498db;
-            border: none;
+            background: linear-gradient(160deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%);
+            border: 1px solid rgba(255,255,255,0.15);
             color: white;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             gap: 5px;
@@ -529,10 +535,9 @@
     <!-- 🎬 HEADER -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">📰</div>
-                <div class="logo-text">HAGO Noticias</div>
-            </div>
+            <a href="index.html" class="logo">
+                <img src="img/LOGOHAGONOTICIAS.png" alt="HAGO Noticias" class="logo-img">
+            </a>
             <div class="search-container">
                 <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar noticias, entrevistas...">
                 <button class="search-btn" onclick="performSearch()">
@@ -671,6 +676,17 @@
         let videos = [];
         let isLoading = true;
 
+        // 🏷️ Categoría estimada según el título del video (para el filtro)
+        function guessCategory(title) {
+            const t = (title || '').toLowerCase();
+            if (/(entrevist|declaraci|conversa)/.test(t)) return 'Entrevistas';
+            if (/(deport|fútbol|futbol|baloncesto|torneo|olímp|olimp|atletis|gol)/.test(t)) return 'Deportes';
+            if (/(cultura|arte|música|musica|baile|danza|teatro|folclor|feria|mural)/.test(t)) return 'Cultura';
+            if (/(evento|celebra|festival|graduaci|izad|semana|aniversario|conmemor|día del|dia del)/.test(t)) return 'Eventos';
+            if (/(opinión|opinion|columna|reflexi|opina|editorial)/.test(t)) return 'Opinión';
+            return 'Noticias';
+        }
+
         // 🎬 FUNCIÓN PARA OBTENER VIDEOS DEL CANAL DE YOUTUBE
         async function loadYouTubeVideos() {
             const videoGrid = document.getElementById('videoGrid');
@@ -779,7 +795,7 @@
             featuredVideos.forEach((video) => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
-                videoCard.dataset.category = 'Todas';
+                videoCard.dataset.category = guessCategory(video.title);
                 videoCard.onclick = () => {
                     playYouTubeVideo(video.id, video.title);
                     updateMainVideo(video.id, video.title);
@@ -821,7 +837,7 @@
                 // Crear la tarjeta de video
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
-                videoCard.dataset.category = 'Todas';
+                videoCard.dataset.category = guessCategory(item.title);
                 videoCard.onclick = () => playYouTubeVideo(videoId, item.title);
                 
                 videoCard.innerHTML = `
@@ -1070,7 +1086,7 @@
             featuredVideos.forEach((video) => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
-                videoCard.dataset.category = 'Todas';
+                videoCard.dataset.category = guessCategory(video.title);
                 videoCard.onclick = () => {
                     playYouTubeVideo(video.id, video.title);
                     updateMainVideo(video.id, video.title);

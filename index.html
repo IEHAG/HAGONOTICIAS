@@ -88,23 +88,37 @@
     }
 
     /* ── Buttons ── */
+    .btn-view, .btn-download {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.16);
+      transition: box-shadow 0.2s, transform 0.15s, filter 0.2s;
+      letter-spacing: 0.01em;
+    }
     .btn-view {
-      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-      box-shadow: 0 4px 14px rgba(124,58,237,0.25);
-      transition: box-shadow 0.2s, transform 0.2s;
+      background: linear-gradient(160deg, #8b5cf6 0%, #7c3aed 48%, #6d28d9 100%);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3), 0 2px 8px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.28);
     }
     .btn-view:hover {
-      box-shadow: 0 6px 24px rgba(124,58,237,0.5);
-      transform: translateY(-1px);
+      filter: brightness(1.13);
+      box-shadow: 0 10px 28px rgba(124,58,237,0.55), 0 2px 10px rgba(124,58,237,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+      transform: translateY(-2px);
     }
     .btn-download {
-      background: linear-gradient(135deg, #059669 0%, #047857 100%);
-      box-shadow: 0 4px 14px rgba(5,150,105,0.25);
-      transition: box-shadow 0.2s, transform 0.2s;
+      background: linear-gradient(160deg, #10b981 0%, #059669 48%, #047857 100%);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3), 0 2px 8px rgba(5,150,105,0.35), inset 0 1px 0 rgba(255,255,255,0.26);
     }
     .btn-download:hover {
-      box-shadow: 0 6px 24px rgba(5,150,105,0.5);
-      transform: translateY(-1px);
+      filter: brightness(1.13);
+      box-shadow: 0 10px 28px rgba(5,150,105,0.55), 0 2px 10px rgba(5,150,105,0.4), inset 0 1px 0 rgba(255,255,255,0.35);
+      transform: translateY(-2px);
+    }
+    .btn-view:active, .btn-download:active {
+      transform: translateY(0) scale(0.97);
+      filter: brightness(0.98);
+    }
+    .btn-view:focus-visible, .btn-download:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79,195,247,0.45), 0 6px 18px rgba(0,0,0,0.35);
     }
 
     /* ── Entrance animations ── */
@@ -344,13 +358,13 @@
           scrolled ? 'bg-[#041B2D]/95 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.3)]' : 'bg-transparent'
         }`
       },
-        React.createElement('div', { className: 'max-w-full mx-auto px-4' },
+        React.createElement('div', { className: 'max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8' },
           React.createElement('div', { className: 'flex items-center justify-between h-14 md:h-16' },
             React.createElement('a', { href: '#home', className: 'flex items-center gap-2 no-underline' },
               React.createElement('img', {
                 src: 'img/LOGOHAGONOTICIAS.png',
                 alt: 'HAGO Noticias',
-                className: 'h-7 md:h-9 w-auto brightness-110'
+                className: 'h-9 md:h-11 w-auto drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]'
               })
             ),
             React.createElement('nav', { className: 'hidden md:flex items-center gap-1' },
@@ -432,7 +446,7 @@
         React.createElement('div', {
           className: 'absolute inset-0 opacity-[0.015] pointer-events-none hero-grid'
         }),
-        React.createElement('div', { className: 'relative max-w-full mx-auto px-4 w-full' },
+        React.createElement('div', { className: 'relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full' },
           React.createElement('div', { className: 'flex flex-col lg:flex-row items-center gap-8 lg:gap-16 py-12' },
 
             /* Left */
@@ -678,7 +692,7 @@
           className: 'absolute inset-0 pointer-events-none',
           style: { background: 'radial-gradient(ellipse at 50% 0%, rgba(79,195,247,0.04) 0%, transparent 50%)' }
         }),
-        React.createElement('div', { className: 'max-w-full mx-auto px-4 relative' },
+        React.createElement('div', { className: 'max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative' },
           React.createElement('div', {
             ref: headerRef,
             className: `text-center mb-6 fade-in-up ${headerIn ? 'visible' : ''}`
@@ -740,7 +754,7 @@
           className: 'absolute inset-0 pointer-events-none',
           style: { background: 'radial-gradient(ellipse at 50% 100%, rgba(79,195,247,0.03) 0%, transparent 50%)' }
         }),
-        React.createElement('div', { className: 'max-w-5xl mx-auto px-4 relative' },
+        React.createElement('div', { className: 'max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative' },
           React.createElement('div', {
             ref: headerRef,
             className: `text-center mb-8 fade-in-up ${headerIn ? 'visible' : ''}`
@@ -828,7 +842,7 @@
         }),
         React.createElement('div', {
           ref: footerRef,
-          className: 'max-w-full mx-auto px-4 py-8 relative'
+          className: 'max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 relative'
         },
           React.createElement('div', { className: 'glass-card rounded-xl p-4 mb-6' },
             React.createElement('div', { className: 'flex items-center justify-center gap-8 md:gap-12' },

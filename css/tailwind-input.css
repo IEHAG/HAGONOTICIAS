@@ -1,4 +1,8 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Archivos que usan utilidades de Tailwind */
+@source "../index.html";
+@source "../pages/*.html";
 
 /* Tokens del tema HAGO (equivalen al tailwind.config inline que usaba el CDN) */
 @theme {

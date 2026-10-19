@@ -4,6 +4,11 @@
    Desarrollo: Ing. Víctor Cañola
    ============================================================ */
 
+/* Se envuelve en @layer base para que las utilidades de Tailwind
+   (@layer utilities) puedan sobrescribir estos estilos base. Sin esto,
+   el reset (unlayered) anula todo el layout hecho con Tailwind. */
+@layer base {
+
 /* ── Variables ── */
 :root {
     --bg-primary:    #041B2D;
@@ -986,3 +991,5 @@ img { max-width: 100%; height: auto; }
     .footer-content { grid-template-columns: 1fr; text-align: center; }
     .footer-social { justify-content: center; }
 }
+
+} /* ── fin @layer base ── */

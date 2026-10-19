@@ -201,10 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth scroll para enlaces internos
+    // Smooth scroll para enlaces internos (ignora href="#" vacío)
     document.querySelectorAll('a[href^="#"]').forEach(link => {
         link.addEventListener('click', e => {
-            const target = document.querySelector(link.getAttribute('href'));
+            const href = link.getAttribute('href');
+            if (!href || href === '#') return;
+
+            let target;
+            try {
+                target = document.querySelector(href);
+            } catch (err) {
+                return; // Selector no válido: dejar comportamiento por defecto
+            }
             if (target) {
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -57,6 +57,11 @@ $user = [
             <a href="#" class="nav-link" data-section="nueva" onclick="showSection('nueva')">
                 <i class="fas fa-plus-circle"></i> Nueva Edición
             </a>
+            <?php if ($user['rol'] === 'admin'): ?>
+            <a href="#" class="nav-link" data-section="usuarios" onclick="showSection('usuarios')">
+                <i class="fas fa-users"></i> Usuarios
+            </a>
+            <?php endif; ?>
             <a href="#" class="nav-link" data-section="configuracion" onclick="showSection('configuracion')">
                 <i class="fas fa-cog"></i> Configuración
             </a>
@@ -122,6 +127,60 @@ $user = [
                 </div>
             </div>
 
+            <div class="stats-grid mt-4">
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-success"><i class="fas fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statActivas">—</span>
+                        <span class="stat-label">Activas</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-warning"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statDestacadas">—</span>
+                        <span class="stat-label">Destacadas</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-info"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statProximamente">—</span>
+                        <span class="stat-label">Próximamente</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-danger"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statUsuarios">—</span>
+                        <span class="stat-label">Usuarios activos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-column"></i> Ediciones por año</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="porAnioContainer" class="bar-chart">
+                            <p class="text-muted">Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-fire"></i> Más vistas</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="topVistasContainer" class="top-list">
+                            <p class="text-muted">Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mt-4">
                 <div class="card-header">
                     <h3><i class="fas fa-history"></i> Actividad reciente</h3>
@@ -141,6 +200,13 @@ $user = [
                 <button class="btn btn-primary" onclick="showSection('nueva')">
                     <i class="fas fa-plus"></i> Nueva Edición
                 </button>
+            </div>
+
+            <div class="table-toolbar">
+                <div class="search-inline">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscarEdiciones" placeholder="Buscar por título, autor o categoría..." oninput="filtrarTablaEdiciones()">
+                </div>
             </div>
 
             <div class="table-container">
@@ -208,13 +274,29 @@ $user = [
 
                     <div class="form-group">
                         <label for="edPdfUrl">URL del PDF *</label>
-                        <input type="text" id="edPdfUrl" required placeholder="pdf/EDICION7.pdf">
-                        <small class="help-text">Ruta relativa al PDF (ej: pdf/EDICION7.pdf)</small>
+                        <div class="input-with-action">
+                            <input type="text" id="edPdfUrl" required placeholder="pdf/EDICION7.pdf o admin/uploads/pdfs/...">
+                            <button type="button" class="btn btn-secondary btn-upload" onclick="document.getElementById('edPdfFile').click()" title="Subir PDF desde el equipo">
+                                <i class="fas fa-upload"></i> Subir
+                            </button>
+                            <input type="file" id="edPdfFile" accept="application/pdf,.pdf" style="display:none" onchange="subirArchivo(event, 'pdf')">
+                        </div>
+                        <small class="help-text">Ruta relativa (ej: pdf/EDICION7.pdf) o sube el archivo (máx. 50 MB)</small>
                     </div>
 
                     <div class="form-group">
                         <label for="edThumbUrl">URL Thumbnail</label>
-                        <input type="text" id="edThumbUrl" placeholder="URL de la imagen de portada">
+                        <div class="input-with-action">
+                            <input type="text" id="edThumbUrl" placeholder="img/thumbnails/EDICION7.jpg">
+                            <button type="button" class="btn btn-secondary btn-upload" onclick="document.getElementById('edThumbFile').click()" title="Subir imagen de portada">
+                                <i class="fas fa-upload"></i> Subir
+                            </button>
+                            <input type="file" id="edThumbFile" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none" onchange="subirArchivo(event, 'imagen')">
+                        </div>
+                        <small class="help-text">Imagen JPG/PNG/WebP (máx. 2 MB). Si se deja vacío se usa la portada por defecto.</small>
+                        <div id="thumbPreview" class="thumb-preview" style="display:none">
+                            <img id="thumbPreviewImg" src="" alt="Vista previa">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -229,7 +311,13 @@ $user = [
 
                     <div class="form-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="edActivo" checked> Activo
+                            <input type="checkbox" id="edActivo" checked> Activo (visible en el portal)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edDestacada"> Destacada (portada)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edProximamente"> Próximamente
                         </label>
                     </div>
                 </div>
@@ -245,6 +333,80 @@ $user = [
             </form>
         </section>
 
+        <!-- Sección: Usuarios (solo admin) -->
+        <?php if ($user['rol'] === 'admin'): ?>
+        <section class="content-section" id="section-usuarios">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-users"></i> Usuarios</h2>
+                <button class="btn btn-primary" onclick="nuevoUsuario()">
+                    <i class="fas fa-plus"></i> Nuevo Usuario
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Último acceso</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuariosBody">
+                        <tr><td colspan="7" class="text-center text-muted">Cargando usuarios...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form id="usuarioForm" class="card mt-4" style="display:none">
+                <input type="hidden" id="usuarioId" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="usUsername">Usuario *</label>
+                        <input type="text" id="usUsername" required placeholder="ej: juan.perez" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="usEmail">Correo *</label>
+                        <input type="email" id="usEmail" required placeholder="correo@hagonoticias.edu.co" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="usNombre">Nombre completo</label>
+                        <input type="text" id="usNombre" placeholder="Nombre y apellidos">
+                    </div>
+                    <div class="form-group">
+                        <label for="usRol">Rol</label>
+                        <select id="usRol">
+                            <option value="editor">Editor</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="usPassword">Contraseña</label>
+                        <input type="password" id="usPassword" minlength="8" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                        <small class="help-text" id="usPasswordHelp">Obligatoria al crear. Déjala vacía para conservarla al editar.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="usActivo" checked> Activo
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btnGuardarUsuario">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="limpiarFormularioUsuario()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </section>
+        <?php endif; ?>
+
         <!-- Sección: Configuración -->
         <section class="content-section" id="section-configuracion">
             <h2 class="section-title"><i class="fas fa-cog"></i> Configuración</h2>
@@ -256,17 +418,22 @@ $user = [
                 <div class="card-body">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Nombre del sitio</label>
+                            <label for="cfgSiteName">Nombre del sitio</label>
                             <input type="text" id="cfgSiteName" value="HAGO Noticias">
                         </div>
                         <div class="form-group">
-                            <label>Autor del desarrollo</label>
-                            <input type="text" id="cfgAuthor" value="Ing. Víctor Cañola" disabled>
+                            <label for="cfgAuthor">Autor del desarrollo</label>
+                            <input type="text" id="cfgAuthor" value="Ing. Víctor Cañola">
                         </div>
                         <div class="form-group full-width">
-                            <label>Descripción</label>
+                            <label for="cfgDescription">Descripción</label>
                             <input type="text" id="cfgDescription" value="Periódico Institucional — I.E. Héctor Abad Gómez">
                         </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="btnGuardarConfig" onclick="guardarConfig()">
+                            <i class="fas fa-save"></i> Guardar configuración
+                        </button>
                     </div>
                 </div>
             </div>

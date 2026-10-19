@@ -21,7 +21,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: #041B2D;
@@ -213,7 +212,7 @@
             : /*#__PURE__*/React.createElement(React.Fragment, null,
                 /*#__PURE__*/React.createElement(motion.button, {
                   onClick: () => onView(edition),
-                  className: 'flex-1 btn-view text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200',
+                  className: 'flex-1 btn-view text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 whitespace-nowrap',
                   whileHover: { scale: 1.03 },
                   whileTap: { scale: 0.97 }
                 },
@@ -223,7 +222,7 @@
                 /*#__PURE__*/React.createElement(motion.a, {
                   href: edition.pdfUrl,
                   download: true,
-                  className: 'flex-1 btn-download text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200',
+                  className: 'flex-1 btn-download text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 whitespace-nowrap',
                   whileHover: { scale: 1.03 },
                   whileTap: { scale: 0.97 }
                 },

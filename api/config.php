@@ -54,8 +54,53 @@ function getDB(): PDO {
             echo json_encode(['error' => 'Error de conexión a la base de datos']);
             exit;
         }
+        ensureSchema($pdo);
     }
     return $pdo;
+}
+
+/**
+ * Migración automática e idempotente del esquema.
+ * Garantiza que existan las columnas/tablas que usa el panel,
+ * incluso en bases de datos creadas con versiones anteriores del SQL.
+ */
+function ensureSchema(PDO $pdo): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+
+    try {
+        // Tabla de configuración
+        $pdo->exec("CREATE TABLE IF NOT EXISTS configuracion (
+            id          INT AUTO_INCREMENT PRIMARY KEY,
+            clave       VARCHAR(100) NOT NULL,
+            valor       TEXT DEFAULT NULL,
+            descripcion VARCHAR(255) DEFAULT NULL,
+            updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uk_clave (clave)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+        // Columnas nuevas de ediciones
+        $existing = [];
+        foreach ($pdo->query('SHOW COLUMNS FROM ediciones')->fetchAll() as $col) {
+            $existing[$col['Field']] = true;
+        }
+        if (!isset($existing['destacada'])) {
+            $pdo->exec('ALTER TABLE ediciones ADD COLUMN destacada TINYINT(1) NOT NULL DEFAULT 0 AFTER activo');
+        }
+        if (!isset($existing['proximamente'])) {
+            $pdo->exec('ALTER TABLE ediciones ADD COLUMN proximamente TINYINT(1) NOT NULL DEFAULT 0 AFTER destacada');
+        }
+
+        // Valores iniciales de configuración
+        $pdo->exec("INSERT IGNORE INTO configuracion (clave, valor, descripcion) VALUES
+            ('site_name',        'HAGO Noticias', 'Nombre del sitio'),
+            ('site_description', 'Periódico Institucional — I.E. Héctor Abad Gómez', 'Descripción del sitio'),
+            ('site_author',      'Ing. Víctor Cañola', 'Autor del desarrollo'),
+            ('editions_per_page','12', 'Ediciones por página')");
+    } catch (Throwable $e) {
+        // Si la migración falla (permisos), el panel sigue funcionando con el esquema existente
+    }
 }
 
 // ── Helpers ──
@@ -103,6 +148,14 @@ function requireAuth(): array {
         'username' => $_SESSION['username'],
         'rol'      => $_SESSION['rol'],
     ];
+}
+
+function requireAdmin(): array {
+    $user = requireAuth();
+    if (($user['rol'] ?? '') !== 'admin') {
+        jsonResponse(['error' => 'Se requieren permisos de administrador'], 403);
+    }
+    return $user;
 }
 
 function logActividad(int $userId, string $accion, string $detalles = ''): void {

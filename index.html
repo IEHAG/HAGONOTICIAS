@@ -23,7 +23,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -573,14 +572,14 @@
             : React.createElement(React.Fragment, null,
                 React.createElement('button', {
                   onClick: () => onView(edition),
-                  className: 'flex-1 btn-view text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1'
+                  className: 'flex-1 btn-view text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1 whitespace-nowrap'
                 },
                   React.createElement(Icon, { name: 'eye', className: 'w-3 h-3' }),
                   'Ver PDF'
                 ),
                 React.createElement('a', {
                   href: edition.pdfUrl, download: true,
-                  className: 'flex-1 btn-download text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1 no-underline'
+                  className: 'flex-1 btn-download text-white text-[10px] font-semibold py-1.5 px-2.5 rounded-lg flex items-center justify-center gap-1 no-underline whitespace-nowrap'
                 },
                   React.createElement(Icon, { name: 'download', className: 'w-3 h-3' }),
                   'Descargar'

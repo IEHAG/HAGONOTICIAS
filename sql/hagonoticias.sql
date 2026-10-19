@@ -50,13 +50,17 @@ CREATE TABLE ediciones (
     fecha_publicacion   DATE         DEFAULT (CURRENT_DATE),
     fecha_actualizacion TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     activo              TINYINT(1)   DEFAULT 1,
+    destacada           TINYINT(1)   DEFAULT 0,
+    proximamente        TINYINT(1)   DEFAULT 0,
     orden_visualizacion INT          DEFAULT 0,
     vistas              INT          DEFAULT 0,
     descargas           INT          DEFAULT 0,
     INDEX idx_categoria (categoria),
     INDEX idx_anio (anio),
     INDEX idx_fecha (fecha_publicacion DESC),
-    INDEX idx_activo (activo)
+    INDEX idx_activo (activo),
+    INDEX idx_destacada (destacada),
+    INDEX idx_proximamente (proximamente)
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
@@ -136,6 +140,8 @@ SELECT
     e.thumbnail_url,
     e.fecha_publicacion,
     e.activo,
+    e.destacada,
+    e.proximamente,
     e.orden_visualizacion,
     e.vistas,
     e.descargas,
@@ -147,4 +153,21 @@ LEFT JOIN usuarios u ON u.id = (
     WHERE l.accion = 'crear_edicion' AND l.detalles LIKE CONCAT('%"', e.id, '%')
     ORDER BY l.created_at DESC LIMIT 1
 )
-ORDER BY e.orden_visualizacion ASC, e.fecha_publicacion DESC;
+    ORDER BY e.orden_visualizacion ASC, e.fecha_publicacion DESC;
+
+-- ============================================================
+-- MIGRACIONES (bases de datos ya existentes)
+-- Ejecutar solo si la base ya fue creada con una versión anterior.
+-- api/config.php las aplica automáticamente (ensureSchema).
+-- ============================================================
+
+-- ALTER TABLE ediciones ADD COLUMN IF NOT EXISTS destacada TINYINT(1) DEFAULT 0 AFTER activo;
+-- ALTER TABLE ediciones ADD COLUMN IF NOT EXISTS proximamente TINYINT(1) DEFAULT 0 AFTER destacada;
+-- ALTER TABLE ediciones ADD INDEX IF NOT EXISTS idx_destacada (destacada);
+-- ALTER TABLE ediciones ADD INDEX IF NOT EXISTS idx_proximamente (proximamente);
+-- CREATE TABLE IF NOT EXISTS configuracion ( ... ) -- ver definición arriba
+-- INSERT IGNORE INTO configuracion (clave, valor, descripcion) VALUES
+--   ('site_name', 'HAGO Noticias', 'Nombre del sitio'),
+--   ('site_description', 'Periódico Institucional — I.E. Héctor Abad Gómez', 'Descripción del sitio'),
+--   ('site_author', 'Ing. Víctor Cañola', 'Autor del desarrollo'),
+--   ('editions_per_page', '12', 'Ediciones por página');

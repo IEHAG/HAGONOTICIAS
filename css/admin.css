@@ -841,3 +841,195 @@ body.admin-body {
         padding: 1.5rem 1.25rem;
     }
 }
+
+/* ── STAT ICON VARIANTS ── */
+.stat-icon-success { background: rgba(46,204,113,0.12); color: var(--admin-success); }
+.stat-icon-warning { background: rgba(241,196,15,0.12); color: #f1c40f; }
+.stat-icon-info    { background: rgba(79,195,247,0.12); color: var(--admin-accent); }
+.stat-icon-danger  { background: rgba(229,9,20,0.12);   color: var(--admin-primary); }
+
+/* ── STATUS VARIANTS ── */
+.status-destacada {
+    background: rgba(241,196,15,0.15);
+    color: #f1c40f;
+    margin-left: 4px;
+}
+
+.status-proximamente {
+    background: rgba(79,195,247,0.15);
+    color: var(--admin-accent);
+    margin-left: 4px;
+}
+
+.status-badge i { font-size: 0.6rem; margin-right: 2px; }
+
+/* ── DASHBOARD GRID ── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* ── BAR CHART (ediciones por año) ── */
+.bar-chart { display: flex; flex-direction: column; gap: 0.7rem; }
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+}
+
+.bar-label {
+    width: 42px;
+    flex-shrink: 0;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+}
+
+.bar-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--admin-primary), var(--admin-accent));
+    transition: width 0.4s ease;
+}
+
+.bar-value {
+    width: 34px;
+    text-align: right;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── TOP VISTAS ── */
+.top-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.top-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--admin-border);
+    font-size: 0.8rem;
+}
+
+.top-item:last-child { border-bottom: none; }
+
+.top-rank {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.top-item:first-child .top-rank { background: rgba(241,196,15,0.2); color: #f1c40f; }
+
+.top-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.top-metric {
+    color: var(--admin-text-muted);
+    flex-shrink: 0;
+}
+
+.top-metric i { color: var(--admin-accent); margin-right: 2px; }
+
+/* ── TABLE TOOLBAR / BÚSQUEDA ── */
+.table-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.search-inline {
+    position: relative;
+    width: 320px;
+    max-width: 100%;
+}
+
+.search-inline i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--admin-text-muted);
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.search-inline input {
+    width: 100%;
+    padding: 0.6rem 0.9rem 0.6rem 2.2rem;
+    background: var(--admin-card);
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    color: var(--admin-text);
+    font-size: 0.85rem;
+}
+
+.search-inline input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(229,9,20,0.15);
+}
+
+/* ── INPUT CON BOTÓN (upload) ── */
+.input-with-action {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-with-action input[type="text"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.btn-upload { flex-shrink: 0; }
+
+.btn-warning {
+    background: rgba(241,196,15,0.9);
+    color: #1a1a2e;
+}
+
+.btn-warning:hover { background: #f1c40f; }
+
+/* ── PREVIEW THUMBNAIL ── */
+.thumb-preview {
+    margin-top: 0.6rem;
+    width: 110px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--admin-border);
+}
+
+.thumb-preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.row-actions { flex-wrap: wrap; }
+
+@media (max-width: 992px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .table-toolbar { justify-content: stretch; }
+    .search-inline { width: 100%; }
+}

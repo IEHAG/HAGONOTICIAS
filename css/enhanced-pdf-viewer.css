@@ -101,12 +101,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+    color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.25);
     line-height: 1;
 }
 
@@ -116,20 +117,35 @@
 
 .enhanced-pdf-btn:hover,
 .enhanced-pdf-btn-sm:hover {
-    background: rgba(79, 195, 247, 0.15);
-    border-color: rgba(79, 195, 247, 0.4);
+    background: linear-gradient(180deg, rgba(79, 195, 247, 0.25) 0%, rgba(79, 195, 247, 0.1) 100%);
+    border-color: rgba(79, 195, 247, 0.55);
     color: #4fc3f7;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 4px 14px rgba(79, 195, 247, 0.25);
+    transform: translateY(-1px);
+}
+
+.enhanced-pdf-btn:active,
+.enhanced-pdf-btn-sm:active {
+    transform: translateY(0) scale(0.96);
 }
 
 .enhanced-pdf-btn:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.enhanced-pdf-close {
+    border-color: rgba(229, 9, 20, 0.3);
+    color: rgba(255, 91, 99, 0.85);
 }
 
 .enhanced-pdf-close:hover {
-    background: rgba(229, 9, 20, 0.2);
-    border-color: rgba(229, 9, 20, 0.5);
+    background: linear-gradient(180deg, rgba(229, 9, 20, 0.3) 0%, rgba(229, 9, 20, 0.14) 100%);
+    border-color: rgba(229, 9, 20, 0.65);
     color: #ff5b63;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 4px 14px rgba(229, 9, 20, 0.3);
 }
 
 .enhanced-pdf-btn-primary {
@@ -137,17 +153,24 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 8px;
-    background: #4fc3f7;
+    background: linear-gradient(160deg, #7dd3fc 0%, #4fc3f7 55%, #38b6ea 100%);
     color: #041B2D;
     font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s, filter 0.2s;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 4px 16px rgba(79, 195, 247, 0.35);
 }
 
-.enhanced-pdf-btn-primary:hover { background: #81d4fa; transform: translateY(-1px); }
+.enhanced-pdf-btn-primary:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 8px 24px rgba(79, 195, 247, 0.5);
+}
+
+.enhanced-pdf-btn-primary:active { transform: translateY(0) scale(0.97); }
 
 .enhanced-pdf-btn-secondary {
     display: inline-flex;
@@ -155,16 +178,24 @@
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     color: #cfe9f7;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.enhanced-pdf-btn-secondary:hover { background: rgba(255, 255, 255, 0.14); transform: translateY(-1px); }
+.enhanced-pdf-btn-secondary:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.09) 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.enhanced-pdf-btn-secondary:active { transform: translateY(0) scale(0.97); }
 
 /* ── Inputs / select ── */
 .enhanced-pdf-page-input {

@@ -1,0 +1,26 @@
+# Bloquear ejecución de scripts en uploads
+<FilesMatch "\.(php|php3|php4|php5|php7|phtml|pl|py|cgi|asp|aspx|jsp|sh)$">
+    Require all denied
+</FilesMatch>
+
+# Deshabilitar ejecución CGI/PHP por completo
+Options -ExecCGI -Indexes
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7
+RemoveType .php .phtml .php3 .php4 .php5 .php7
+php_flag engine off
+
+# Servir solo como archivos estáticos
+<IfModule mod_mime.c>
+    AddType application/pdf .pdf
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/webp .webp
+    AddType image/gif .gif
+</IfModule>
+
+# Permitir acceso a PDF e imágenes, negar todo lo demás
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(pdf|jpg|jpeg|png|webp|gif)$">
+        Require all granted
+    </FilesMatch>
+</IfModule>

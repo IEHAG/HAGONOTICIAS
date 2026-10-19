@@ -30,7 +30,7 @@ switch ($method) {
         $anio      = isset($_GET['anio']) ? (int) $_GET['anio'] : null;
         $buscar    = $_GET['buscar'] ?? null;
         $page      = max(1, (int) ($_GET['page'] ?? 1));
-        $limit     = min(50, max(1, (int) ($_GET['limit'] ?? 12)));
+        $limit     = min(200, max(1, (int) ($_GET['limit'] ?? 100)));
         $offset    = ($page - 1) * $limit;
         $soloActivos = isset($_GET['solo_activos']) ? (bool) $_GET['solo_activos'] : true;
 
@@ -65,7 +65,7 @@ switch ($method) {
         $total = (int) $stmt->fetchColumn();
 
         // Obtener datos
-        $sql = "SELECT * FROM ediciones {$whereSQL} ORDER BY orden_visualizacion ASC, fecha_publicacion DESC LIMIT {$limit} OFFSET {$offset}";
+        $sql = "SELECT * FROM ediciones {$whereSQL} ORDER BY destacada DESC, orden_visualizacion ASC, fecha_publicacion DESC LIMIT {$limit} OFFSET {$offset}";
         $stmt = $db->prepare($sql);
         $stmt->execute($params);
         $ediciones = $stmt->fetchAll();
@@ -78,8 +78,18 @@ switch ($method) {
         ]);
         break;
 
-    // ── POST: Crear edición ──
+    // ── POST: Crear edición (o incrementar contador público) ──
     case 'POST':
+        // Contadores públicos: vista / descarga (no requieren sesión)
+        if ($action === 'vista' || $action === 'descarga') {
+            if (!$id) jsonResponse(['error' => 'ID requerido'], 400);
+            $col = $action === 'vista' ? 'vistas' : 'descargas';
+            $stmt = $db->prepare("UPDATE ediciones SET {$col} = {$col} + 1 WHERE id = ?");
+            $stmt->execute([$id]);
+            if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Edición no encontrada'], 404);
+            jsonResponse(['ok' => true]);
+        }
+
         $user = requireAuth();
         $input = getRequestBody();
 
@@ -90,7 +100,7 @@ switch ($method) {
         if (empty($titulo))      jsonResponse(['error' => 'El título es requerido'], 400);
         if (empty($pdf_url))     jsonResponse(['error' => 'La URL del PDF es requerida'], 400);
 
-        $stmt = $db->prepare('INSERT INTO ediciones (titulo, autor, categoria, anio, descripcion, pdf_url, thumbnail_url, fecha_publicacion, activo, orden_visualizacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $db->prepare('INSERT INTO ediciones (titulo, autor, categoria, anio, descripcion, pdf_url, thumbnail_url, fecha_publicacion, activo, destacada, proximamente, orden_visualizacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([
             $titulo,
             trim($input['autor'] ?? ''),
@@ -101,6 +111,8 @@ switch ($method) {
             trim($input['thumbnail_url'] ?? ''),
             $input['fecha_publicacion'] ?? date('Y-m-d'),
             $input['activo'] ?? 1,
+            $input['destacada'] ?? 0,
+            $input['proximamente'] ?? 0,
             $input['orden_visualizacion'] ?? 0,
         ]);
 
@@ -126,7 +138,7 @@ switch ($method) {
         $fields = [];
         $params = [];
 
-        $allowed = ['titulo', 'autor', 'categoria', 'anio', 'descripcion', 'pdf_url', 'thumbnail_url', 'fecha_publicacion', 'activo', 'orden_visualizacion', 'vistas', 'descargas'];
+        $allowed = ['titulo', 'autor', 'categoria', 'anio', 'descripcion', 'pdf_url', 'thumbnail_url', 'fecha_publicacion', 'activo', 'destacada', 'proximamente', 'orden_visualizacion', 'vistas', 'descargas'];
         foreach ($allowed as $field) {
             if (array_key_exists($field, $input)) {
                 $fields[] = "{$field} = ?";
@@ -160,6 +172,15 @@ switch ($method) {
 
         $stmt = $db->prepare('DELETE FROM ediciones WHERE id = ?');
         $stmt->execute([$id]);
+
+        // Eliminar archivos subidos asociados (solo si están dentro de admin/uploads/)
+        foreach (['pdf_url' => 'admin/uploads/pdfs/', 'thumbnail_url' => 'admin/uploads/thumbnails/'] as $field => $prefix) {
+            $rel = $edicion[$field] ?? '';
+            if ($rel && str_starts_with($rel, $prefix)) {
+                $abs = ROOT_PATH . '/' . $rel;
+                if (is_file($abs)) @unlink($abs);
+            }
+        }
 
         logActividad($user['id'], 'eliminar_edicion', json_encode(['id' => $id, 'titulo' => $edicion['titulo']]));
 

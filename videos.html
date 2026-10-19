@@ -105,9 +105,15 @@
         }
 
         .back-btn:hover {
-            background: #2980b9;
+            filter: brightness(1.12);
             color: white;
             text-decoration: none;
+            box-shadow: 0 6px 18px rgba(37,99,235,0.5), inset 0 1px 0 rgba(255,255,255,0.28);
+            transform: translateY(-1px);
+        }
+
+        .back-btn:active {
+            transform: translateY(0) scale(0.97);
         }
 
         /* 📰 BANNER DE PERIÓDICO */
@@ -396,19 +402,36 @@
         }
 
         .category-btn {
-            padding: 8px 16px;
-            background: #edf2f7;
-            border: none;
-            border-radius: 20px;
+            padding: 9px 18px;
+            background: #ffffff;
+            border: 1px solid #dbe3ec;
+            border-radius: 999px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease, color 0.2s ease;
             color: #4a5568;
             font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.06);
         }
 
-        .category-btn:hover, .category-btn.active {
-            background: #e74c3c;
+        .category-btn:hover {
+            background: #fff5f5;
+            color: #c0392b;
+            border-color: #f3b3ab;
+            box-shadow: 0 4px 12px rgba(220,38,38,0.16);
+            transform: translateY(-1px);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(160deg, #ef4444 0%, #dc2626 55%, #b91c1c 100%);
             color: white;
+            border-color: transparent;
+            box-shadow: 0 6px 18px rgba(220,38,38,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+        }
+
+        .category-btn:active {
+            transform: translateY(0) scale(0.97);
         }
 
         /* 🎬 MODAL VIDEO PLAYER */

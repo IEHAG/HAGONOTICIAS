@@ -117,8 +117,8 @@
         }
 
         .control-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
             color: white;
             width: 60px;
             height: 60px;
@@ -127,20 +127,33 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.25s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             font-size: 1.5rem;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14);
         }
 
         .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.3);
+            transform: scale(1.08);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.22);
+        }
+
+        .control-btn:active {
+            transform: scale(1.0);
         }
 
         .play-btn {
-            background: #ff6b35;
+            background: linear-gradient(160deg, #ff8a4d 0%, #ff6b35 50%, #f7931e 100%);
+            border: 1px solid rgba(255,255,255,0.28);
             font-size: 2rem;
             width: 80px;
             height: 80px;
+            box-shadow: 0 8px 26px rgba(255,107,53,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
+        }
+
+        .play-btn:hover {
+            box-shadow: 0 12px 34px rgba(255,107,53,0.65), inset 0 1px 0 rgba(255,255,255,0.42);
         }
 
         /* 📊 PROGRESS BAR */
@@ -174,8 +187,8 @@
         }
 
         .volume-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
             color: white;
             width: 40px;
             height: 40px;
@@ -184,12 +197,15 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background 0.25s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             font-size: 1.2rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
         }
 
         .volume-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.3);
+            transform: scale(1.06);
         }
 
         .volume-slider-container {
@@ -374,16 +390,18 @@
 
         .track-btn {
             background: rgba(255, 107, 53, 0.2);
-            border: 1px solid rgba(255, 107, 53, 0.4);
+            border: 1px solid rgba(255, 107, 53, 0.45);
             color: #ff6b35;
             cursor: pointer;
             font-size: 0.75rem;
-            padding: 0.3rem 0.6rem;
+            font-weight: 600;
+            padding: 0.32rem 0.7rem;
             border-radius: 15px;
-            transition: all 0.3s ease;
+            transition: background 0.25s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
         }
 
         .track-btn i {
@@ -420,30 +438,32 @@
         }
 
         .radio-btn {
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            border: none;
+            background: linear-gradient(160deg, #ff8a4d 0%, #ff6b35 48%, #f7931e 100%);
+            border: 1px solid rgba(255,255,255,0.24);
             color: white;
             padding: 1.5rem 3rem;
             border-radius: 50px;
             font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: filter 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
             position: relative;
             display: inline-flex;
             align-items: center;
             gap: 1rem;
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 8px 26px rgba(255, 107, 53, 0.45), inset 0 1px 0 rgba(255,255,255,0.32);
             overflow: hidden;
+            letter-spacing: 0.02em;
         }
 
         .radio-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+            filter: brightness(1.06);
+            box-shadow: 0 12px 36px rgba(255, 107, 53, 0.62), inset 0 1px 0 rgba(255,255,255,0.38);
         }
 
         .radio-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-1px) scale(0.98);
         }
 
         .radio-btn.playing {

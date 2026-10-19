@@ -73,6 +73,76 @@
       color: white;
     }
 
+    /* ── Modal de acceso admin ── */
+    .admin-modal {
+      position: fixed; inset: 0; z-index: 2000;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(2,10,20,0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 1rem;
+    }
+    .admin-modal.open { display: flex; animation: adminFade 0.2s ease; }
+    @keyframes adminFade { from { opacity: 0; } to { opacity: 1; } }
+    .admin-modal-card {
+      width: 100%; max-width: 340px;
+      background: linear-gradient(160deg, #0a1c30, #071626);
+      border: 1px solid rgba(79,195,247,0.15);
+      border-radius: 16px;
+      padding: 1.4rem 1.4rem 1.25rem;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      animation: adminPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes adminPop { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: none; } }
+    .admin-modal-icon {
+      width: 44px; height: 44px; margin: 0 auto 0.75rem;
+      border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff; font-size: 1.1rem;
+      box-shadow: 0 6px 18px rgba(124,58,237,0.4);
+    }
+    .admin-modal-title { text-align: center; color: #fff; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.15rem; }
+    .admin-modal-sub { text-align: center; color: rgba(255,255,255,0.35); font-size: 0.72rem; margin-bottom: 1rem; }
+    .admin-modal label { display: block; color: rgba(255,255,255,0.5); font-size: 0.72rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .admin-modal input {
+      width: 100%; padding: 0.55rem 0.75rem; margin-bottom: 0.75rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 9px; color: #fff; font-size: 0.82rem;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .admin-modal input:focus {
+      outline: none; border-color: rgba(79,195,247,0.5);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 3px rgba(79,195,247,0.12);
+    }
+    .admin-modal-error {
+      display: none; align-items: center; gap: 0.4rem;
+      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25);
+      color: #fca5a5; font-size: 0.73rem; border-radius: 8px;
+      padding: 0.45rem 0.6rem; margin-bottom: 0.75rem;
+    }
+    .admin-modal-error.show { display: flex; }
+    .admin-modal-actions { display: flex; gap: 0.5rem; }
+    .admin-modal-actions button {
+      flex: 1; padding: 0.6rem 0.8rem; border-radius: 9px; border: none;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .admin-modal-cancel {
+      background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.12) !important;
+    }
+    .admin-modal-cancel:hover { background: rgba(255,255,255,0.12); }
+    .admin-modal-submit {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff;
+      box-shadow: 0 6px 18px rgba(124,58,237,0.35);
+    }
+    .admin-modal-submit:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    .admin-modal-submit:disabled { opacity: 0.75; cursor: wait; transform: none; }
+    .admin-modal-hint { text-align: center; color: rgba(255,255,255,0.22); font-size: 0.65rem; margin-top: 0.75rem; }
+
     /* ── Glass card ── */
     .glass-card {
       background: rgba(255,255,255,0.04);
@@ -268,9 +338,36 @@
   </div>
 
   <!-- Admin Button -->
-  <a href="admin/login.php" class="admin-btn" title="Panel de Administración">
+  <button type="button" class="admin-btn" title="Panel de Administración" onclick="abrirAccesoAdmin()">
     <i class="fas fa-user-shield"></i>
-  </a>
+  </button>
+
+  <!-- Modal de acceso al panel -->
+  <div class="admin-modal" id="adminLoginModal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <form class="admin-modal-card" id="adminLoginForm" onsubmit="enviarAccesoAdmin(event)">
+      <div class="admin-modal-icon"><i class="fas fa-user-shield"></i></div>
+      <h3 class="admin-modal-title" id="adminModalTitle">Acceso administrador</h3>
+      <p class="admin-modal-sub">Ingresa tus credenciales para administrar el portal</p>
+
+      <div class="admin-modal-error" id="adminLoginError">
+        <i class="fas fa-exclamation-circle"></i><span id="adminLoginErrorText"></span>
+      </div>
+
+      <label for="adminUser">Usuario</label>
+      <input type="text" id="adminUser" value="admin" autocomplete="username" required>
+
+      <label for="adminPass">Contraseña</label>
+      <input type="password" id="adminPass" placeholder="••••••••" autocomplete="current-password" required>
+
+      <div class="admin-modal-actions">
+        <button type="button" class="admin-modal-cancel" onclick="cerrarAccesoAdmin()">Cancelar</button>
+        <button type="submit" class="admin-modal-submit" id="adminLoginSubmit">
+          <i class="fas fa-right-to-bracket"></i> Ingresar
+        </button>
+      </div>
+      <p class="admin-modal-hint">Conexión segura con la base de datos</p>
+    </form>
+  </div>
 
   <!-- React Root -->
   <div id="root"></div>
@@ -973,5 +1070,84 @@
 
   <!-- Utilidades compartidas del portal -->
   <script src="js/main.js"></script>
+
+  <!-- Acceso al panel de administración -->
+  <script>
+    (function () {
+      var modal = document.getElementById('adminLoginModal');
+      var form = document.getElementById('adminLoginForm');
+      var userInput = document.getElementById('adminUser');
+      var passInput = document.getElementById('adminPass');
+      var errorBox = document.getElementById('adminLoginError');
+      var errorText = document.getElementById('adminLoginErrorText');
+      var submitBtn = document.getElementById('adminLoginSubmit');
+
+      function resetError() {
+        errorBox.classList.remove('show');
+        errorText.textContent = '';
+      }
+
+      window.abrirAccesoAdmin = function () {
+        resetError();
+        form.reset();
+        userInput.value = 'admin';
+        modal.classList.add('open');
+        setTimeout(function () { passInput.focus(); }, 60);
+      };
+
+      window.cerrarAccesoAdmin = function () {
+        modal.classList.remove('open');
+      };
+
+      window.enviarAccesoAdmin = async function (event) {
+        event.preventDefault();
+        resetError();
+
+        var username = userInput.value.trim();
+        var password = passInput.value;
+        if (!username || !password) return;
+
+        // Sin servidor (file://) la API y el panel no pueden ejecutarse
+        if (location.protocol === 'file:') {
+          errorText.textContent = 'El panel requiere abrir el sitio desde un servidor (http://localhost/...).';
+          errorBox.classList.add('show');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+
+        try {
+          var resp = await fetch('api/auth.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: password })
+          });
+          var data = await resp.json().catch(function () { return {}; });
+
+          if (!resp.ok) {
+            throw new Error(data.error || 'No se pudo iniciar sesión');
+          }
+
+          submitBtn.innerHTML = '<i class="fas fa-check"></i> Acceso concedido';
+          window.location.href = 'admin/dashboard.php';
+        } catch (err) {
+          errorText.textContent = err.message || 'Error al conectar con la base de datos';
+          errorBox.classList.add('show');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Ingresar';
+          passInput.select();
+        }
+      };
+
+      // Cerrar con clic en el fondo o con Escape
+      modal.addEventListener('mousedown', function (e) {
+        if (e.target === modal) window.cerrarAccesoAdmin();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) window.cerrarAccesoAdmin();
+      });
+    })();
+  </script>
 </body>
 </html>
